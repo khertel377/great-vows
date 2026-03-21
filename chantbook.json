@@ -1,0 +1,65 @@
+{
+  "version": "1.0",
+  "name": "Great Vows",
+  "description": "A multi-tradition Zen chant book and practice companion",
+  "sanghas": [
+    {
+      "id": "sfzc",
+      "name": "San Francisco Zen Center",
+      "shortName": "SFZC",
+      "file": "sanghas/sfzc.json",
+      "location": "San Francisco, CA",
+      "lineage": ["Soto"],
+      "color": "#2a3fcc",
+      "url": "https://www.sfzc.org"
+    },
+    {
+      "id": "zcd",
+      "name": "Zen Center of Denver",
+      "shortName": "ZCD",
+      "file": "sanghas/zcd.json",
+      "location": "Denver, CO",
+      "lineage": ["Soto", "Rinzai"],
+      "color": "#8b4a2a",
+      "url": "https://www.zencenterofdenver.org"
+    }
+  ],
+  "crossLinks": [
+    {
+      "key": "heart-sutra",
+      "label": "Heart of Great Perfect Wisdom Sutra",
+      "note": "Different translations; SFZC uses Mel Weitsman/Red Pine lineage, ZCD uses Kapleau/Rochester lineage",
+      "sanghaIds": ["sfzc", "zcd"]
+    },
+    {
+      "key": "sandokai",
+      "label": "Harmony of Difference and Equality / Affirming Faith in Mind",
+      "note": "SFZC chants Sandokai (Shitou); ZCD chants Affirming Faith in Mind (Sengcan) — related but distinct texts",
+      "sanghaIds": ["sfzc", "zcd"]
+    },
+    {
+      "key": "jewel-mirror-samadhi",
+      "label": "Song of the Jewel Mirror Samadhi",
+      "note": "ZCD explicitly credits SFZC/Thomas Cleary translation as source",
+      "sanghaIds": ["sfzc", "zcd"]
+    },
+    {
+      "key": "fukanzazengi",
+      "label": "Fukanzazengi / Universal Recommendations for Zazen",
+      "note": "Both chant Dogen's text; different translations",
+      "sanghaIds": ["sfzc", "zcd"]
+    },
+    {
+      "key": "loving-kindness",
+      "label": "Loving Kindness / Metta Sutta",
+      "note": "Both draw from Pali source; different translations",
+      "sanghaIds": ["sfzc", "zcd"]
+    },
+    {
+      "key": "great-vows",
+      "label": "Four Bodhisattva Vows",
+      "note": "Universal across traditions; wording varies",
+      "sanghaIds": ["sfzc", "zcd"]
+    }
+  ]
+}

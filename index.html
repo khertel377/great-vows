@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Great Vows</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #05060f;
+    --text: #ffffff;
+    --text-next: rgba(255,255,255,0.35);
+    --text-dim: rgba(255,255,255,0.08);
+    --accent: #2a3fcc;
+    --gold: #c8a96e;
+    --gold-dim: rgba(200,169,110,0.4);
+    --ui: rgba(255,255,255,0.12);
+    --ui-hover: rgba(255,255,255,0.2);
+    --sangha-color: #2a3fcc;
+  }
+  html, body { height: 100%; background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; overflow: hidden; }
+
+  /* ── CANVAS ── */
+  #waveCanvas { position: fixed; bottom: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+  body::after { content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 1; opacity: 0.3; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E"); }
+
+  /* ── SCREENS ── */
+  .screen { position: fixed; inset: 0; z-index: 10; transition: opacity 0.6s ease; }
+  .screen.hidden { opacity: 0; pointer-events: none; }
+
+  /* ══════════════════════════════
+     INDEX SCREEN
+  ══════════════════════════════ */
+  #indexScreen {
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    padding: 56px 6vw 80px;
+    scrollbar-width: none;
+  }
+  #indexScreen::-webkit-scrollbar { display: none; }
+
+  .index-header { margin-bottom: 48px; }
+  .index-eyebrow {
+    font-size: 11px; font-weight: 500; letter-spacing: 0.25em;
+    text-transform: uppercase; color: var(--gold); margin-bottom: 12px;
+    opacity: 0; animation: fadeUp 0.8s ease 0.1s forwards;
+  }
+  .index-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(40px, 7vw, 80px);
+    line-height: 1; letter-spacing: -0.02em;
+    opacity: 0; animation: fadeUp 0.8s ease 0.2s forwards;
+  }
+  .index-sub {
+    font-family: 'DM Serif Display', serif; font-style: italic;
+    font-size: clamp(14px, 2vw, 18px); color: rgba(255,255,255,0.4);
+    margin-top: 8px;
+    opacity: 0; animation: fadeUp 0.8s ease 0.3s forwards;
+  }
+
+  /* ── SANGHA SWITCHER ── */
+  .sangha-switcher {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 48px;
+    flex-wrap: wrap;
+    opacity: 0; animation: fadeUp 0.8s ease 0.32s forwards;
+  }
+  .sangha-btn {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px; font-weight: 600;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    padding: 7px 14px;
+    border-radius: 2px;
+    border: 1px solid var(--ui);
+    background: transparent;
+    color: rgba(255,255,255,0.35);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .sangha-btn:hover {
+    border-color: var(--ui-hover);
+    color: rgba(255,255,255,0.7);
+  }
+  .sangha-btn.active {
+    border-color: var(--sangha-color);
+    color: #fff;
+    background: rgba(255,255,255,0.04);
+  }
+
+  /* service stacks */
+  .section-label {
+    font-size: 10px; font-weight: 600; letter-spacing: 0.3em;
+    text-transform: uppercase; color: var(--gold-dim);
+    margin-bottom: 16px; margin-top: 48px;
+    opacity: 0; animation: fadeUp 0.8s ease 0.35s forwards;
+  }
+  .service-cards {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 12px; margin-bottom: 8px;
+    opacity: 0; animation: fadeUp 0.8s ease 0.4s forwards;
+  }
+  .service-card {
+    border: 1px solid var(--gold-dim); border-radius: 3px;
+    padding: 18px 20px; cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .service-card:hover { background: rgba(200,169,110,0.06); border-color: var(--gold); }
+  .service-card-title { font-weight: 600; font-size: 15px; margin-bottom: 4px; }
+  .service-card-desc { font-size: 12px; color: rgba(255,255,255,0.35); }
+
+  /* chant list */
+  .chant-section { margin-top: 40px; opacity: 0; animation: fadeUp 0.8s ease 0.45s forwards; }
+  .chant-section-name {
+    font-size: 10px; font-weight: 600; letter-spacing: 0.3em;
+    text-transform: uppercase; color: rgba(255,255,255,0.2);
+    margin-bottom: 8px; padding-bottom: 8px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .chant-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,0.05);
+    cursor: pointer; transition: opacity 0.2s;
+  }
+  .chant-row:hover { opacity: 0.75; }
+  .chant-row-left { display: flex; flex-direction: column; gap: 3px; }
+  .chant-row-title { font-size: 15px; font-weight: 500; }
+  .chant-row-subtitle { font-size: 12px; color: rgba(255,255,255,0.35); font-style: italic; }
+  .chant-row-right { display: flex; align-items: center; gap: 8px; }
+  .chant-has-audio {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--gold); opacity: 0.7;
+  }
+  .chant-arrow { color: rgba(255,255,255,0.2); font-size: 14px; }
+
+  /* ══════════════════════════════
+     CHANT SCREEN
+  ══════════════════════════════ */
+  #chantScreen { background: transparent; }
+
+  #chantStage {
+    position: absolute; inset: 0; overflow: hidden;
+    display: flex; align-items: flex-start; padding-left: 8vw;
+  }
+  #chantTrack {
+    display: flex; flex-direction: column;
+    align-items: flex-start; will-change: transform;
+  }
+  .chant-line {
+    display: block; font-family: 'DM Sans', sans-serif;
+    font-size: clamp(24px, 5vw, 50px); font-weight: 700;
+    line-height: 1.3; letter-spacing: -0.01em;
+    white-space: pre-line; padding: 8px 0;
+    transition: opacity 0.5s ease, color 0.5s ease;
+  }
+  .chant-line.active { color: var(--text); opacity: 1; }
+  .chant-line.next   { color: var(--text-next); opacity: 1; }
+  .chant-line.past   { color: var(--text-dim); opacity: 1; }
+  .chant-line.future { color: var(--text-dim); opacity: 1; }
+  .section-gap { height: 28px; }
+
+  /* top bar */
+  .top-bar {
+    position: fixed; top: 0; left: 0; right: 0;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 20px 28px; z-index: 20;
+    background: linear-gradient(to bottom, rgba(5,6,15,0.9) 0%, transparent 100%);
+  }
+  .top-bar-left { display: flex; align-items: center; gap: 16px; }
+  .back-btn {
+    background: none; border: 1px solid var(--ui); color: rgba(255,255,255,0.5);
+    font-family: 'DM Sans', sans-serif; font-size: 12px;
+    letter-spacing: 0.1em; padding: 7px 14px; cursor: pointer;
+    border-radius: 2px; transition: all 0.2s;
+  }
+  .back-btn:hover { border-color: var(--ui-hover); color: #fff; }
+  .chant-title-display {
+    font-family: 'DM Serif Display', serif; font-style: italic;
+    font-size: 14px; color: rgba(255,255,255,0.3);
+  }
+  .lineage-tag {
+    font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+    color: rgba(255,255,255,0.15); font-weight: 500;
+  }
+
+  /* controls */
+  .controls {
+    position: fixed; bottom: 32px; right: 32px;
+    display: flex; gap: 10px; z-index: 20;
+  }
+  .ctrl-btn {
+    width: 42px; height: 42px; border-radius: 50%;
+    border: 1px solid var(--ui); background: rgba(5,6,15,0.6);
+    color: rgba(255,255,255,0.6); font-size: 15px;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s; backdrop-filter: blur(8px);
+  }
+  .ctrl-btn:hover { background: rgba(255,255,255,0.1); color: #fff; border-color: var(--ui-hover); }
+
+  /* progress */
+  .progress-bar { position: fixed; bottom: 0; left: 0; height: 2px; background: var(--accent); width: 0%; z-index: 20; opacity: 0.5; }
+
+  /* tap hint */
+  .tap-hint {
+    position: fixed; bottom: 38px; left: 50%; transform: translateX(-50%);
+    font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: rgba(255,255,255,0.15); z-index: 20;
+    animation: pulse 3s ease infinite; display: none;
+    pointer-events: none;
+  }
+
+  /* audio load banner */
+  .audio-banner {
+    position: fixed; bottom: 32px; left: 32px;
+    font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--gold); opacity: 0.7; z-index: 20;
+    display: none;
+  }
+
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes pulse { 0%, 100% { opacity: 0.15; } 50% { opacity: 0.4; } }
+</style>
+</head>
+<body>
+
+<canvas id="waveCanvas"></canvas>
+
+<!-- INDEX -->
+<div class="screen" id="indexScreen">
+  <div class="index-header">
+    <div class="index-eyebrow" id="indexEyebrow">Great Vows</div>
+    <div class="index-title" id="indexTitle">Daily Sutras</div>
+    <div class="index-sub" id="indexSub">Verses and Texts</div>
+  </div>
+
+  <!-- SANGHA SWITCHER -->
+  <div class="sangha-switcher" id="sanghaSwitcher"></div>
+
+  <div class="section-label" id="servicesLabel">Services</div>
+  <div class="service-cards" id="serviceCards"></div>
+  <div id="chantList"></div>
+</div>
+
+<!-- CHANT -->
+<div class="screen hidden" id="chantScreen">
+  <div class="top-bar">
+    <div class="top-bar-left">
+      <button class="back-btn" onclick="goIndex()">&#8592; Back</button>
+      <div class="chant-title-display" id="chantTitleDisplay"></div>
+    </div>
+    <div class="lineage-tag" id="lineageTag"></div>
+  </div>
+  <div id="chantStage">
+    <div id="chantTrack"></div>
+  </div>
+  <div class="controls" id="controls">
+    <button class="ctrl-btn" id="playPauseBtn" onclick="togglePlayPause()">&#9654;</button>
+    <button class="ctrl-btn" onclick="restartChant()">&#8635;</button>
+  </div>
+  <div class="progress-bar" id="progressBar"></div>
+  <div class="tap-hint" id="tapHint">tap to advance</div>
+  <div class="audio-banner" id="audioBanner">&#9679; Recording loaded</div>
+</div>
+
+<audio id="audioPlayer"></audio>
+
+<script>
+// ══════════════════════════════
+// STATE
+// ══════════════════════════════
+var MANIFEST = null;       // chantbook.json
+var SANGHAS = {};          // id -> sangha data object
+var currentSangha = null;  // active sangha object
+var currentChant = null;
+var currentIndex = 0;
+var hasAudio = false;
+var isPlaying = false;
+var tweenRaf = null;
+var isScrubbing = false;
+var scrubTimer = null;
+var lineTranslates = {};
+var currentBoost = 1.0;
+var currentSpeedBoost = 1.0;
+var audioEl = document.getElementById('audioPlayer');
+
+// ══════════════════════════════
+// BOOT — load manifest then sanghas
+// ══════════════════════════════
+fetch('chantbook.json')
+  .then(function(r) { return r.json(); })
+  .then(function(manifest) {
+    MANIFEST = manifest;
+    // fetch all sangha files in parallel
+    var fetches = manifest.sanghas.map(function(s) {
+      return fetch(s.file)
+        .then(function(r) { return r.json(); })
+        .then(function(data) { SANGHAS[s.id] = data; });
+    });
+    return Promise.all(fetches);
+  })
+  .then(function() {
+    buildSwitcher();
+    // default to first sangha
+    switchSangha(MANIFEST.sanghas[0].id);
+  })
+  .catch(function(err) {
+    console.error('Could not load chantbook.json:', err);
+    document.getElementById('indexScreen').innerHTML = '<div style="padding:60px;color:rgba(255,255,255,0.4);font-size:14px;">Could not load chantbook.json — make sure you are running from a local server (python3 -m http.server 8000) and the file structure matches the README.</div>';
+  });
+
+// ══════════════════════════════
+// SANGHA SWITCHER
+// ══════════════════════════════
+function buildSwitcher() {
+  var el = document.getElementById('sanghaSwitcher');
+  el.innerHTML = '';
+  MANIFEST.sanghas.forEach(function(s) {
+    var btn = document.createElement('button');
+    btn.className = 'sangha-btn';
+    btn.id = 'sangha-btn-' + s.id;
+    btn.textContent = s.shortName;
+    btn.onclick = function() { switchSangha(s.id); };
+    el.appendChild(btn);
+  });
+}
+
+function switchSangha(id) {
+  currentSangha = SANGHAS[id];
+  var meta = MANIFEST.sanghas.find(function(s) { return s.id === id; });
+
+  // update accent color from sangha color
+  document.documentElement.style.setProperty('--sangha-color', meta.color);
+  document.documentElement.style.setProperty('--accent', meta.color);
+
+  // update active button
+  MANIFEST.sanghas.forEach(function(s) {
+    var btn = document.getElementById('sangha-btn-' + s.id);
+    if (btn) btn.classList.toggle('active', s.id === id);
+  });
+
+  // update header
+  document.getElementById('indexTitle').textContent = currentSangha.name;
+  document.getElementById('indexSub').textContent = currentSangha.tradition || '';
+  document.getElementById('lineageTag').textContent = meta.shortName + ' \u00b7 ' + (currentSangha.lineage || []).join('/');
+
+  // rebuild index content for this sangha
+  buildIndex();
+}
+
+// ══════════════════════════════
+// INDEX
+// ══════════════════════════════
+function buildIndex() {
+  var DATA = currentSangha;
+
+  // services — only show services that have a description or audio
+  // (filters out stubs that aren't ready yet)
+  var svcEl = document.getElementById('serviceCards');
+  svcEl.innerHTML = '';
+  var servicesLabel = document.getElementById('servicesLabel');
+
+  var visibleServices = (DATA.services || []).filter(function(s) {
+    return s.description || s.audio;
+  });
+
+  servicesLabel.style.display = visibleServices.length > 0 ? '' : 'none';
+
+  visibleServices.forEach(function(svc) {
+    var card = document.createElement('div');
+    card.className = 'service-card';
+    card.innerHTML = '<div class="service-card-title">' + svc.title + '</div>'
+      + (svc.description ? '<div class="service-card-desc">' + svc.description + '</div>' : '');
+    card.onclick = function() { loadService(svc); };
+    svcEl.appendChild(card);
+  });
+
+  // chants grouped by section
+  var sections = {};
+  var sectionOrder = [];
+  (DATA.chants || []).forEach(function(c) {
+    var s = c.section || 'Other';
+    if (!sections[s]) { sections[s] = []; sectionOrder.push(s); }
+    sections[s].push(c);
+  });
+
+  var listEl = document.getElementById('chantList');
+  listEl.innerHTML = '';
+  sectionOrder.forEach(function(sectionName) {
+    var sec = document.createElement('div');
+    sec.className = 'chant-section';
+    sec.innerHTML = '<div class="chant-section-name">' + sectionName + '</div>';
+    sections[sectionName].forEach(function(c) {
+      var row = document.createElement('div');
+      row.className = 'chant-row';
+      row.innerHTML = '<div class="chant-row-left">'
+        + '<div class="chant-row-title">' + c.title + '</div>'
+        + (c.subtitle ? '<div class="chant-row-subtitle">' + c.subtitle + '</div>' : '')
+        + '</div>'
+        + '<div class="chant-row-right">'
+        + (c.audio ? '<div class="chant-has-audio" title="Audio available"></div>' : '')
+        + '<div class="chant-arrow">›</div>'
+        + '</div>';
+      row.onclick = function() { openChant(c); };
+      sec.appendChild(row);
+    });
+    listEl.appendChild(sec);
+  });
+}
+
+// ══════════════════════════════
+// SERVICE LOADER
+// builds a virtual chant from a service's items array
+// handles type:chant items; skips silence/ceremonial for now
+// ══════════════════════════════
+function loadService(svc) {
+  var DATA = currentSangha;
+  var lines = [];
+
+  // support both old format (chants:[]) and new format (items:[])
+  var ids = svc.chants || [];
+  if (svc.items) {
+    ids = svc.items
+      .filter(function(item) { return item.type === 'chant'; })
+      .map(function(item) { return item.id; });
+  }
+
+  ids.forEach(function(id, i) {
+    var chant = DATA.chants.find(function(c) { return c.id === id; });
+    if (!chant) return;
+    if (i > 0) { lines.push({ text: null }); lines.push({ text: null }); }
+    chant.lines.forEach(function(l) { lines.push(l); });
+  });
+
+  // use the service's own recording if it has one
+  var virtual = {
+    id: svc.id,
+    title: svc.title,
+    audio: svc.audio || null,
+    lines: lines
+  };
+  openChant(virtual);
+}
+
+// ══════════════════════════════
+// OPEN CHANT
+// ══════════════════════════════
+function openChant(chant) {
+  currentChant = chant;
+  currentIndex = 0;
+  hasAudio = false;
+  isPlaying = false;
+  lineTranslates = {};
+  window._scrollAccum = 0;
+  if (tweenRaf) { cancelAnimationFrame(tweenRaf); tweenRaf = null; }
+  audioEl.pause();
+  audioEl.src = '';
+
+  document.getElementById('chantTitleDisplay').textContent = chant.title;
+  document.getElementById('playPauseBtn').innerHTML = '&#9654;';
+  document.getElementById('progressBar').style.width = '0%';
+  document.getElementById('tapHint').style.display = 'none';
+  document.getElementById('audioBanner').style.display = 'none';
+
+  document.getElementById('indexScreen').classList.add('hidden');
+  document.getElementById('chantScreen').classList.remove('hidden');
+
+  buildTrack();
+
+  requestAnimationFrame(function() {
+    requestAnimationFrame(function() {
+      cacheTranslates();
+      var firstIdx = firstTextIndex();
+      setClasses(firstIdx);
+      applyTranslate(lineTranslates[firstIdx] || 0);
+
+      if (chant.audio) {
+        tryAutoLoad(chant.audio);
+      } else {
+        startTapMode();
+      }
+    });
+  });
+}
+
+function goIndex() {
+  if (tweenRaf) { cancelAnimationFrame(tweenRaf); tweenRaf = null; }
+  audioEl.pause();
+  isPlaying = false;
+  document.getElementById('chantScreen').classList.add('hidden');
+  document.getElementById('indexScreen').classList.remove('hidden');
+}
+
+// ══════════════════════════════
+// AUDIO
+// ══════════════════════════════
+function tryAutoLoad(filename) {
+  audioEl.src = filename;
+  audioEl.load();
+
+  function onReady() {
+    cleanup();
+    hasAudio = true;
+    document.getElementById('audioBanner').style.display = 'block';
+    document.getElementById('tapHint').style.display = 'none';
+    audioEl.play();
+    isPlaying = true;
+    document.getElementById('playPauseBtn').innerHTML = '&#9646;&#9646;';
+    startTween();
+    audioEl.addEventListener('ended', onAudioEnd);
+  }
+
+  function onErr() {
+    cleanup();
+    audioEl.src = '';
+    startTapMode();
+  }
+
+  function cleanup() {
+    audioEl.removeEventListener('canplaythrough', onReady);
+    audioEl.removeEventListener('error', onErr);
+  }
+
+  audioEl.addEventListener('canplaythrough', onReady, { once: true });
+  audioEl.addEventListener('error', onErr, { once: true });
+}
+
+function onAudioEnd() { endChant(); }
+
+// ══════════════════════════════
+// TAP MODE
+// ══════════════════════════════
+function startTapMode() {
+  document.getElementById('tapHint').style.display = 'block';
+}
+
+// ══════════════════════════════
+// BUILD TRACK DOM
+// ══════════════════════════════
+function buildTrack() {
+  var track = document.getElementById('chantTrack');
+  track.innerHTML = '';
+  var lines = currentChant.lines;
+  for (var i = 0; i < lines.length; i++) {
+    if (lines[i].text === null) {
+      var gap = document.createElement('div');
+      gap.className = 'section-gap';
+      track.appendChild(gap);
+    } else {
+      var el = document.createElement('span');
+      el.className = 'chant-line future';
+      el.id = 'line-' + i;
+      el.textContent = lines[i].text;
+      track.appendChild(el);
+    }
+  }
+}
+
+// ══════════════════════════════
+// POSITION CACHE
+// ══════════════════════════════
+function getTranslateForLine(idx) {
+  var el = document.getElementById('line-' + idx);
+  if (!el) return 0;
+  return window.innerHeight / 2 - el.offsetTop - el.offsetHeight / 2;
+}
+
+function cacheTranslates() {
+  var track = document.getElementById('chantTrack');
+  track.style.transform = 'translateY(0px)';
+  var lines = currentChant.lines;
+  for (var i = 0; i < lines.length; i++) {
+    if (lines[i].text !== null) {
+      lineTranslates[i] = getTranslateForLine(i);
+    }
+  }
+}
+
+function applyTranslate(y) {
+  document.getElementById('chantTrack').style.transform = 'translateY(' + y + 'px)';
+}
+
+// ══════════════════════════════
+// LINE HELPERS
+// ══════════════════════════════
+function firstTextIndex() {
+  var lines = currentChant.lines;
+  for (var i = 0; i < lines.length; i++) {
+    if (lines[i].text !== null) return i;
+  }
+  return 0;
+}
+
+function nextTextIndex(from) {
+  var lines = currentChant.lines;
+  for (var i = from + 1; i < lines.length; i++) {
+    if (lines[i].text !== null) return i;
+  }
+  return -1;
+}
+
+function setClasses(activeIdx) {
+  currentIndex = activeIdx;
+  var nextIdx = nextTextIndex(activeIdx);
+  var lines = currentChant.lines;
+  for (var i = 0; i < lines.length; i++) {
+    if (lines[i].text === null) continue;
+    var el = document.getElementById('line-' + i);
+    if (!el) continue;
+    if (i < activeIdx)        el.className = 'chant-line past';
+    else if (i === activeIdx) el.className = 'chant-line active';
+    else if (i === nextIdx)   el.className = 'chant-line next';
+    else                      el.className = 'chant-line future';
+  }
+}
+
+// ══════════════════════════════
+// TWEEN ENGINE
+// ══════════════════════════════
+function startTween() {
+  if (tweenRaf) cancelAnimationFrame(tweenRaf);
+
+  function getTextLines() {
+    var out = [];
+    var lines = currentChant.lines;
+    for (var i = 0; i < lines.length; i++) {
+      if (lines[i].text !== null && lines[i].cueIn !== undefined) {
+        out.push({ idx: i, cueIn: lines[i].cueIn });
+      }
+    }
+    return out;
+  }
+
+  function tick() {
+    var t = audioEl.currentTime;
+    var dur = audioEl.duration || 68;
+    document.getElementById('progressBar').style.width = ((t / dur) * 100) + '%';
+
+    var textLines = getTextLines();
+    var curLine = textLines[0], nextLine = null;
+    for (var i = 0; i < textLines.length; i++) {
+      if (t >= textLines[i].cueIn) {
+        curLine = textLines[i];
+        nextLine = textLines[i + 1] || null;
+      }
+    }
+
+    setClasses(curLine.idx);
+
+    var fromY = lineTranslates[curLine.idx] || 0;
+    var toY = nextLine ? (lineTranslates[nextLine.idx] || fromY) : fromY;
+    var translateY;
+
+    if (nextLine) {
+      var p = Math.max(0, Math.min(1, (t - curLine.cueIn) / (nextLine.cueIn - curLine.cueIn)));
+      var eased = p < 0.5 ? 4*p*p*p : 1 - Math.pow(-2*p+2, 3)/2;
+      translateY = fromY + (toY - fromY) * eased;
+    } else {
+      translateY = fromY;
+    }
+
+    applyTranslate(translateY);
+    tweenRaf = requestAnimationFrame(tick);
+  }
+
+  tweenRaf = requestAnimationFrame(tick);
+}
+
+// ══════════════════════════════
+// TAP / CLICK HANDLER
+// ══════════════════════════════
+document.getElementById('chantScreen').addEventListener('click', function(e) {
+  if (e.target.closest('.ctrl-btn') || e.target.closest('.back-btn')) return;
+  if (hasAudio) return;
+  var next = nextTextIndex(currentIndex);
+  if (next === -1) return;
+  setClasses(next);
+  applyTranslate(lineTranslates[next] || 0);
+  var lines = currentChant.lines;
+  var textLines = lines.filter(function(l) { return l.text !== null; });
+  var pos = 0;
+  for (var i = 0; i < textLines.length; i++) {
+    if (lines.indexOf(textLines[i]) >= next) { pos = i; break; }
+  }
+  document.getElementById('progressBar').style.width = ((pos / (textLines.length - 1)) * 100) + '%';
+});
+
+document.addEventListener('keydown', function(e) {
+  var cs = document.getElementById('chantScreen');
+  if (cs.classList.contains('hidden')) return;
+  if (e.code === 'Space' || e.code === 'ArrowRight') {
+    e.preventDefault();
+    if (!hasAudio) {
+      var next = nextTextIndex(currentIndex);
+      if (next !== -1) { setClasses(next); applyTranslate(lineTranslates[next] || 0); }
+    }
+  }
+  if (e.code === 'ArrowLeft' && hasAudio) {
+    audioEl.currentTime = Math.max(0, audioEl.currentTime - 5);
+  }
+});
+
+// ══════════════════════════════
+// SCROLL TO SCRUB
+// ══════════════════════════════
+document.getElementById('chantScreen').addEventListener('wheel', function(e) {
+  e.preventDefault();
+  isScrubbing = true;
+
+  if (hasAudio) {
+    audioEl.muted = true;
+    var raw = e.deltaY;
+    var delta = Math.sign(raw) * Math.min(Math.abs(raw) * 0.04, 3.0);
+    var newTime = Math.max(0, Math.min(audioEl.duration || 68, audioEl.currentTime + delta));
+    audioEl.currentTime = newTime;
+
+    if (!isPlaying) {
+      var lines = currentChant.lines;
+      var t = newTime;
+      var bestIdx = firstTextIndex();
+      for (var i = 0; i < lines.length; i++) {
+        if (lines[i].text !== null && lines[i].cueIn !== undefined && t >= lines[i].cueIn) {
+          bestIdx = i;
+        }
+      }
+      setClasses(bestIdx);
+      applyTranslate(lineTranslates[bestIdx] || 0);
+      document.getElementById('progressBar').style.width = ((t / (audioEl.duration || 68)) * 100) + '%';
+    }
+  } else {
+    if (!window._scrollAccum) window._scrollAccum = 0;
+    window._scrollAccum += e.deltaY;
+    var threshold = 40;
+    if (window._scrollAccum > threshold) {
+      window._scrollAccum = 0;
+      var next = nextTextIndex(currentIndex);
+      if (next !== -1) { setClasses(next); applyTranslate(lineTranslates[next] || 0); }
+    } else if (window._scrollAccum < -threshold) {
+      window._scrollAccum = 0;
+      var lines2 = currentChant.lines;
+      var prev = -1;
+      for (var j = currentIndex - 1; j >= 0; j--) {
+        if (lines2[j] && lines2[j].text !== null) { prev = j; break; }
+      }
+      if (prev !== -1) { setClasses(prev); applyTranslate(lineTranslates[prev] || 0); }
+    }
+  }
+
+  if (scrubTimer) clearTimeout(scrubTimer);
+  scrubTimer = setTimeout(function() {
+    isScrubbing = false;
+    if (hasAudio) audioEl.muted = false;
+  }, 350);
+}, { passive: false });
+
+// ══════════════════════════════
+// CONTROLS
+// ══════════════════════════════
+function togglePlayPause() {
+  if (!hasAudio) return;
+  if (isPlaying) {
+    audioEl.pause(); isPlaying = false;
+    if (tweenRaf) { cancelAnimationFrame(tweenRaf); tweenRaf = null; }
+    document.getElementById('playPauseBtn').innerHTML = '&#9654;';
+  } else {
+    audioEl.play(); isPlaying = true;
+    document.getElementById('playPauseBtn').innerHTML = '&#9646;&#9646;';
+    startTween();
+  }
+}
+
+function restartChant() {
+  if (tweenRaf) { cancelAnimationFrame(tweenRaf); tweenRaf = null; }
+  var firstIdx = firstTextIndex();
+  setClasses(firstIdx);
+  applyTranslate(lineTranslates[firstIdx] || 0);
+  document.getElementById('progressBar').style.width = '0%';
+  if (hasAudio) {
+    audioEl.currentTime = 0;
+    audioEl.play(); isPlaying = true;
+    document.getElementById('playPauseBtn').innerHTML = '&#9646;&#9646;';
+    startTween();
+  }
+}
+
+function endChant() {
+  if (tweenRaf) { cancelAnimationFrame(tweenRaf); tweenRaf = null; }
+  isPlaying = false;
+  document.getElementById('playPauseBtn').innerHTML = '&#9654;';
+}
+
+// ══════════════════════════════
+// WAVES
+// ══════════════════════════════
+var canvas = document.getElementById('waveCanvas');
+var ctx = canvas.getContext('2d');
+var waves = [
+  { amp: 0.18, freq: 0.0018, speed: 0.000004, offset: 0,   color: '#0a0e2a', yBase: 0.55, phase: 0 },
+  { amp: 0.14, freq: 0.0022, speed: 0.000006, offset: 2.1, color: '#0d1540', yBase: 0.62, phase: 0 },
+  { amp: 0.10, freq: 0.0028, speed: 0.000008, offset: 4.3, color: '#142060', yBase: 0.70, phase: 0 },
+  { amp: 0.07, freq: 0.0035, speed: 0.000010, offset: 1.1, color: '#1a2a8a', yBase: 0.78, phase: 0 }
+];
+
+function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+window.addEventListener('resize', function() { resizeCanvas(); if (currentChant) { cacheTranslates(); } });
+resizeCanvas();
+
+function drawWaves() {
+  var W = canvas.width, H = canvas.height;
+  ctx.clearRect(0, 0, W, H);
+
+  var boostTarget = isScrubbing ? 1.15 : 1.0;
+  var speedTarget = isScrubbing ? 1.6 : 1.0;
+  var lerpRate = isScrubbing ? 0.10 : 0.03;
+  currentBoost += (boostTarget - currentBoost) * lerpRate;
+  currentSpeedBoost += (speedTarget - currentSpeedBoost) * lerpRate;
+
+  for (var i = 0; i < waves.length; i++) {
+    var w = waves[i];
+    w.phase += w.speed * currentSpeedBoost;
+    ctx.beginPath(); ctx.moveTo(0, H);
+    for (var x = 0; x <= W; x += 3) {
+      var y = w.yBase * H
+        + Math.sin(x * w.freq + w.phase * 1000 + w.offset) * w.amp * currentBoost * H
+        + Math.sin(x * w.freq * 1.7 + w.phase * 700 + w.offset + 1) * w.amp * currentBoost * 0.4 * H;
+      ctx.lineTo(x, y);
+    }
+    ctx.lineTo(W, H); ctx.closePath();
+    ctx.fillStyle = w.color; ctx.fill();
+  }
+  requestAnimationFrame(drawWaves);
+}
+drawWaves();
+</script>
+</body>
+</html>
