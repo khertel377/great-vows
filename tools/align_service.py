@@ -101,9 +101,12 @@ def main():
         print(f"Error: service '{args.service_id}' has no audio field", file=sys.stderr)
         sys.exit(1)
 
-    # Build chant lookup and ordered chant list from service items
+    # Build chant lookup and ordered chant list
     chant_lookup = {c["id"]: c for c in data.get("chants", [])}
-    chant_ids = [item["id"] for item in service.get("items", []) if item.get("type") == "chant"]
+    if service.get("recordingChants"):
+        chant_ids = service["recordingChants"]
+    else:
+        chant_ids = [item["id"] for item in service.get("items", []) if item.get("type") == "chant"]
 
     ordered_chants = []
     for cid in chant_ids:
