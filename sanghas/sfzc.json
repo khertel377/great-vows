@@ -2543,6 +2543,494 @@
           "type": "chant",
           "id": "great-vows"
         }
+      ],
+      "timestampMap": [
+        {
+          "chantId": "purification",
+          "startTime": 241.72,
+          "lines": [
+            {
+              "lineIndex": 0,
+              "cueIn": 241.72
+            },
+            {
+              "lineIndex": 1,
+              "cueIn": 249.32
+            },
+            {
+              "lineIndex": 2,
+              "cueIn": 249.32
+            },
+            {
+              "lineIndex": 3,
+              "cueIn": 249.32
+            }
+          ]
+        },
+        {
+          "chantId": "heart-sutra",
+          "startTime": 250.68,
+          "lines": [
+            {
+              "lineIndex": 0,
+              "cueIn": 250.68
+            },
+            {
+              "lineIndex": 1,
+              "cueIn": 255.32
+            },
+            {
+              "lineIndex": 2,
+              "cueIn": 260.58
+            },
+            {
+              "lineIndex": 3,
+              "cueIn": 264.8
+            },
+            {
+              "lineIndex": 5,
+              "cueIn": 268.08
+            },
+            {
+              "lineIndex": 6,
+              "cueIn": 272.28
+            },
+            {
+              "lineIndex": 7,
+              "cueIn": 276.16
+            },
+            {
+              "lineIndex": 8,
+              "cueIn": 279.56
+            },
+            {
+              "lineIndex": 9,
+              "cueIn": 282.4
+            },
+            {
+              "lineIndex": 10,
+              "cueIn": 286.34
+            },
+            {
+              "lineIndex": 12,
+              "cueIn": 289.24
+            },
+            {
+              "lineIndex": 13,
+              "cueIn": 294.2
+            },
+            {
+              "lineIndex": 14,
+              "cueIn": 297.04
+            },
+            {
+              "lineIndex": 15,
+              "cueIn": 297.04
+            },
+            {
+              "lineIndex": 17,
+              "cueIn": 302.7
+            },
+            {
+              "lineIndex": 18,
+              "cueIn": 305.76
+            },
+            {
+              "lineIndex": 19,
+              "cueIn": 306.96
+            },
+            {
+              "lineIndex": 20,
+              "cueIn": 308.34
+            },
+            {
+              "lineIndex": 21,
+              "cueIn": 309.46
+            },
+            {
+              "lineIndex": 22,
+              "cueIn": 310.62
+            },
+            {
+              "lineIndex": 23,
+              "cueIn": 312.72
+            },
+            {
+              "lineIndex": 24,
+              "cueIn": 313.74
+            },
+            {
+              "lineIndex": 25,
+              "cueIn": 314.62
+            },
+            {
+              "lineIndex": 27,
+              "cueIn": 329.8
+            },
+            {
+              "lineIndex": 28,
+              "cueIn": 331.52
+            },
+            {
+              "lineIndex": 29,
+              "cueIn": 334.64
+            },
+            {
+              "lineIndex": 30,
+              "cueIn": 336.92
+            },
+            {
+              "lineIndex": 31,
+              "cueIn": 340.32
+            },
+            {
+              "lineIndex": 32,
+              "cueIn": 341.66
+            },
+            {
+              "lineIndex": 34,
+              "cueIn": 348.12
+            },
+            {
+              "lineIndex": 35,
+              "cueIn": 349.78
+            },
+            {
+              "lineIndex": 36,
+              "cueIn": 356.16
+            },
+            {
+              "lineIndex": 37,
+              "cueIn": 357.74
+            },
+            {
+              "lineIndex": 38,
+              "cueIn": 362.86
+            },
+            {
+              "lineIndex": 39,
+              "cueIn": 365.88
+            },
+            {
+              "lineIndex": 41,
+              "cueIn": 368.86
+            },
+            {
+              "lineIndex": 42,
+              "cueIn": 372.16
+            },
+            {
+              "lineIndex": 43,
+              "cueIn": 375.92
+            },
+            {
+              "lineIndex": 44,
+              "cueIn": 379.76
+            },
+            {
+              "lineIndex": 46,
+              "cueIn": 382.46
+            },
+            {
+              "lineIndex": 47,
+              "cueIn": 386.26
+            },
+            {
+              "lineIndex": 48,
+              "cueIn": 387.32
+            },
+            {
+              "lineIndex": 49,
+              "cueIn": 390.32
+            },
+            {
+              "lineIndex": 50,
+              "cueIn": 392.98
+            },
+            {
+              "lineIndex": 51,
+              "cueIn": 397.46
+            },
+            {
+              "lineIndex": 52,
+              "cueIn": 399.44
+            },
+            {
+              "lineIndex": 54,
+              "cueIn": 402.22
+            },
+            {
+              "lineIndex": 55,
+              "cueIn": 403.74
+            },
+            {
+              "lineIndex": 57,
+              "cueIn": 411.58
+            },
+            {
+              "lineIndex": 58,
+              "cueIn": 414.96
+            }
+          ]
+        },
+        {
+          "chantId": "maka-hannya",
+          "startTime": 421.6,
+          "lines": [
+            {
+              "lineIndex": 0,
+              "cueIn": 421.6
+            },
+            {
+              "lineIndex": 1,
+              "cueIn": 422.78
+            },
+            {
+              "lineIndex": 2,
+              "cueIn": 423.28
+            },
+            {
+              "lineIndex": 3,
+              "cueIn": 424.56
+            },
+            {
+              "lineIndex": 5,
+              "cueIn": 432.62
+            },
+            {
+              "lineIndex": 6,
+              "cueIn": 434.3
+            },
+            {
+              "lineIndex": 7,
+              "cueIn": 463.22
+            },
+            {
+              "lineIndex": 8,
+              "cueIn": 466.0
+            },
+            {
+              "lineIndex": 9,
+              "cueIn": 466.78
+            },
+            {
+              "lineIndex": 11,
+              "cueIn": 469.6
+            },
+            {
+              "lineIndex": 12,
+              "cueIn": 477.98
+            },
+            {
+              "lineIndex": 13,
+              "cueIn": 478.22
+            },
+            {
+              "lineIndex": 14,
+              "cueIn": 480.28
+            },
+            {
+              "lineIndex": 16,
+              "cueIn": 482.8
+            },
+            {
+              "lineIndex": 17,
+              "cueIn": 483.54
+            },
+            {
+              "lineIndex": 18,
+              "cueIn": 487.26
+            },
+            {
+              "lineIndex": 19,
+              "cueIn": 508.72
+            },
+            {
+              "lineIndex": 20,
+              "cueIn": 510.32
+            },
+            {
+              "lineIndex": 22,
+              "cueIn": 522.62
+            },
+            {
+              "lineIndex": 23,
+              "cueIn": 538.32
+            },
+            {
+              "lineIndex": 24,
+              "cueIn": 541.32
+            },
+            {
+              "lineIndex": 25,
+              "cueIn": 542.68
+            },
+            {
+              "lineIndex": 27,
+              "cueIn": 564.5
+            },
+            {
+              "lineIndex": 28,
+              "cueIn": 565.78
+            },
+            {
+              "lineIndex": 29,
+              "cueIn": 566.54
+            },
+            {
+              "lineIndex": 30,
+              "cueIn": 566.54
+            },
+            {
+              "lineIndex": 31,
+              "cueIn": 568.56
+            },
+            {
+              "lineIndex": 33,
+              "cueIn": 571.74
+            },
+            {
+              "lineIndex": 34,
+              "cueIn": 573.72
+            },
+            {
+              "lineIndex": 36,
+              "cueIn": 573.72
+            },
+            {
+              "lineIndex": 37,
+              "cueIn": 574.1
+            },
+            {
+              "lineIndex": 38,
+              "cueIn": 576.34
+            },
+            {
+              "lineIndex": 39,
+              "cueIn": 584.82
+            },
+            {
+              "lineIndex": 41,
+              "cueIn": 592.34
+            },
+            {
+              "lineIndex": 42,
+              "cueIn": 605.9
+            },
+            {
+              "lineIndex": 44,
+              "cueIn": 612.04
+            },
+            {
+              "lineIndex": 45,
+              "cueIn": 612.26
+            },
+            {
+              "lineIndex": 46,
+              "cueIn": 613.62
+            }
+          ]
+        },
+        {
+          "chantId": "enmei-jukku",
+          "startTime": 614.52,
+          "lines": [
+            {
+              "lineIndex": 0,
+              "cueIn": 614.52
+            },
+            {
+              "lineIndex": 1,
+              "cueIn": 615.0
+            },
+            {
+              "lineIndex": 2,
+              "cueIn": 615.0
+            },
+            {
+              "lineIndex": 3,
+              "cueIn": 616.66
+            },
+            {
+              "lineIndex": 4,
+              "cueIn": 619.56
+            },
+            {
+              "lineIndex": 5,
+              "cueIn": 620.48
+            },
+            {
+              "lineIndex": 6,
+              "cueIn": 622.62
+            },
+            {
+              "lineIndex": 7,
+              "cueIn": 624.22
+            },
+            {
+              "lineIndex": 8,
+              "cueIn": 624.22
+            },
+            {
+              "lineIndex": 9,
+              "cueIn": 624.22
+            }
+          ]
+        },
+        {
+          "chantId": "great-vows",
+          "startTime": 625.6,
+          "lines": [
+            {
+              "lineIndex": 0,
+              "cueIn": 625.6
+            },
+            {
+              "lineIndex": 1,
+              "cueIn": 627.5
+            },
+            {
+              "lineIndex": 2,
+              "cueIn": 630.14
+            },
+            {
+              "lineIndex": 3,
+              "cueIn": 632.38
+            },
+            {
+              "lineIndex": 5,
+              "cueIn": 633.6
+            },
+            {
+              "lineIndex": 6,
+              "cueIn": 636.04
+            },
+            {
+              "lineIndex": 8,
+              "cueIn": 639.8
+            },
+            {
+              "lineIndex": 9,
+              "cueIn": 639.88
+            },
+            {
+              "lineIndex": 11,
+              "cueIn": 642.58
+            },
+            {
+              "lineIndex": 12,
+              "cueIn": 644.58
+            },
+            {
+              "lineIndex": 14,
+              "cueIn": 649.56
+            },
+            {
+              "lineIndex": 15,
+              "cueIn": 651.76
+            }
+          ]
+        }
       ]
     },
     {
