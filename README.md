@@ -7,9 +7,11 @@
 3. Match the filename to the `"audio"` field in `chants.json`
 4. Run a local server from this folder:
    ```
-   python3 -m http.server 8000
+   npx serve .
    ```
-5. Open http://localhost:8000 in Chrome
+5. Open http://localhost:3000 in your browser
+
+> **Note:** Do not use `python3 -m http.server` — it does not support HTTP range requests, which are required for seeking in MP4 files.
 
 ### Adding Audio
 In `chants.json`, find the chant you have a recording for and set:
