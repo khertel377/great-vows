@@ -3109,38 +3109,167 @@
       "dayOfWeek": 1,
       "audio": "audio/sfzc/MorningService_Monday.mp4",
       "duration": 1180,
-      "cues": [
-        { "time": 0,   "emoji": "〰️", "text": "Rolldown" },
-        { "time": 39,  "emoji": "⬇️", "text": "Prostrate" },
-        { "time": 47,  "emoji": "⬆️", "text": "Rise" },
-        { "time": 52,  "emoji": "⬇️", "text": "Prostrate" },
-        { "time": 59,  "emoji": "⬆️", "text": "Rise" },
-        { "time": 65,  "emoji": "⬇️", "text": "Prostrate" },
-        { "time": 71,  "emoji": "⬆️", "text": "Rise" },
-        { "time": 78,  "emoji": "⬇️", "text": "Prostrate" },
-        { "time": 85,  "emoji": "⬆️", "text": "Rise" },
-        { "time": 91,  "emoji": "⬇️", "text": "Prostrate" },
-        { "time": 98,  "emoji": "⬆️", "text": "Rise" },
-        { "time": 104, "emoji": "⬇️", "text": "Prostrate" },
-        { "time": 111, "emoji": "⬆️", "text": "Rise" },
-        { "time": 117, "emoji": "⬇️", "text": "Prostrate" },
-        { "time": 124, "emoji": "⬆️", "text": "Rise" },
-        { "time": 130, "emoji": "⬇️", "text": "Prostrate" },
-        { "time": 137, "emoji": "⬆️", "text": "Rise" },
-        { "time": 145, "emoji": "⬇️", "text": "Prostrate" },
-        { "time": 150, "emoji": "⬆️ 🙇", "text": "Rise — final standing bow" },
-        { "time": 195, "emoji": "🔔", "text": "Chanting service" },
-        { "time": 195, "emoji": "🧎", "text": "Move to seiza" },
-        { "time": 195, "emoji": "📖", "text": "Raise chantbook" },
-        { "time": 210, "emoji": "🔔", "text": "" },
-        { "time": 225, "emoji": "🔔", "text": "" },
-        { "time": 240, "emoji": "🔔", "text": "" },
-        { "time": 251, "emoji": "📖", "text": "Heart of Great Perfect Wisdom Sutra" }
-      ],
       "items": [
         {
           "type": "ceremonial",
-          "label": "Opening ceremony and prostrations"
+          "label": "Opening ceremony and prostrations",
+          "cues": [
+            {
+              "time": 0,
+              "emoji": "〰️",
+              "text": "Prepare to bow"
+            },
+            {
+              "time": 39,
+              "emoji": "⬇️",
+              "text": "Prostrate"
+            },
+            {
+              "time": 47,
+              "emoji": "⬆️",
+              "text": "Rise"
+            },
+            {
+              "time": 52,
+              "emoji": "⬇️",
+              "text": "Prostrate"
+            },
+            {
+              "time": 59,
+              "emoji": "⬆️",
+              "text": "Rise"
+            },
+            {
+              "time": 65,
+              "emoji": "⬇️",
+              "text": "Prostrate"
+            },
+            {
+              "time": 72,
+              "emoji": "⬆️",
+              "text": "Rise"
+            },
+            {
+              "time": 78,
+              "emoji": "⬇️",
+              "text": "Prostrate"
+            },
+            {
+              "time": 85,
+              "emoji": "⬆️",
+              "text": "Rise"
+            },
+            {
+              "time": 91,
+              "emoji": "⬇️",
+              "text": "Prostrate"
+            },
+            {
+              "time": 98,
+              "emoji": "⬆️",
+              "text": "Rise"
+            },
+            {
+              "time": 104,
+              "emoji": "⬇️",
+              "text": "Prostrate"
+            },
+            {
+              "time": 111,
+              "emoji": "⬆️",
+              "text": "Rise"
+            },
+            {
+              "time": 117,
+              "emoji": "⬇️",
+              "text": "Prostrate"
+            },
+            {
+              "time": 124,
+              "emoji": "⬆️",
+              "text": "Rise"
+            },
+            {
+              "time": 130,
+              "emoji": "⬇️",
+              "text": "Prostrate"
+            },
+            {
+              "time": 137,
+              "emoji": "⬆️",
+              "text": "Rise"
+            },
+            {
+              "time": 145,
+              "emoji": "⬇️",
+              "text": "Prostrate"
+            },
+            {
+              "time": 150,
+              "emoji": "⬆️",
+              "text": "Rise"
+            },
+            {
+              "time": 155,
+              "emoji": "🙇",
+              "text": "Final bow"
+            },
+            {
+              "time": 160,
+              "emoji": "🪷",
+              "text": "Offering flowers"
+            },
+            {
+              "time": 168,
+              "emoji": "🕯️",
+              "text": "Offering light"
+            },
+            {
+              "time": 176,
+              "emoji": "🫧",
+              "text": "Offering incense"
+            },
+            {
+              "time": 184,
+              "emoji": "🙏",
+              "text": "Offering heart"
+            },
+            {
+              "time": 195,
+              "emoji": "🔔",
+              "text": "Prepare for chanting"
+            },
+            {
+              "time": 200,
+              "emoji": "🧎",
+              "text": "Move to seiza"
+            },
+            {
+              "time": 205,
+              "emoji": "📖",
+              "text": "Raise chantbook"
+            },
+            {
+              "time": 210,
+              "emoji": "🔔",
+              "text": ""
+            },
+            {
+              "time": 225,
+              "emoji": "🔔",
+              "text": ""
+            },
+            {
+              "time": 240,
+              "emoji": "🔔",
+              "text": ""
+            },
+            {
+              "time": 248,
+              "emoji": "📖",
+              "text": "Heart of Great Perfect Wisdom Sutra"
+            }
+          ]
         },
         {
           "type": "doshi",
