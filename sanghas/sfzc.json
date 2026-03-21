@@ -3162,6 +3162,1080 @@
         "names-buddhas-ancestors",
         "names-women-ancestors",
         "after-dedication"
+      ],
+      "timestampMap": [
+        {
+          "chantId": "heart-sutra",
+          "startTime": 251.95,
+          "lines": [
+            {
+              "lineIndex": 0,
+              "cueIn": 251.95
+            },
+            {
+              "lineIndex": 1,
+              "cueIn": 255.4
+            },
+            {
+              "lineIndex": 2,
+              "cueIn": 260.48
+            },
+            {
+              "lineIndex": 3,
+              "cueIn": 264.8
+            },
+            {
+              "lineIndex": 5,
+              "cueIn": 268.22
+            },
+            {
+              "lineIndex": 6,
+              "cueIn": 272.3
+            },
+            {
+              "lineIndex": 7,
+              "cueIn": 276.18
+            },
+            {
+              "lineIndex": 8,
+              "cueIn": 278.58
+            },
+            {
+              "lineIndex": 9,
+              "cueIn": 282.4
+            },
+            {
+              "lineIndex": 10,
+              "cueIn": 286.34
+            },
+            {
+              "lineIndex": 12,
+              "cueIn": 289.24
+            },
+            {
+              "lineIndex": 13,
+              "cueIn": 294.2
+            },
+            {
+              "lineIndex": 14,
+              "cueIn": 297.02
+            },
+            {
+              "lineIndex": 15,
+              "cueIn": 297.02
+            },
+            {
+              "lineIndex": 17,
+              "cueIn": 302.72
+            },
+            {
+              "lineIndex": 18,
+              "cueIn": 305.76
+            },
+            {
+              "lineIndex": 19,
+              "cueIn": 307.0
+            },
+            {
+              "lineIndex": 20,
+              "cueIn": 308.48
+            },
+            {
+              "lineIndex": 21,
+              "cueIn": 309.8
+            },
+            {
+              "lineIndex": 22,
+              "cueIn": 309.8
+            },
+            {
+              "lineIndex": 23,
+              "cueIn": 312.72
+            },
+            {
+              "lineIndex": 24,
+              "cueIn": 313.78
+            },
+            {
+              "lineIndex": 25,
+              "cueIn": 314.88
+            },
+            {
+              "lineIndex": 27,
+              "cueIn": 329.82
+            },
+            {
+              "lineIndex": 28,
+              "cueIn": 331.48
+            },
+            {
+              "lineIndex": 29,
+              "cueIn": 334.66
+            },
+            {
+              "lineIndex": 30,
+              "cueIn": 336.94
+            },
+            {
+              "lineIndex": 31,
+              "cueIn": 340.28
+            },
+            {
+              "lineIndex": 32,
+              "cueIn": 341.68
+            },
+            {
+              "lineIndex": 34,
+              "cueIn": 348.12
+            },
+            {
+              "lineIndex": 35,
+              "cueIn": 350.2
+            },
+            {
+              "lineIndex": 36,
+              "cueIn": 356.16
+            },
+            {
+              "lineIndex": 37,
+              "cueIn": 357.76
+            },
+            {
+              "lineIndex": 38,
+              "cueIn": 362.88
+            },
+            {
+              "lineIndex": 39,
+              "cueIn": 365.92
+            },
+            {
+              "lineIndex": 41,
+              "cueIn": 368.62
+            },
+            {
+              "lineIndex": 42,
+              "cueIn": 372.16
+            },
+            {
+              "lineIndex": 43,
+              "cueIn": 375.94
+            },
+            {
+              "lineIndex": 44,
+              "cueIn": 379.72
+            },
+            {
+              "lineIndex": 46,
+              "cueIn": 382.6
+            },
+            {
+              "lineIndex": 47,
+              "cueIn": 386.24
+            },
+            {
+              "lineIndex": 48,
+              "cueIn": 387.34
+            },
+            {
+              "lineIndex": 49,
+              "cueIn": 390.32
+            },
+            {
+              "lineIndex": 50,
+              "cueIn": 392.76
+            },
+            {
+              "lineIndex": 51,
+              "cueIn": 397.44
+            },
+            {
+              "lineIndex": 52,
+              "cueIn": 399.6
+            },
+            {
+              "lineIndex": 54,
+              "cueIn": 402.14
+            },
+            {
+              "lineIndex": 55,
+              "cueIn": 403.72
+            },
+            {
+              "lineIndex": 57,
+              "cueIn": 411.6
+            },
+            {
+              "lineIndex": 58,
+              "cueIn": 415.0
+            }
+          ]
+        },
+        {
+          "chantId": "hymn-perfection-wisdom",
+          "startTime": 421.76,
+          "lines": [
+            {
+              "lineIndex": 0,
+              "cueIn": 421.76
+            },
+            {
+              "lineIndex": 1,
+              "cueIn": 422.74
+            },
+            {
+              "lineIndex": 2,
+              "cueIn": 425.6
+            },
+            {
+              "lineIndex": 3,
+              "cueIn": 441.28
+            },
+            {
+              "lineIndex": 5,
+              "cueIn": 445.72
+            },
+            {
+              "lineIndex": 6,
+              "cueIn": 447.56
+            },
+            {
+              "lineIndex": 7,
+              "cueIn": 450.7
+            },
+            {
+              "lineIndex": 8,
+              "cueIn": 453.24
+            },
+            {
+              "lineIndex": 10,
+              "cueIn": 455.9
+            },
+            {
+              "lineIndex": 11,
+              "cueIn": 459.34
+            },
+            {
+              "lineIndex": 12,
+              "cueIn": 461.68
+            },
+            {
+              "lineIndex": 13,
+              "cueIn": 466.76
+            },
+            {
+              "lineIndex": 15,
+              "cueIn": 470.18
+            },
+            {
+              "lineIndex": 16,
+              "cueIn": 471.86
+            },
+            {
+              "lineIndex": 17,
+              "cueIn": 475.46
+            },
+            {
+              "lineIndex": 18,
+              "cueIn": 478.74
+            },
+            {
+              "lineIndex": 19,
+              "cueIn": 482.4
+            }
+          ]
+        },
+        {
+          "chantId": "shosaimyo",
+          "startTime": 487.1,
+          "lines": [
+            {
+              "lineIndex": 0,
+              "cueIn": 487.1
+            },
+            {
+              "lineIndex": 1,
+              "cueIn": 487.82
+            },
+            {
+              "lineIndex": 2,
+              "cueIn": 487.82
+            },
+            {
+              "lineIndex": 3,
+              "cueIn": 487.82
+            },
+            {
+              "lineIndex": 4,
+              "cueIn": 489.12
+            },
+            {
+              "lineIndex": 5,
+              "cueIn": 489.36
+            },
+            {
+              "lineIndex": 6,
+              "cueIn": 491.32
+            },
+            {
+              "lineIndex": 7,
+              "cueIn": 491.32
+            },
+            {
+              "lineIndex": 9,
+              "cueIn": 491.32
+            },
+            {
+              "lineIndex": 10,
+              "cueIn": 503.04
+            },
+            {
+              "lineIndex": 11,
+              "cueIn": 508.76
+            },
+            {
+              "lineIndex": 12,
+              "cueIn": 509.58
+            },
+            {
+              "lineIndex": 13,
+              "cueIn": 515.3
+            },
+            {
+              "lineIndex": 14,
+              "cueIn": 515.66
+            },
+            {
+              "lineIndex": 15,
+              "cueIn": 516.92
+            },
+            {
+              "lineIndex": 17,
+              "cueIn": 517.82
+            },
+            {
+              "lineIndex": 18,
+              "cueIn": 520.4
+            },
+            {
+              "lineIndex": 19,
+              "cueIn": 521.48
+            },
+            {
+              "lineIndex": 20,
+              "cueIn": 523.92
+            },
+            {
+              "lineIndex": 21,
+              "cueIn": 525.64
+            }
+          ]
+        },
+        {
+          "chantId": "names-buddhas-ancestors",
+          "startTime": 527.96,
+          "lines": [
+            {
+              "lineIndex": 0,
+              "cueIn": 527.96
+            },
+            {
+              "lineIndex": 1,
+              "cueIn": 531.3
+            },
+            {
+              "lineIndex": 2,
+              "cueIn": 532.92
+            },
+            {
+              "lineIndex": 3,
+              "cueIn": 577.38
+            },
+            {
+              "lineIndex": 4,
+              "cueIn": 579.98
+            },
+            {
+              "lineIndex": 5,
+              "cueIn": 581.02
+            },
+            {
+              "lineIndex": 6,
+              "cueIn": 591.06
+            },
+            {
+              "lineIndex": 7,
+              "cueIn": 640.54
+            },
+            {
+              "lineIndex": 9,
+              "cueIn": 644.14
+            },
+            {
+              "lineIndex": 10,
+              "cueIn": 646.52
+            },
+            {
+              "lineIndex": 11,
+              "cueIn": 649.02
+            },
+            {
+              "lineIndex": 12,
+              "cueIn": 651.62
+            },
+            {
+              "lineIndex": 13,
+              "cueIn": 654.18
+            },
+            {
+              "lineIndex": 14,
+              "cueIn": 656.3
+            },
+            {
+              "lineIndex": 15,
+              "cueIn": 658.86
+            },
+            {
+              "lineIndex": 16,
+              "cueIn": 661.76
+            },
+            {
+              "lineIndex": 18,
+              "cueIn": 664.32
+            },
+            {
+              "lineIndex": 19,
+              "cueIn": 666.92
+            },
+            {
+              "lineIndex": 20,
+              "cueIn": 669.08
+            },
+            {
+              "lineIndex": 21,
+              "cueIn": 670.4
+            },
+            {
+              "lineIndex": 22,
+              "cueIn": 674.68
+            },
+            {
+              "lineIndex": 23,
+              "cueIn": 677.66
+            },
+            {
+              "lineIndex": 24,
+              "cueIn": 680.4
+            },
+            {
+              "lineIndex": 25,
+              "cueIn": 683.08
+            },
+            {
+              "lineIndex": 27,
+              "cueIn": 686.08
+            },
+            {
+              "lineIndex": 28,
+              "cueIn": 688.56
+            },
+            {
+              "lineIndex": 29,
+              "cueIn": 690.92
+            },
+            {
+              "lineIndex": 30,
+              "cueIn": 693.44
+            },
+            {
+              "lineIndex": 31,
+              "cueIn": 696.0
+            },
+            {
+              "lineIndex": 32,
+              "cueIn": 698.28
+            },
+            {
+              "lineIndex": 33,
+              "cueIn": 700.9
+            },
+            {
+              "lineIndex": 34,
+              "cueIn": 703.68
+            },
+            {
+              "lineIndex": 36,
+              "cueIn": 706.28
+            },
+            {
+              "lineIndex": 37,
+              "cueIn": 709.0
+            },
+            {
+              "lineIndex": 38,
+              "cueIn": 711.92
+            },
+            {
+              "lineIndex": 39,
+              "cueIn": 714.7
+            },
+            {
+              "lineIndex": 40,
+              "cueIn": 717.54
+            },
+            {
+              "lineIndex": 41,
+              "cueIn": 720.36
+            },
+            {
+              "lineIndex": 42,
+              "cueIn": 723.06
+            },
+            {
+              "lineIndex": 43,
+              "cueIn": 725.78
+            },
+            {
+              "lineIndex": 45,
+              "cueIn": 728.6
+            },
+            {
+              "lineIndex": 46,
+              "cueIn": 731.5
+            },
+            {
+              "lineIndex": 47,
+              "cueIn": 734.2
+            },
+            {
+              "lineIndex": 48,
+              "cueIn": 737.14
+            },
+            {
+              "lineIndex": 49,
+              "cueIn": 739.8
+            },
+            {
+              "lineIndex": 50,
+              "cueIn": 742.72
+            },
+            {
+              "lineIndex": 51,
+              "cueIn": 745.58
+            },
+            {
+              "lineIndex": 52,
+              "cueIn": 748.42
+            },
+            {
+              "lineIndex": 54,
+              "cueIn": 751.24
+            },
+            {
+              "lineIndex": 55,
+              "cueIn": 754.2
+            },
+            {
+              "lineIndex": 56,
+              "cueIn": 756.96
+            },
+            {
+              "lineIndex": 57,
+              "cueIn": 759.92
+            },
+            {
+              "lineIndex": 58,
+              "cueIn": 762.78
+            },
+            {
+              "lineIndex": 59,
+              "cueIn": 765.64
+            },
+            {
+              "lineIndex": 60,
+              "cueIn": 768.6
+            },
+            {
+              "lineIndex": 61,
+              "cueIn": 771.5
+            },
+            {
+              "lineIndex": 63,
+              "cueIn": 774.34
+            },
+            {
+              "lineIndex": 64,
+              "cueIn": 777.3
+            },
+            {
+              "lineIndex": 65,
+              "cueIn": 780.18
+            },
+            {
+              "lineIndex": 66,
+              "cueIn": 783.08
+            },
+            {
+              "lineIndex": 67,
+              "cueIn": 785.78
+            },
+            {
+              "lineIndex": 68,
+              "cueIn": 788.74
+            },
+            {
+              "lineIndex": 69,
+              "cueIn": 790.46
+            },
+            {
+              "lineIndex": 70,
+              "cueIn": 790.46
+            },
+            {
+              "lineIndex": 72,
+              "cueIn": 790.46
+            },
+            {
+              "lineIndex": 73,
+              "cueIn": 844.79
+            },
+            {
+              "lineIndex": 74,
+              "cueIn": 846.74
+            },
+            {
+              "lineIndex": 75,
+              "cueIn": 854.38
+            },
+            {
+              "lineIndex": 76,
+              "cueIn": 859.92
+            },
+            {
+              "lineIndex": 77,
+              "cueIn": 862.48
+            },
+            {
+              "lineIndex": 78,
+              "cueIn": 959.66
+            },
+            {
+              "lineIndex": 79,
+              "cueIn": 961.9
+            },
+            {
+              "lineIndex": 81,
+              "cueIn": 962.12
+            },
+            {
+              "lineIndex": 82,
+              "cueIn": 962.88
+            },
+            {
+              "lineIndex": 83,
+              "cueIn": 965.6
+            },
+            {
+              "lineIndex": 84,
+              "cueIn": 972.3
+            },
+            {
+              "lineIndex": 85,
+              "cueIn": 1006.54
+            },
+            {
+              "lineIndex": 86,
+              "cueIn": 1026.58
+            },
+            {
+              "lineIndex": 87,
+              "cueIn": 1033.24
+            },
+            {
+              "lineIndex": 88,
+              "cueIn": 1042.7
+            },
+            {
+              "lineIndex": 90,
+              "cueIn": 1177.0
+            },
+            {
+              "lineIndex": 91,
+              "cueIn": 1179.44
+            },
+            {
+              "lineIndex": 92,
+              "cueIn": 1179.44
+            },
+            {
+              "lineIndex": 93,
+              "cueIn": 1179.62
+            },
+            {
+              "lineIndex": 94,
+              "cueIn": 1179.64
+            },
+            {
+              "lineIndex": 95,
+              "cueIn": 1180.02
+            },
+            {
+              "lineIndex": 96,
+              "cueIn": 1180.02
+            },
+            {
+              "lineIndex": 97,
+              "cueIn": 1180.02
+            },
+            {
+              "lineIndex": 99,
+              "cueIn": 1180.02
+            },
+            {
+              "lineIndex": 100,
+              "cueIn": 1180.02
+            },
+            {
+              "lineIndex": 101,
+              "cueIn": 1180.02
+            },
+            {
+              "lineIndex": 102,
+              "cueIn": 1180.02
+            },
+            {
+              "lineIndex": 103,
+              "cueIn": 1180.02
+            },
+            {
+              "lineIndex": 104,
+              "cueIn": 1180.02
+            },
+            {
+              "lineIndex": 105,
+              "cueIn": 1180.02
+            },
+            {
+              "lineIndex": 106,
+              "cueIn": 1180.02
+            }
+          ]
+        },
+        {
+          "chantId": "names-women-ancestors",
+          "startTime": 1180.02,
+          "lines": [
+            {
+              "lineIndex": 0,
+              "cueIn": 1180.02
+            },
+            {
+              "lineIndex": 1,
+              "cueIn": 1180.02
+            },
+            {
+              "lineIndex": 2,
+              "cueIn": 1180.02
+            },
+            {
+              "lineIndex": 3,
+              "cueIn": 1180.02
+            },
+            {
+              "lineIndex": 4,
+              "cueIn": 1180.02
+            },
+            {
+              "lineIndex": 5,
+              "cueIn": 1180.02
+            },
+            {
+              "lineIndex": 6,
+              "cueIn": 1180.02
+            },
+            {
+              "lineIndex": 7,
+              "cueIn": 1180.02
+            },
+            {
+              "lineIndex": 9,
+              "cueIn": 1180.02
+            },
+            {
+              "lineIndex": 10,
+              "cueIn": 1180.02
+            },
+            {
+              "lineIndex": 11,
+              "cueIn": 1180.02
+            },
+            {
+              "lineIndex": 12,
+              "cueIn": 1180.02
+            },
+            {
+              "lineIndex": 13,
+              "cueIn": 1180.02
+            },
+            {
+              "lineIndex": 14,
+              "cueIn": 1180.02
+            },
+            {
+              "lineIndex": 15,
+              "cueIn": 1180.02
+            },
+            {
+              "lineIndex": 16,
+              "cueIn": 1180.02
+            },
+            {
+              "lineIndex": 18,
+              "cueIn": 1180.02
+            },
+            {
+              "lineIndex": 19,
+              "cueIn": 1180.02
+            },
+            {
+              "lineIndex": 20,
+              "cueIn": 1180.02
+            },
+            {
+              "lineIndex": 21,
+              "cueIn": 1180.02
+            },
+            {
+              "lineIndex": 22,
+              "cueIn": 1180.02
+            },
+            {
+              "lineIndex": 23,
+              "cueIn": 1180.02
+            },
+            {
+              "lineIndex": 24,
+              "cueIn": 1180.02
+            },
+            {
+              "lineIndex": 25,
+              "cueIn": 1180.02
+            },
+            {
+              "lineIndex": 27,
+              "cueIn": 1180.02
+            },
+            {
+              "lineIndex": 28,
+              "cueIn": 1180.02
+            },
+            {
+              "lineIndex": 29,
+              "cueIn": 1180.02
+            },
+            {
+              "lineIndex": 30,
+              "cueIn": 1180.02
+            },
+            {
+              "lineIndex": 31,
+              "cueIn": 1180.02
+            },
+            {
+              "lineIndex": 32,
+              "cueIn": 1180.02
+            },
+            {
+              "lineIndex": 33,
+              "cueIn": 1180.02
+            },
+            {
+              "lineIndex": 34,
+              "cueIn": 1180.02
+            },
+            {
+              "lineIndex": 36,
+              "cueIn": 1180.02
+            },
+            {
+              "lineIndex": 37,
+              "cueIn": 1180.02
+            },
+            {
+              "lineIndex": 38,
+              "cueIn": 1180.02
+            },
+            {
+              "lineIndex": 39,
+              "cueIn": 1180.02
+            },
+            {
+              "lineIndex": 40,
+              "cueIn": 1180.02
+            },
+            {
+              "lineIndex": 41,
+              "cueIn": 1180.02
+            },
+            {
+              "lineIndex": 42,
+              "cueIn": 1180.02
+            },
+            {
+              "lineIndex": 43,
+              "cueIn": 1180.02
+            },
+            {
+              "lineIndex": 45,
+              "cueIn": 1180.02
+            },
+            {
+              "lineIndex": 46,
+              "cueIn": 1180.02
+            },
+            {
+              "lineIndex": 47,
+              "cueIn": 1180.02
+            },
+            {
+              "lineIndex": 48,
+              "cueIn": 1180.02
+            },
+            {
+              "lineIndex": 49,
+              "cueIn": 1180.02
+            },
+            {
+              "lineIndex": 50,
+              "cueIn": 1180.02
+            },
+            {
+              "lineIndex": 51,
+              "cueIn": 1180.02
+            },
+            {
+              "lineIndex": 52,
+              "cueIn": 1180.02
+            },
+            {
+              "lineIndex": 54,
+              "cueIn": 1180.02
+            },
+            {
+              "lineIndex": 55,
+              "cueIn": 1180.02
+            },
+            {
+              "lineIndex": 56,
+              "cueIn": 1180.02
+            },
+            {
+              "lineIndex": 57,
+              "cueIn": 1180.02
+            },
+            {
+              "lineIndex": 58,
+              "cueIn": 1180.02
+            },
+            {
+              "lineIndex": 59,
+              "cueIn": 1180.02
+            },
+            {
+              "lineIndex": 60,
+              "cueIn": 1180.02
+            },
+            {
+              "lineIndex": 61,
+              "cueIn": 1180.02
+            },
+            {
+              "lineIndex": 63,
+              "cueIn": 1180.02
+            },
+            {
+              "lineIndex": 64,
+              "cueIn": 1180.02
+            },
+            {
+              "lineIndex": 65,
+              "cueIn": 1180.02
+            },
+            {
+              "lineIndex": 66,
+              "cueIn": 1180.02
+            },
+            {
+              "lineIndex": 67,
+              "cueIn": 1180.02
+            },
+            {
+              "lineIndex": 68,
+              "cueIn": 1180.02
+            },
+            {
+              "lineIndex": 69,
+              "cueIn": 1180.02
+            },
+            {
+              "lineIndex": 70,
+              "cueIn": 1180.02
+            },
+            {
+              "lineIndex": 72,
+              "cueIn": 1180.02
+            },
+            {
+              "lineIndex": 73,
+              "cueIn": 1180.02
+            }
+          ]
+        },
+        {
+          "chantId": "after-dedication",
+          "startTime": 1180.02,
+          "lines": [
+            {
+              "lineIndex": 0,
+              "cueIn": 1180.02
+            },
+            {
+              "lineIndex": 1,
+              "cueIn": 1180.02
+            },
+            {
+              "lineIndex": 2,
+              "cueIn": 1180.02
+            },
+            {
+              "lineIndex": 3,
+              "cueIn": 1180.02
+            },
+            {
+              "lineIndex": 4,
+              "cueIn": 1180.02
+            },
+            {
+              "lineIndex": 5,
+              "cueIn": 1180.02
+            },
+            {
+              "lineIndex": 7,
+              "cueIn": 1180.02
+            },
+            {
+              "lineIndex": 8,
+              "cueIn": 1180.02
+            },
+            {
+              "lineIndex": 9,
+              "cueIn": 1180.02
+            },
+            {
+              "lineIndex": 10,
+              "cueIn": 1180.02
+            }
+          ]
+        }
       ]
     },
     {
