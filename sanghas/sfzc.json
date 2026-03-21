@@ -3115,8 +3115,8 @@
           "label": "Opening ceremony and prostrations"
         },
         {
-          "type": "chant",
-          "id": "purification"
+          "type": "doshi",
+          "label": "Heart Sutra announcement"
         },
         {
           "type": "chant",
@@ -3156,7 +3156,6 @@
         }
       ],
       "recordingChants": [
-        "purification",
         "heart-sutra",
         "hymn-perfection-wisdom",
         "shosaimyo",
