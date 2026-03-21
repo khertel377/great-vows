@@ -221,6 +221,31 @@
 
   @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
   @keyframes pulse { 0%, 100% { opacity: 0.15; } 50% { opacity: 0.4; } }
+
+  /* ── LISTENING MODE ── */
+  .listening-overlay {
+    position: fixed; inset: 0; z-index: 15;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 28px; text-align: center; padding: 40px;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.7s ease;
+  }
+  .listening-overlay.active { opacity: 1; pointer-events: auto; }
+  .listening-svc-title {
+    font-family: 'DM Serif Display', serif; font-style: italic;
+    font-size: clamp(22px, 4vw, 44px);
+    color: rgba(255,255,255,0.85);
+  }
+  .listening-pulse {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--gold);
+    animation: pulse 2.4s ease infinite;
+  }
+  .listening-names {
+    display: flex; flex-direction: column; align-items: center; gap: 10px;
+    margin-top: 4px;
+  }
+  .listening-names span { font-size: 13px; color: rgba(255,255,255,0.2); letter-spacing: 0.03em; }
 </style>
 </head>
 <body>
@@ -255,6 +280,7 @@
   <div id="chantStage">
     <div id="chantTrack"></div>
   </div>
+  <div class="listening-overlay" id="listeningOverlay"></div>
   <div class="controls" id="controls">
     <button class="ctrl-btn" id="playPauseBtn" onclick="togglePlayPause()">&#9654;</button>
     <button class="ctrl-btn" onclick="restartChant()">&#8635;</button>
@@ -276,6 +302,7 @@ var currentSangha = null;  // active sangha object
 var currentChant = null;
 var currentIndex = 0;
 var hasAudio = false;
+var listeningMode = false;
 var isPlaying = false;
 var tweenRaf = null;
 var isScrubbing = false;
@@ -426,9 +453,11 @@ function loadService(svc) {
       .map(function(item) { return item.id; });
   }
 
+  var chantNames = [];
   ids.forEach(function(id, i) {
     var chant = DATA.chants.find(function(c) { return c.id === id; });
     if (!chant) return;
+    chantNames.push(chant.title);
     if (i > 0) { lines.push({ text: null }); lines.push({ text: null }); }
     chant.lines.forEach(function(l) { lines.push(l); });
   });
@@ -438,7 +467,8 @@ function loadService(svc) {
     id: svc.id,
     title: svc.title,
     audio: svc.audio || null,
-    lines: lines
+    lines: lines,
+    chantNames: chantNames
   };
   openChant(virtual);
 }
@@ -451,11 +481,19 @@ function openChant(chant) {
   currentIndex = 0;
   hasAudio = false;
   isPlaying = false;
+  listeningMode = false;
   lineTranslates = {};
   window._scrollAccum = 0;
   if (tweenRaf) { cancelAnimationFrame(tweenRaf); tweenRaf = null; }
   audioEl.pause();
   audioEl.src = '';
+
+  // reset listening overlay
+  var _overlay = document.getElementById('listeningOverlay');
+  _overlay.classList.remove('active');
+  _overlay.innerHTML = '';
+  document.getElementById('chantStage').style.opacity = '';
+  document.getElementById('chantStage').style.pointerEvents = '';
 
   document.getElementById('chantTitleDisplay').textContent = chant.title;
   document.getElementById('playPauseBtn').innerHTML = '&#9654;';
@@ -475,6 +513,12 @@ function openChant(chant) {
       setClasses(firstIdx);
       applyTranslate(lineTranslates[firstIdx] || 0);
 
+      var cueInCount = chant.lines.filter(function(l) { return l.cueIn !== undefined; }).length;
+      if (chant.audio && chant.chantNames && chant.chantNames.length > 0) {
+        listeningMode = true;
+        enterListeningMode(chant);
+      }
+
       if (chant.audio) {
         tryAutoLoad(chant.audio);
       } else {
@@ -488,6 +532,12 @@ function goIndex() {
   if (tweenRaf) { cancelAnimationFrame(tweenRaf); tweenRaf = null; }
   audioEl.pause();
   isPlaying = false;
+  listeningMode = false;
+  document.getElementById('chantStage').style.opacity = '';
+  document.getElementById('chantStage').style.pointerEvents = '';
+  var overlay = document.getElementById('listeningOverlay');
+  overlay.classList.remove('active');
+  overlay.innerHTML = '';
   document.getElementById('chantScreen').classList.add('hidden');
   document.getElementById('indexScreen').classList.remove('hidden');
 }
@@ -533,6 +583,25 @@ function onAudioEnd() { endChant(); }
 // ══════════════════════════════
 function startTapMode() {
   document.getElementById('tapHint').style.display = 'block';
+}
+
+// ══════════════════════════════
+// LISTENING MODE
+// ══════════════════════════════
+function enterListeningMode(chant) {
+  var stage = document.getElementById('chantStage');
+  stage.style.opacity = '0';
+  stage.style.pointerEvents = 'none';
+
+  var names = chant.chantNames || [];
+  var overlay = document.getElementById('listeningOverlay');
+  overlay.innerHTML = '<div class="listening-svc-title">' + chant.title + '</div>'
+    + '<div class="listening-pulse"></div>'
+    + (names.length ? '<div class="listening-names">'
+        + names.map(function(n) { return '<span>' + n + '</span>'; }).join('')
+        + '</div>' : '');
+
+  requestAnimationFrame(function() { overlay.classList.add('active'); });
 }
 
 // ══════════════════════════════
@@ -637,30 +706,35 @@ function startTween() {
     var dur = audioEl.duration || 68;
     document.getElementById('progressBar').style.width = ((t / dur) * 100) + '%';
 
-    var textLines = getTextLines();
-    var curLine = textLines[0], nextLine = null;
-    for (var i = 0; i < textLines.length; i++) {
-      if (t >= textLines[i].cueIn) {
-        curLine = textLines[i];
-        nextLine = textLines[i + 1] || null;
+    if (!listeningMode) {
+      var textLines = getTextLines();
+      var curLine = textLines[0], nextLine = null;
+      for (var i = 0; i < textLines.length; i++) {
+        if (t >= textLines[i].cueIn) {
+          curLine = textLines[i];
+          nextLine = textLines[i + 1] || null;
+        }
+      }
+
+      if (curLine) {
+        setClasses(curLine.idx);
+
+        var fromY = lineTranslates[curLine.idx] || 0;
+        var toY = nextLine ? (lineTranslates[nextLine.idx] || fromY) : fromY;
+        var translateY;
+
+        if (nextLine) {
+          var p = Math.max(0, Math.min(1, (t - curLine.cueIn) / (nextLine.cueIn - curLine.cueIn)));
+          var eased = p < 0.5 ? 4*p*p*p : 1 - Math.pow(-2*p+2, 3)/2;
+          translateY = fromY + (toY - fromY) * eased;
+        } else {
+          translateY = fromY;
+        }
+
+        applyTranslate(translateY);
       }
     }
 
-    setClasses(curLine.idx);
-
-    var fromY = lineTranslates[curLine.idx] || 0;
-    var toY = nextLine ? (lineTranslates[nextLine.idx] || fromY) : fromY;
-    var translateY;
-
-    if (nextLine) {
-      var p = Math.max(0, Math.min(1, (t - curLine.cueIn) / (nextLine.cueIn - curLine.cueIn)));
-      var eased = p < 0.5 ? 4*p*p*p : 1 - Math.pow(-2*p+2, 3)/2;
-      translateY = fromY + (toY - fromY) * eased;
-    } else {
-      translateY = fromY;
-    }
-
-    applyTranslate(translateY);
     tweenRaf = requestAnimationFrame(tick);
   }
 
