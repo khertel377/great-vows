@@ -212,37 +212,47 @@
       "audio": null,
       "lines": [
         {
-          "text": "Ji ho san shi"
+          "text": "Ji ho san shi",
+          "cueIn": 27.22
         },
         {
-          "text": "i shi fu"
+          "text": "i shi fu",
+          "cueIn": 32.4
         },
         {
-          "text": "shi son bu sa"
+          "text": "shi son bu sa",
+          "cueIn": 33.8
         },
         {
-          "text": "mo ko sa"
+          "text": "mo ko sa",
+          "cueIn": 45.4
         },
         {
-          "text": "mo ko ho ja"
+          "text": "mo ko ho ja",
+          "cueIn": 49.58
         },
         {
-          "text": "ho ro mi"
+          "text": "ho ro mi",
+          "cueIn": 49.58
         },
         {
           "text": null
         },
         {
-          "text": "All buddhas, ten directions, three times."
+          "text": "All buddhas, ten directions, three times.",
+          "cueIn": 49.94
         },
         {
-          "text": "All honored ones, bodhisattva-mahasattvas,"
+          "text": "All honored ones, bodhisattva-mahasattvas,",
+          "cueIn": 62.84
         },
         {
-          "text": "Wisdom beyond wisdom,"
+          "text": "Wisdom beyond wisdom,",
+          "cueIn": 67.52
         },
         {
-          "text": "Maha Prajña Paramita"
+          "text": "Maha Prajña Paramita",
+          "cueIn": 70.0
         }
       ]
     },
@@ -2550,325 +2560,421 @@
       "section": "Ceremonies",
       "lines": [
         {
-          "text": "Bibashi Butsu Daiosho"
+          "text": "Bibashi Butsu Daiosho",
+          "cueIn": 2.14
         },
         {
-          "text": "Shiki Butsu Daiosho"
+          "text": "Shiki Butsu Daiosho",
+          "cueIn": 5.64
         },
         {
-          "text": "Bishafu Butsu Daiosho"
+          "text": "Bishafu Butsu Daiosho",
+          "cueIn": 10.32
         },
         {
-          "text": "Kurusōn Butsu Daiosho"
+          "text": "Kurusōn Butsu Daiosho",
+          "cueIn": 11.36
         },
         {
-          "text": "Kunagōnmuni Butsu Daiosho"
+          "text": "Kunagōnmuni Butsu Daiosho",
+          "cueIn": 12.98
         },
         {
-          "text": "Kashō Butsu Daiosho"
+          "text": "Kashō Butsu Daiosho",
+          "cueIn": 16.04
         },
         {
-          "text": "Shakamuni Butsu Daiosho"
+          "text": "Shakamuni Butsu Daiosho",
+          "cueIn": 18.72
         },
         {
-          "text": "Makakashō Daiosho"
-        },
-        {
-          "text": null
-        },
-        {
-          "text": "Anānda Daiosho"
-        },
-        {
-          "text": "Shōnawashu Daiosho"
-        },
-        {
-          "text": "Ubakikuta Daiosho"
-        },
-        {
-          "text": "Dāitaka Daiosho"
-        },
-        {
-          "text": "Mishaka Daiosho"
-        },
-        {
-          "text": "Vashumitsu Daiosho"
-        },
-        {
-          "text": "Butsudanāndāi Daiosho"
-        },
-        {
-          "text": "Fudamītta Daiosho"
+          "text": "Makakashō Daiosho",
+          "cueIn": 21.86
         },
         {
           "text": null
         },
         {
-          "text": "Barishiba Daiosho"
+          "text": "Anānda Daiosho",
+          "cueIn": 24.12
         },
         {
-          "text": "Funayasha Daiosho"
+          "text": "Shōnawashu Daiosho",
+          "cueIn": 26.46
         },
         {
-          "text": "Anabotēi Daiosho"
+          "text": "Ubakikuta Daiosho",
+          "cueIn": 28.98
         },
         {
-          "text": "Kabimara Daiosho"
+          "text": "Dāitaka Daiosho",
+          "cueIn": 31.9
         },
         {
-          "text": "Nagyaharajuna Daiosho"
+          "text": "Mishaka Daiosho",
+          "cueIn": 34.2
         },
         {
-          "text": "Kanadāiba Daiosho"
+          "text": "Vashumitsu Daiosho",
+          "cueIn": 36.28
         },
         {
-          "text": "Ragorata Daiosho"
+          "text": "Butsudanāndāi Daiosho",
+          "cueIn": 38.86
         },
         {
-          "text": "Sōgyanāndāi Daiosho"
-        },
-        {
-          "text": null
-        },
-        {
-          "text": "Kayashata Daiosho"
-        },
-        {
-          "text": "Kumorata Daiosho"
-        },
-        {
-          "text": "Shayata Daiosho"
-        },
-        {
-          "text": "Vashubānzu Daiosho"
-        },
-        {
-          "text": "Manura Daiosho"
-        },
-        {
-          "text": "Kakurokuna Daiosho"
-        },
-        {
-          "text": "Shishibodāi Daiosho"
-        },
-        {
-          "text": "Bashashita Daiosho"
+          "text": "Fudamītta Daiosho",
+          "cueIn": 41.76
         },
         {
           "text": null
         },
         {
-          "text": "Funyomītta Daiosho"
+          "text": "Barishiba Daiosho",
+          "cueIn": 44.32
         },
         {
-          "text": "Hānnyatara Daiosho"
+          "text": "Funayasha Daiosho",
+          "cueIn": 46.94
         },
         {
-          "text": "Bodāidaruma Daiosho"
+          "text": "Anabotēi Daiosho",
+          "cueIn": 49.36
         },
         {
-          "text": "Tāiso Eka Daiosho"
+          "text": "Kabimara Daiosho",
+          "cueIn": 52.14
         },
         {
-          "text": "Kānchi Sōsān Daiosho"
+          "text": "Nagyaharajuna Daiosho",
+          "cueIn": 54.72
         },
         {
-          "text": "Dāi-I Dōshīn Daiosho"
+          "text": "Kanadāiba Daiosho",
+          "cueIn": 57.66
         },
         {
-          "text": "Dāimān Kōnīn Daiosho"
+          "text": "Ragorata Daiosho",
+          "cueIn": 61.46
         },
         {
-          "text": "Dāikān Enō Daiosho"
-        },
-        {
-          "text": null
-        },
-        {
-          "text": "Sēigēn Gyōshi Daiosho"
-        },
-        {
-          "text": "Sekitō Kisēn Daiosho"
-        },
-        {
-          "text": "Yakusān Igēn Daiosho"
-        },
-        {
-          "text": "Ūngān Dōnjō Daiosho"
-        },
-        {
-          "text": "Tōzān Ryōkāi Daiosho"
-        },
-        {
-          "text": "Ūngodōyō Daiosho"
-        },
-        {
-          "text": "Dōān Dōhi Daiosho"
-        },
-        {
-          "text": "Dōān Kānshi Daiosho"
+          "text": "Sōgyanāndāi Daiosho",
+          "cueIn": 62.92
         },
         {
           "text": null
         },
         {
-          "text": "Ryozān Ēnkān Daiosho"
+          "text": "Kayashata Daiosho",
+          "cueIn": 65.9
         },
         {
-          "text": "Tāiyō Kyōgēn Daiosho"
+          "text": "Kumorata Daiosho",
+          "cueIn": 68.5
         },
         {
-          "text": "Tōsu Gisēi Daiosho"
+          "text": "Shayata Daiosho",
+          "cueIn": 70.88
         },
         {
-          "text": "Fuyō Dōkāi Daiosho"
+          "text": "Vashubānzu Daiosho",
+          "cueIn": 73.28
         },
         {
-          "text": "Tānka Shijūn Daiosho"
+          "text": "Manura Daiosho",
+          "cueIn": 75.94
         },
         {
-          "text": "Chōro Sēiryō Daiosho"
+          "text": "Kakurokuna Daiosho",
+          "cueIn": 78.24
         },
         {
-          "text": "Tēndō Sōgaku Daiosho"
+          "text": "Shishibodāi Daiosho",
+          "cueIn": 80.88
         },
         {
-          "text": "Sēcchō Chikān Daiosho"
-        },
-        {
-          "text": null
-        },
-        {
-          "text": "Tēndō Nyojō Daiosho"
-        },
-        {
-          "text": "Ēihēi Dōgēn Daiosho"
-        },
-        {
-          "text": "Koūn Ejō Daiosho"
-        },
-        {
-          "text": "Tēttsū Gikāi Daiosho"
-        },
-        {
-          "text": "Kēizān Jōkīn Daiosho"
-        },
-        {
-          "text": "Gasān Jōseki Daiosho"
-        },
-        {
-          "text": "Tāigēn Sōshīn Daiosho"
-        },
-        {
-          "text": "Bāizān Mōmpōn Daiosho"
+          "text": "Bashashita Daiosho",
+          "cueIn": 83.68
         },
         {
           "text": null
         },
         {
-          "text": "Jōchū Tēngīn Daiosho"
+          "text": "Funyomītta Daiosho",
+          "cueIn": 86.32
         },
         {
-          "text": "Shīngān Dōkū Daiosho"
+          "text": "Hānnyatara Daiosho",
+          "cueIn": 88.94
         },
         {
-          "text": "Sēnsō Esāi Daiosho"
+          "text": "Bodāidaruma Daiosho",
+          "cueIn": 91.64
         },
         {
-          "text": "Iyoku Chōyū Daiosho"
+          "text": "Tāiso Eka Daiosho",
+          "cueIn": 94.66
         },
         {
-          "text": "Mugāi Kēigōn Daiosho"
+          "text": "Kānchi Sōsān Daiosho",
+          "cueIn": 97.54
         },
         {
-          "text": "Nēnshitsu Yokaku Daiosho"
+          "text": "Dāi-I Dōshīn Daiosho",
+          "cueIn": 100.26
         },
         {
-          "text": "Sēssō Hōseki Daiosho"
+          "text": "Dāimān Kōnīn Daiosho",
+          "cueIn": 103.06
         },
         {
-          "text": "Tāiēi Zeshō Daiosho"
-        },
-        {
-          "text": null
-        },
-        {
-          "text": "Nāmpo Gēntaku Daiosho"
-        },
-        {
-          "text": "Zōdēn Yokō Daiosho"
-        },
-        {
-          "text": "Tēnyū Sōēn Daiosho"
-        },
-        {
-          "text": "Kēn'ān Jūnsa Daiosho"
-        },
-        {
-          "text": "Chōkoku Koēn Daiosho"
-        },
-        {
-          "text": "Sēnshū Dōnko Daiosho"
-        },
-        {
-          "text": "Fudēn Gēntotsu Daiosho"
-        },
-        {
-          "text": "Dāishūn Kān'yu Daiosho"
+          "text": "Dāikān Enō Daiosho",
+          "cueIn": 105.76
         },
         {
           "text": null
         },
         {
-          "text": "Tēnrīn Kānshū Daiosho"
+          "text": "Sēigēn Gyōshi Daiosho",
+          "cueIn": 108.56
         },
         {
-          "text": "Sēssān Tetsuzēn Daiosho"
+          "text": "Sekitō Kisēn Daiosho",
+          "cueIn": 111.52
         },
         {
-          "text": "Fuzān Shūnki Daiosho"
+          "text": "Yakusān Igēn Daiosho",
+          "cueIn": 114.22
         },
         {
-          "text": "Jīssān Mokūin Daiosho"
+          "text": "Ūngān Dōnjō Daiosho",
+          "cueIn": 117.1
         },
         {
-          "text": "Sēngān Bōnryū Daiosho"
+          "text": "Tōzān Ryōkāi Daiosho",
+          "cueIn": 119.8
         },
         {
-          "text": "Dāiki Kyōkān Daiosho"
+          "text": "Ūngodōyō Daiosho",
+          "cueIn": 122.72
         },
         {
-          "text": "Ēnjō Gikān Daiosho"
+          "text": "Dōān Dōhi Daiosho",
+          "cueIn": 125.54
         },
         {
-          "text": "Shōūn Hōzui Daiosho"
+          "text": "Dōān Kānshi Daiosho",
+          "cueIn": 128.34
         },
         {
           "text": null
         },
         {
-          "text": "Shizān Tokuchu Daiosho"
+          "text": "Ryozān Ēnkān Daiosho",
+          "cueIn": 131.24
         },
         {
-          "text": "Nānsō Shīnshu Daiosho"
+          "text": "Tāiyō Kyōgēn Daiosho",
+          "cueIn": 134.12
         },
         {
-          "text": "Kānkāi Tokuōn Daiosho"
+          "text": "Tōsu Gisēi Daiosho",
+          "cueIn": 136.98
         },
         {
-          "text": "Kosēn Bāidō Daiosho"
+          "text": "Fuyō Dōkāi Daiosho",
+          "cueIn": 139.86
         },
         {
-          "text": "Gyakushitsu Sojūn Daiosho"
+          "text": "Tānka Shijūn Daiosho",
+          "cueIn": 142.78
         },
         {
-          "text": "Butsumōn Sogaku Daiosho"
+          "text": "Chōro Sēiryō Daiosho",
+          "cueIn": 145.58
         },
         {
-          "text": "Gyokujūn So-ōn Daiosho"
+          "text": "Tēndō Sōgaku Daiosho",
+          "cueIn": 148.6
         },
         {
-          "text": "Shōgaku Shūnryū Daiosho"
+          "text": "Sēcchō Chikān Daiosho",
+          "cueIn": 151.46
+        },
+        {
+          "text": null
+        },
+        {
+          "text": "Tēndō Nyojō Daiosho",
+          "cueIn": 154.3
+        },
+        {
+          "text": "Ēihēi Dōgēn Daiosho",
+          "cueIn": 157.24
+        },
+        {
+          "text": "Koūn Ejō Daiosho",
+          "cueIn": 160.18
+        },
+        {
+          "text": "Tēttsū Gikāi Daiosho",
+          "cueIn": 163.06
+        },
+        {
+          "text": "Kēizān Jōkīn Daiosho",
+          "cueIn": 165.84
+        },
+        {
+          "text": "Gasān Jōseki Daiosho",
+          "cueIn": 168.74
+        },
+        {
+          "text": "Tāigēn Sōshīn Daiosho",
+          "cueIn": 171.64
+        },
+        {
+          "text": "Bāizān Mōmpōn Daiosho",
+          "cueIn": 174.02
+        },
+        {
+          "text": null
+        },
+        {
+          "text": "Jōchū Tēngīn Daiosho",
+          "cueIn": 175.72
+        },
+        {
+          "text": "Shīngān Dōkū Daiosho",
+          "cueIn": 177.78
+        },
+        {
+          "text": "Sēnsō Esāi Daiosho",
+          "cueIn": 180.0
+        },
+        {
+          "text": "Iyoku Chōyū Daiosho",
+          "cueIn": 180.0
+        },
+        {
+          "text": "Mugāi Kēigōn Daiosho",
+          "cueIn": 180.0
+        },
+        {
+          "text": "Nēnshitsu Yokaku Daiosho",
+          "cueIn": 180.0
+        },
+        {
+          "text": "Sēssō Hōseki Daiosho",
+          "cueIn": 180.0
+        },
+        {
+          "text": "Tāiēi Zeshō Daiosho",
+          "cueIn": 180.0
+        },
+        {
+          "text": null
+        },
+        {
+          "text": "Nāmpo Gēntaku Daiosho",
+          "cueIn": 180.0
+        },
+        {
+          "text": "Zōdēn Yokō Daiosho",
+          "cueIn": 180.0
+        },
+        {
+          "text": "Tēnyū Sōēn Daiosho",
+          "cueIn": 180.0
+        },
+        {
+          "text": "Kēn'ān Jūnsa Daiosho",
+          "cueIn": 180.0
+        },
+        {
+          "text": "Chōkoku Koēn Daiosho",
+          "cueIn": 180.0
+        },
+        {
+          "text": "Sēnshū Dōnko Daiosho",
+          "cueIn": 180.0
+        },
+        {
+          "text": "Fudēn Gēntotsu Daiosho",
+          "cueIn": 180.0
+        },
+        {
+          "text": "Dāishūn Kān'yu Daiosho",
+          "cueIn": 180.0
+        },
+        {
+          "text": null
+        },
+        {
+          "text": "Tēnrīn Kānshū Daiosho",
+          "cueIn": 180.0
+        },
+        {
+          "text": "Sēssān Tetsuzēn Daiosho",
+          "cueIn": 180.0
+        },
+        {
+          "text": "Fuzān Shūnki Daiosho",
+          "cueIn": 180.0
+        },
+        {
+          "text": "Jīssān Mokūin Daiosho",
+          "cueIn": 180.0
+        },
+        {
+          "text": "Sēngān Bōnryū Daiosho",
+          "cueIn": 180.0
+        },
+        {
+          "text": "Dāiki Kyōkān Daiosho",
+          "cueIn": 180.0
+        },
+        {
+          "text": "Ēnjō Gikān Daiosho",
+          "cueIn": 180.0
+        },
+        {
+          "text": "Shōūn Hōzui Daiosho",
+          "cueIn": 180.0
+        },
+        {
+          "text": null
+        },
+        {
+          "text": "Shizān Tokuchu Daiosho",
+          "cueIn": 180.0
+        },
+        {
+          "text": "Nānsō Shīnshu Daiosho",
+          "cueIn": 180.0
+        },
+        {
+          "text": "Kānkāi Tokuōn Daiosho",
+          "cueIn": 180.0
+        },
+        {
+          "text": "Kosēn Bāidō Daiosho",
+          "cueIn": 180.0
+        },
+        {
+          "text": "Gyakushitsu Sojūn Daiosho",
+          "cueIn": 180.0
+        },
+        {
+          "text": "Butsumōn Sogaku Daiosho",
+          "cueIn": 180.0
+        },
+        {
+          "text": "Gyokujūn So-ōn Daiosho",
+          "cueIn": 180.0
+        },
+        {
+          "text": "Shōgaku Shūnryū Daiosho",
+          "cueIn": 180.0
         }
       ]
     },
@@ -2878,226 +2984,565 @@
       "section": "Ceremonies",
       "lines": [
         {
-          "text": "Acharya Mahapajapati"
+          "text": "Acharya Mahapajapati",
+          "cueIn": 0.6
         },
         {
-          "text": "Acharya Mitta"
+          "text": "Acharya Mitta",
+          "cueIn": 7.97
         },
         {
-          "text": "Acharya Yasodhara"
+          "text": "Acharya Yasodhara",
+          "cueIn": 10.0
         },
         {
-          "text": "Acharya Tissa"
+          "text": "Acharya Tissa",
+          "cueIn": 13.48
         },
         {
-          "text": "Acharya Sujata"
+          "text": "Acharya Sujata",
+          "cueIn": 15.12
         },
         {
-          "text": "Acharya Sundari-nanda"
+          "text": "Acharya Sundari-nanda",
+          "cueIn": 15.64
         },
         {
-          "text": "Acharya Vaddhesi"
+          "text": "Acharya Vaddhesi",
+          "cueIn": 19.06
         },
         {
-          "text": "Acharya Patachara"
-        },
-        {
-          "text": null
-        },
-        {
-          "text": "Acharya Visakha"
-        },
-        {
-          "text": "Acharya Singalaka-mata"
-        },
-        {
-          "text": "Acharya Khema"
-        },
-        {
-          "text": "Acharya Uppalavanna"
-        },
-        {
-          "text": "Acharya Samavati"
-        },
-        {
-          "text": "Acharya Uttara"
-        },
-        {
-          "text": "Acharya Chanda"
-        },
-        {
-          "text": "Acharya Uttama"
+          "text": "Acharya Patachara",
+          "cueIn": 21.7
         },
         {
           "text": null
         },
         {
-          "text": "Acharya Bhadda Kundalakesa"
+          "text": "Acharya Visakha",
+          "cueIn": 24.64
         },
         {
-          "text": "Acharya Nanduttara"
+          "text": "Acharya Singalaka-mata",
+          "cueIn": 27.36
         },
         {
-          "text": "Acharya Dantika"
+          "text": "Acharya Khema",
+          "cueIn": 30.6
         },
         {
-          "text": "Acharya Sakula"
+          "text": "Acharya Uppalavanna",
+          "cueIn": 32.96
         },
         {
-          "text": "Acharya Siha"
+          "text": "Acharya Samavati",
+          "cueIn": 36.68
         },
         {
-          "text": "Acharya Dhammadinna"
+          "text": "Acharya Uttara",
+          "cueIn": 40.1
         },
         {
-          "text": "Acharya Kisagotami"
+          "text": "Acharya Chanda",
+          "cueIn": 41.5
         },
         {
-          "text": "Acharya Ubbiri"
-        },
-        {
-          "text": null
-        },
-        {
-          "text": "Acharya Isidasi"
-        },
-        {
-          "text": "Acharya Bhadda Kapilani"
-        },
-        {
-          "text": "Acharya Mutta"
-        },
-        {
-          "text": "Acharya Sumana"
-        },
-        {
-          "text": "Acharya Dhamma"
-        },
-        {
-          "text": "Acharya Chitta"
-        },
-        {
-          "text": "Acharya Anopama"
-        },
-        {
-          "text": "Acharya Sukka"
+          "text": "Acharya Uttama",
+          "cueIn": 44.08
         },
         {
           "text": null
         },
         {
-          "text": "Acharya Sama"
+          "text": "Acharya Bhadda Kundalakesa",
+          "cueIn": 46.7
         },
         {
-          "text": "Acharya Utpalavarna"
+          "text": "Acharya Nanduttara",
+          "cueIn": 50.48
         },
         {
-          "text": "Acharya Shrimala Devi"
+          "text": "Acharya Dantika",
+          "cueIn": 53.08
         },
         {
-          "text": "Acharya Congchi"
+          "text": "Acharya Sakula",
+          "cueIn": 55.64
         },
         {
-          "text": "Acharya Lingzhao"
+          "text": "Acharya Siha",
+          "cueIn": 58.66
         },
         {
-          "text": "Acharya Moshan Liaoran"
+          "text": "Acharya Dhammadinna",
+          "cueIn": 61.5
         },
         {
-          "text": "Acharya Liu Tiemo"
+          "text": "Acharya Kisagotami",
+          "cueIn": 64.54
         },
         {
-          "text": "Acharya Miaoxin"
-        },
-        {
-          "text": null
-        },
-        {
-          "text": "Acharya Daoshen"
-        },
-        {
-          "text": "Acharya Shiji"
-        },
-        {
-          "text": "Acharya Zhi'an"
-        },
-        {
-          "text": "Acharya Huiguang"
-        },
-        {
-          "text": "Acharya Kongshi Daoren"
-        },
-        {
-          "text": "Acharya Yu Daopo"
-        },
-        {
-          "text": "Acharya Huiwen"
-        },
-        {
-          "text": "Acharya Fadeng"
+          "text": "Acharya Ubbiri",
+          "cueIn": 67.4
         },
         {
           "text": null
         },
         {
-          "text": "Acharya Wenzhao"
+          "text": "Acharya Isidasi",
+          "cueIn": 70.0
         },
         {
-          "text": "Acharya Miaodao"
+          "text": "Acharya Bhadda Kapilani",
+          "cueIn": 72.88
         },
         {
-          "text": "Acharya Zhitong"
+          "text": "Acharya Mutta",
+          "cueIn": 75.86
         },
         {
-          "text": "Acharya Zenshin"
+          "text": "Acharya Sumana",
+          "cueIn": 78.12
         },
         {
-          "text": "Acharya Zenzo"
+          "text": "Acharya Dhamma",
+          "cueIn": 80.98
         },
         {
-          "text": "Acharya Ezen"
+          "text": "Acharya Chitta",
+          "cueIn": 83.7
         },
         {
-          "text": "Acharya Ryonen"
+          "text": "Acharya Anopama",
+          "cueIn": 86.26
         },
         {
-          "text": "Acharya Egi"
-        },
-        {
-          "text": null
-        },
-        {
-          "text": "Acharya Shogaku"
-        },
-        {
-          "text": "Acharya Ekan"
-        },
-        {
-          "text": "Acharya Shōzen"
-        },
-        {
-          "text": "Acharya Mokufu Sonin"
-        },
-        {
-          "text": "Acharya Myosho Enkan"
-        },
-        {
-          "text": "Acharya Ekyu"
-        },
-        {
-          "text": "Acharya Eshun"
-        },
-        {
-          "text": "Acharya Soshin"
+          "text": "Acharya Sukka",
+          "cueIn": 88.78
         },
         {
           "text": null
         },
         {
-          "text": "Acharya Soitsu"
+          "text": "Acharya Sama",
+          "cueIn": 91.8
         },
         {
-          "text": "Acharya Chiyono"
+          "text": "Acharya Utpalavarna",
+          "cueIn": 94.22
+        },
+        {
+          "text": "Acharya Shrimala Devi",
+          "cueIn": 97.44
+        },
+        {
+          "text": "Acharya Congchi",
+          "cueIn": 100.78
+        },
+        {
+          "text": "Acharya Lingzhao",
+          "cueIn": 103.42
+        },
+        {
+          "text": "Acharya Moshan Liaoran",
+          "cueIn": 106.1
+        },
+        {
+          "text": "Acharya Liu Tiemo",
+          "cueIn": 109.88
+        },
+        {
+          "text": "Acharya Miaoxin",
+          "cueIn": 112.18
+        },
+        {
+          "text": null
+        },
+        {
+          "text": "Acharya Daoshen",
+          "cueIn": 115.0
+        },
+        {
+          "text": "Acharya Shiji",
+          "cueIn": 117.44
+        },
+        {
+          "text": "Acharya Zhi'an",
+          "cueIn": 119.9
+        },
+        {
+          "text": "Acharya Huiguang",
+          "cueIn": 122.74
+        },
+        {
+          "text": "Acharya Kongshi Daoren",
+          "cueIn": 125.24
+        },
+        {
+          "text": "Acharya Yu Daopo",
+          "cueIn": 128.34
+        },
+        {
+          "text": "Acharya Huiwen",
+          "cueIn": 129.72
+        },
+        {
+          "text": "Acharya Fadeng",
+          "cueIn": 133.94
+        },
+        {
+          "text": null
+        },
+        {
+          "text": "Acharya Wenzhao",
+          "cueIn": 136.16
+        },
+        {
+          "text": "Acharya Miaodao",
+          "cueIn": 138.9
+        },
+        {
+          "text": "Acharya Zhitong",
+          "cueIn": 141.78
+        },
+        {
+          "text": "Acharya Zenshin",
+          "cueIn": 143.88
+        },
+        {
+          "text": "Acharya Zenzo",
+          "cueIn": 146.34
+        },
+        {
+          "text": "Acharya Ezen",
+          "cueIn": 148.98
+        },
+        {
+          "text": "Acharya Ryonen",
+          "cueIn": 151.46
+        },
+        {
+          "text": "Acharya Egi",
+          "cueIn": 153.9
+        },
+        {
+          "text": null
+        },
+        {
+          "text": "Acharya Shogaku",
+          "cueIn": 156.42
+        },
+        {
+          "text": "Acharya Ekan",
+          "cueIn": 159.72
+        },
+        {
+          "text": "Acharya Shōzen",
+          "cueIn": 161.5
+        },
+        {
+          "text": "Acharya Mokufu Sonin",
+          "cueIn": 164.14
+        },
+        {
+          "text": "Acharya Myosho Enkan",
+          "cueIn": 167.38
+        },
+        {
+          "text": "Acharya Ekyu",
+          "cueIn": 170.34
+        },
+        {
+          "text": "Acharya Eshun",
+          "cueIn": 172.86
+        },
+        {
+          "text": "Acharya Soshin",
+          "cueIn": 175.24
+        },
+        {
+          "text": null
+        },
+        {
+          "text": "Acharya Soitsu",
+          "cueIn": 177.86
+        },
+        {
+          "text": "Acharya Chiyono",
+          "cueIn": 180.14
+        }
+      ]
+    },
+    {
+      "id": "names-buddhas-ancestors-monday",
+      "title": "Names of the Buddhas and Ancestors",
+      "section": "Ceremonies",
+      "audio": null,
+      "lines": [
+        {
+          "text": "Bibashi Butsu Daiosho",
+          "cueIn": 0.48
+        },
+        {
+          "text": "Shiki Butsu Daiosho",
+          "cueIn": 2.62
+        },
+        {
+          "text": "Bishafu Butsu Daiosho",
+          "cueIn": 4.92
+        },
+        {
+          "text": "Kurusōn Butsu Daiosho",
+          "cueIn": 7.4
+        },
+        {
+          "text": "Kunagōnmuni Butsu Daiosho",
+          "cueIn": 9.96
+        },
+        {
+          "text": "Kashō Butsu Daiosho",
+          "cueIn": 13.04
+        },
+        {
+          "text": "Shakamuni Butsu Daiosho",
+          "cueIn": 15.74
+        },
+        {
+          "text": "Makakashō Daiosho",
+          "cueIn": 18.78
+        },
+        {
+          "text": null
+        },
+        {
+          "text": "Anānda Daiosho",
+          "cueIn": 21.1
+        },
+        {
+          "text": "Shōnawashu Daiosho",
+          "cueIn": 23.42
+        },
+        {
+          "text": "Ubakikuta Daiosho",
+          "cueIn": 25.98
+        },
+        {
+          "text": "Dāitaka Daiosho",
+          "cueIn": 28.52
+        },
+        {
+          "text": "Mishaka Daiosho",
+          "cueIn": 31.1
+        },
+        {
+          "text": "Vashumitsu Daiosho",
+          "cueIn": 33.32
+        },
+        {
+          "text": "Butsudanāndāi Daiosho",
+          "cueIn": 35.86
+        },
+        {
+          "text": "Fudamītta Daiosho",
+          "cueIn": 38.78
+        },
+        {
+          "text": null
+        },
+        {
+          "text": "Barishiba Daiosho",
+          "cueIn": 41.32
+        },
+        {
+          "text": "Funayasha Daiosho",
+          "cueIn": 43.94
+        },
+        {
+          "text": "Anabotēi Daiosho",
+          "cueIn": 46.36
+        },
+        {
+          "text": "Kabimara Daiosho",
+          "cueIn": 49.18
+        },
+        {
+          "text": "Nagyaharajuna Daiosho",
+          "cueIn": 51.74
+        },
+        {
+          "text": "Kanadāiba Daiosho",
+          "cueIn": 54.64
+        },
+        {
+          "text": "Ragorata Daiosho",
+          "cueIn": 57.36
+        },
+        {
+          "text": "Sōgyanāndāi Daiosho",
+          "cueIn": 60.52
+        },
+        {
+          "text": null
+        },
+        {
+          "text": "Kayashata Daiosho",
+          "cueIn": 62.9
+        },
+        {
+          "text": "Kumorata Daiosho",
+          "cueIn": 65.42
+        },
+        {
+          "text": "Shayata Daiosho",
+          "cueIn": 67.9
+        },
+        {
+          "text": "Vashubānzu Daiosho",
+          "cueIn": 70.26
+        },
+        {
+          "text": "Manura Daiosho",
+          "cueIn": 72.94
+        },
+        {
+          "text": "Kakurokuna Daiosho",
+          "cueIn": 75.26
+        },
+        {
+          "text": "Shishibodāi Daiosho",
+          "cueIn": 77.9
+        },
+        {
+          "text": "Bashashita Daiosho",
+          "cueIn": 80.68
+        },
+        {
+          "text": null
+        },
+        {
+          "text": "Funyomītta Daiosho",
+          "cueIn": 83.32
+        },
+        {
+          "text": "Hānnyatara Daiosho",
+          "cueIn": 86.0
+        },
+        {
+          "text": "Bodāidaruma Daiosho",
+          "cueIn": 89.36
+        },
+        {
+          "text": "Tāiso Eka Daiosho",
+          "cueIn": 91.66
+        },
+        {
+          "text": "Kānchi Sōsān Daiosho",
+          "cueIn": 94.46
+        },
+        {
+          "text": "Dāi-I Dōshīn Daiosho",
+          "cueIn": 97.28
+        },
+        {
+          "text": "Dāimān Kōnīn Daiosho",
+          "cueIn": 100.06
+        },
+        {
+          "text": "Dāikān Enō Daiosho",
+          "cueIn": 102.8
+        },
+        {
+          "text": null
+        },
+        {
+          "text": "Sēigēn Gyōshi Daiosho",
+          "cueIn": 105.58
+        },
+        {
+          "text": "Sekitō Kisēn Daiosho",
+          "cueIn": 108.52
+        },
+        {
+          "text": "Yakusān Igēn Daiosho",
+          "cueIn": 111.22
+        },
+        {
+          "text": "Ūngān Dōnjō Daiosho",
+          "cueIn": 114.1
+        },
+        {
+          "text": "Tōzān Ryōkāi Daiosho",
+          "cueIn": 116.8
+        },
+        {
+          "text": "Ūngodōyō Daiosho",
+          "cueIn": 119.72
+        },
+        {
+          "text": "Dōān Dōhi Daiosho",
+          "cueIn": 122.56
+        },
+        {
+          "text": "Dōān Kānshi Daiosho",
+          "cueIn": 125.34
+        },
+        {
+          "text": null
+        },
+        {
+          "text": "Ryozān Ēnkān Daiosho",
+          "cueIn": 128.24
+        },
+        {
+          "text": "Tāiyō Kyōgēn Daiosho",
+          "cueIn": 131.14
+        },
+        {
+          "text": "Tōsu Gisēi Daiosho",
+          "cueIn": 134.0
+        },
+        {
+          "text": "Fuyō Dōkāi Daiosho",
+          "cueIn": 136.86
+        },
+        {
+          "text": "Tānka Shijūn Daiosho",
+          "cueIn": 139.78
+        },
+        {
+          "text": "Chōro Sēiryō Daiosho",
+          "cueIn": 142.62
+        },
+        {
+          "text": "Tēndō Sōgaku Daiosho",
+          "cueIn": 145.6
+        },
+        {
+          "text": "Sēcchō Chikān Daiosho",
+          "cueIn": 148.5
+        },
+        {
+          "text": null
+        },
+        {
+          "text": "Tēndō Nyojō Daiosho",
+          "cueIn": 151.38
+        },
+        {
+          "text": "Ēihēi Dōgēn Daiosho",
+          "cueIn": 154.3
+        },
+        {
+          "text": "Koūn Ejō Daiosho",
+          "cueIn": 157.2
+        },
+        {
+          "text": "Tēttsū Gikāi Daiosho",
+          "cueIn": 160.14
+        },
+        {
+          "text": "Kēizān Jōkīn Daiosho",
+          "cueIn": 162.88
         }
       ]
     }
@@ -3316,7 +3761,7 @@
         "heart-sutra",
         "hymn-perfection-wisdom",
         "shosaimyo",
-        "names-buddhas-ancestors",
+        "names-buddhas-ancestors-monday",
         "names-women-ancestors",
         "after-dedication"
       ],
@@ -3688,64 +4133,64 @@
           ]
         },
         {
-          "chantId": "names-buddhas-ancestors",
-          "startTime": 527.96,
+          "chantId": "names-buddhas-ancestors-monday",
+          "startTime": 623.48,
           "lines": [
             {
               "lineIndex": 0,
-              "cueIn": 527.96
+              "cueIn": 623.48
             },
             {
               "lineIndex": 1,
-              "cueIn": 531.3
+              "cueIn": 625.62
             },
             {
               "lineIndex": 2,
-              "cueIn": 532.92
+              "cueIn": 627.92
             },
             {
               "lineIndex": 3,
-              "cueIn": 577.38
+              "cueIn": 630.4
             },
             {
               "lineIndex": 4,
-              "cueIn": 579.98
+              "cueIn": 632.96
             },
             {
               "lineIndex": 5,
-              "cueIn": 581.02
+              "cueIn": 636.04
             },
             {
               "lineIndex": 6,
-              "cueIn": 591.06
+              "cueIn": 638.74
             },
             {
               "lineIndex": 7,
-              "cueIn": 640.54
+              "cueIn": 641.78
             },
             {
               "lineIndex": 9,
-              "cueIn": 644.14
+              "cueIn": 644.1
             },
             {
               "lineIndex": 10,
-              "cueIn": 646.52
+              "cueIn": 646.42
             },
             {
               "lineIndex": 11,
-              "cueIn": 649.02
+              "cueIn": 648.98
             },
             {
               "lineIndex": 12,
-              "cueIn": 651.62
+              "cueIn": 651.52
             },
             {
               "lineIndex": 13,
-              "cueIn": 654.18
+              "cueIn": 654.1
             },
             {
               "lineIndex": 14,
-              "cueIn": 656.3
+              "cueIn": 656.32
             },
             {
               "lineIndex": 15,
@@ -3753,7 +4198,7 @@
             },
             {
               "lineIndex": 16,
-              "cueIn": 661.76
+              "cueIn": 661.78
             },
             {
               "lineIndex": 18,
@@ -3761,55 +4206,55 @@
             },
             {
               "lineIndex": 19,
-              "cueIn": 666.92
+              "cueIn": 666.94
             },
             {
               "lineIndex": 20,
-              "cueIn": 669.08
+              "cueIn": 669.36
             },
             {
               "lineIndex": 21,
-              "cueIn": 670.4
+              "cueIn": 672.18
             },
             {
               "lineIndex": 22,
-              "cueIn": 674.68
+              "cueIn": 674.74
             },
             {
               "lineIndex": 23,
-              "cueIn": 677.66
+              "cueIn": 677.64
             },
             {
               "lineIndex": 24,
-              "cueIn": 680.4
+              "cueIn": 680.36
             },
             {
               "lineIndex": 25,
-              "cueIn": 683.08
+              "cueIn": 683.52
             },
             {
               "lineIndex": 27,
-              "cueIn": 686.08
+              "cueIn": 685.9
             },
             {
               "lineIndex": 28,
-              "cueIn": 688.56
+              "cueIn": 688.42
             },
             {
               "lineIndex": 29,
-              "cueIn": 690.92
+              "cueIn": 690.9
             },
             {
               "lineIndex": 30,
-              "cueIn": 693.44
+              "cueIn": 693.26
             },
             {
               "lineIndex": 31,
-              "cueIn": 696.0
+              "cueIn": 695.94
             },
             {
               "lineIndex": 32,
-              "cueIn": 698.28
+              "cueIn": 698.26
             },
             {
               "lineIndex": 33,
@@ -3821,7 +4266,7 @@
             },
             {
               "lineIndex": 36,
-              "cueIn": 706.28
+              "cueIn": 706.32
             },
             {
               "lineIndex": 37,
@@ -3829,19 +4274,19 @@
             },
             {
               "lineIndex": 38,
-              "cueIn": 711.92
+              "cueIn": 712.36
             },
             {
               "lineIndex": 39,
-              "cueIn": 714.7
+              "cueIn": 714.66
             },
             {
               "lineIndex": 40,
-              "cueIn": 717.54
+              "cueIn": 717.46
             },
             {
               "lineIndex": 41,
-              "cueIn": 720.36
+              "cueIn": 720.28
             },
             {
               "lineIndex": 42,
@@ -3849,23 +4294,23 @@
             },
             {
               "lineIndex": 43,
-              "cueIn": 725.78
+              "cueIn": 725.8
             },
             {
               "lineIndex": 45,
-              "cueIn": 728.6
+              "cueIn": 728.58
             },
             {
               "lineIndex": 46,
-              "cueIn": 731.5
+              "cueIn": 731.52
             },
             {
               "lineIndex": 47,
-              "cueIn": 734.2
+              "cueIn": 734.22
             },
             {
               "lineIndex": 48,
-              "cueIn": 737.14
+              "cueIn": 737.1
             },
             {
               "lineIndex": 49,
@@ -3877,11 +4322,11 @@
             },
             {
               "lineIndex": 51,
-              "cueIn": 745.58
+              "cueIn": 745.56
             },
             {
               "lineIndex": 52,
-              "cueIn": 748.42
+              "cueIn": 748.34
             },
             {
               "lineIndex": 54,
@@ -3889,15 +4334,15 @@
             },
             {
               "lineIndex": 55,
-              "cueIn": 754.2
+              "cueIn": 754.14
             },
             {
               "lineIndex": 56,
-              "cueIn": 756.96
+              "cueIn": 757.0
             },
             {
               "lineIndex": 57,
-              "cueIn": 759.92
+              "cueIn": 759.86
             },
             {
               "lineIndex": 58,
@@ -3905,7 +4350,7 @@
             },
             {
               "lineIndex": 59,
-              "cueIn": 765.64
+              "cueIn": 765.62
             },
             {
               "lineIndex": 60,
@@ -3917,7 +4362,7 @@
             },
             {
               "lineIndex": 63,
-              "cueIn": 774.34
+              "cueIn": 774.38
             },
             {
               "lineIndex": 64,
@@ -3925,471 +4370,331 @@
             },
             {
               "lineIndex": 65,
-              "cueIn": 780.18
+              "cueIn": 780.2
             },
             {
               "lineIndex": 66,
-              "cueIn": 783.08
+              "cueIn": 783.14
             },
             {
               "lineIndex": 67,
-              "cueIn": 785.78
-            },
-            {
-              "lineIndex": 68,
-              "cueIn": 788.74
-            },
-            {
-              "lineIndex": 69,
-              "cueIn": 790.46
-            },
-            {
-              "lineIndex": 70,
-              "cueIn": 790.46
-            },
-            {
-              "lineIndex": 72,
-              "cueIn": 790.46
-            },
-            {
-              "lineIndex": 73,
-              "cueIn": 844.79
-            },
-            {
-              "lineIndex": 74,
-              "cueIn": 846.74
-            },
-            {
-              "lineIndex": 75,
-              "cueIn": 854.38
-            },
-            {
-              "lineIndex": 76,
-              "cueIn": 859.92
-            },
-            {
-              "lineIndex": 77,
-              "cueIn": 862.48
-            },
-            {
-              "lineIndex": 78,
-              "cueIn": 959.66
-            },
-            {
-              "lineIndex": 79,
-              "cueIn": 961.9
-            },
-            {
-              "lineIndex": 81,
-              "cueIn": 962.12
-            },
-            {
-              "lineIndex": 82,
-              "cueIn": 962.88
-            },
-            {
-              "lineIndex": 83,
-              "cueIn": 965.6
-            },
-            {
-              "lineIndex": 84,
-              "cueIn": 972.3
-            },
-            {
-              "lineIndex": 85,
-              "cueIn": 1006.54
-            },
-            {
-              "lineIndex": 86,
-              "cueIn": 1026.58
-            },
-            {
-              "lineIndex": 87,
-              "cueIn": 1033.24
-            },
-            {
-              "lineIndex": 88,
-              "cueIn": 1042.7
-            },
-            {
-              "lineIndex": 90,
-              "cueIn": 1177.0
-            },
-            {
-              "lineIndex": 91,
-              "cueIn": 1179.44
-            },
-            {
-              "lineIndex": 92,
-              "cueIn": 1179.44
-            },
-            {
-              "lineIndex": 93,
-              "cueIn": 1179.62
-            },
-            {
-              "lineIndex": 94,
-              "cueIn": 1179.64
-            },
-            {
-              "lineIndex": 95,
-              "cueIn": 1180.02
-            },
-            {
-              "lineIndex": 96,
-              "cueIn": 1180.02
-            },
-            {
-              "lineIndex": 97,
-              "cueIn": 1180.02
-            },
-            {
-              "lineIndex": 99,
-              "cueIn": 1180.02
-            },
-            {
-              "lineIndex": 100,
-              "cueIn": 1180.02
-            },
-            {
-              "lineIndex": 101,
-              "cueIn": 1180.02
-            },
-            {
-              "lineIndex": 102,
-              "cueIn": 1180.02
-            },
-            {
-              "lineIndex": 103,
-              "cueIn": 1180.02
-            },
-            {
-              "lineIndex": 104,
-              "cueIn": 1180.02
-            },
-            {
-              "lineIndex": 105,
-              "cueIn": 1180.02
-            },
-            {
-              "lineIndex": 106,
-              "cueIn": 1180.02
+              "cueIn": 785.88
             }
           ]
         },
         {
           "chantId": "names-women-ancestors",
-          "startTime": 1180.02,
+          "startTime": 798.6,
           "lines": [
             {
               "lineIndex": 0,
-              "cueIn": 1180.02
+              "cueIn": 798.6
             },
             {
               "lineIndex": 1,
-              "cueIn": 1180.02
+              "cueIn": 805.97
             },
             {
               "lineIndex": 2,
-              "cueIn": 1180.02
+              "cueIn": 808.0
             },
             {
               "lineIndex": 3,
-              "cueIn": 1180.02
+              "cueIn": 811.48
             },
             {
               "lineIndex": 4,
-              "cueIn": 1180.02
+              "cueIn": 813.12
             },
             {
               "lineIndex": 5,
-              "cueIn": 1180.02
+              "cueIn": 813.64
             },
             {
               "lineIndex": 6,
-              "cueIn": 1180.02
+              "cueIn": 817.06
             },
             {
               "lineIndex": 7,
-              "cueIn": 1180.02
+              "cueIn": 819.7
             },
             {
               "lineIndex": 9,
-              "cueIn": 1180.02
+              "cueIn": 822.64
             },
             {
               "lineIndex": 10,
-              "cueIn": 1180.02
+              "cueIn": 825.36
             },
             {
               "lineIndex": 11,
-              "cueIn": 1180.02
+              "cueIn": 828.6
             },
             {
               "lineIndex": 12,
-              "cueIn": 1180.02
+              "cueIn": 830.96
             },
             {
               "lineIndex": 13,
-              "cueIn": 1180.02
+              "cueIn": 834.68
             },
             {
               "lineIndex": 14,
-              "cueIn": 1180.02
+              "cueIn": 838.1
             },
             {
               "lineIndex": 15,
-              "cueIn": 1180.02
+              "cueIn": 839.5
             },
             {
               "lineIndex": 16,
-              "cueIn": 1180.02
+              "cueIn": 842.08
             },
             {
               "lineIndex": 18,
-              "cueIn": 1180.02
+              "cueIn": 844.7
             },
             {
               "lineIndex": 19,
-              "cueIn": 1180.02
+              "cueIn": 848.48
             },
             {
               "lineIndex": 20,
-              "cueIn": 1180.02
+              "cueIn": 851.08
             },
             {
               "lineIndex": 21,
-              "cueIn": 1180.02
+              "cueIn": 853.64
             },
             {
               "lineIndex": 22,
-              "cueIn": 1180.02
+              "cueIn": 856.66
             },
             {
               "lineIndex": 23,
-              "cueIn": 1180.02
+              "cueIn": 859.5
             },
             {
               "lineIndex": 24,
-              "cueIn": 1180.02
+              "cueIn": 862.54
             },
             {
               "lineIndex": 25,
-              "cueIn": 1180.02
+              "cueIn": 865.4
             },
             {
               "lineIndex": 27,
-              "cueIn": 1180.02
+              "cueIn": 868.0
             },
             {
               "lineIndex": 28,
-              "cueIn": 1180.02
+              "cueIn": 870.88
             },
             {
               "lineIndex": 29,
-              "cueIn": 1180.02
+              "cueIn": 873.86
             },
             {
               "lineIndex": 30,
-              "cueIn": 1180.02
+              "cueIn": 876.12
             },
             {
               "lineIndex": 31,
-              "cueIn": 1180.02
+              "cueIn": 878.98
             },
             {
               "lineIndex": 32,
-              "cueIn": 1180.02
+              "cueIn": 881.7
             },
             {
               "lineIndex": 33,
-              "cueIn": 1180.02
+              "cueIn": 884.26
             },
             {
               "lineIndex": 34,
-              "cueIn": 1180.02
+              "cueIn": 886.78
             },
             {
               "lineIndex": 36,
-              "cueIn": 1180.02
+              "cueIn": 889.8
             },
             {
               "lineIndex": 37,
-              "cueIn": 1180.02
+              "cueIn": 892.22
             },
             {
               "lineIndex": 38,
-              "cueIn": 1180.02
+              "cueIn": 895.44
             },
             {
               "lineIndex": 39,
-              "cueIn": 1180.02
+              "cueIn": 898.78
             },
             {
               "lineIndex": 40,
-              "cueIn": 1180.02
+              "cueIn": 901.42
             },
             {
               "lineIndex": 41,
-              "cueIn": 1180.02
+              "cueIn": 904.1
             },
             {
               "lineIndex": 42,
-              "cueIn": 1180.02
+              "cueIn": 907.88
             },
             {
               "lineIndex": 43,
-              "cueIn": 1180.02
+              "cueIn": 910.18
             },
             {
               "lineIndex": 45,
-              "cueIn": 1180.02
+              "cueIn": 913.0
             },
             {
               "lineIndex": 46,
-              "cueIn": 1180.02
+              "cueIn": 915.44
             },
             {
               "lineIndex": 47,
-              "cueIn": 1180.02
+              "cueIn": 917.9
             },
             {
               "lineIndex": 48,
-              "cueIn": 1180.02
+              "cueIn": 920.74
             },
             {
               "lineIndex": 49,
-              "cueIn": 1180.02
+              "cueIn": 923.24
             },
             {
               "lineIndex": 50,
-              "cueIn": 1180.02
+              "cueIn": 926.34
             },
             {
               "lineIndex": 51,
-              "cueIn": 1180.02
+              "cueIn": 927.72
             },
             {
               "lineIndex": 52,
-              "cueIn": 1180.02
+              "cueIn": 931.94
             },
             {
               "lineIndex": 54,
-              "cueIn": 1180.02
+              "cueIn": 934.16
             },
             {
               "lineIndex": 55,
-              "cueIn": 1180.02
+              "cueIn": 936.9
             },
             {
               "lineIndex": 56,
-              "cueIn": 1180.02
+              "cueIn": 939.78
             },
             {
               "lineIndex": 57,
-              "cueIn": 1180.02
+              "cueIn": 941.88
             },
             {
               "lineIndex": 58,
-              "cueIn": 1180.02
+              "cueIn": 944.34
             },
             {
               "lineIndex": 59,
-              "cueIn": 1180.02
+              "cueIn": 946.98
             },
             {
               "lineIndex": 60,
-              "cueIn": 1180.02
+              "cueIn": 949.46
             },
             {
               "lineIndex": 61,
-              "cueIn": 1180.02
+              "cueIn": 951.9
             },
             {
               "lineIndex": 63,
-              "cueIn": 1180.02
+              "cueIn": 954.42
             },
             {
               "lineIndex": 64,
-              "cueIn": 1180.02
+              "cueIn": 957.72
             },
             {
               "lineIndex": 65,
-              "cueIn": 1180.02
+              "cueIn": 959.5
             },
             {
               "lineIndex": 66,
-              "cueIn": 1180.02
+              "cueIn": 962.14
             },
             {
               "lineIndex": 67,
-              "cueIn": 1180.02
+              "cueIn": 965.38
             },
             {
               "lineIndex": 68,
-              "cueIn": 1180.02
+              "cueIn": 968.34
             },
             {
               "lineIndex": 69,
-              "cueIn": 1180.02
+              "cueIn": 970.86
             },
             {
               "lineIndex": 70,
-              "cueIn": 1180.02
+              "cueIn": 973.24
             },
             {
               "lineIndex": 72,
-              "cueIn": 1180.02
+              "cueIn": 975.86
             },
             {
               "lineIndex": 73,
-              "cueIn": 1180.02
+              "cueIn": 978.14
             }
           ]
         },
         {
           "chantId": "after-dedication",
-          "startTime": 1180.02,
+          "startTime": 1007.22,
           "lines": [
             {
               "lineIndex": 0,
-              "cueIn": 1180.02
+              "cueIn": 1007.22
             },
             {
               "lineIndex": 1,
-              "cueIn": 1180.02
+              "cueIn": 1012.4
             },
             {
               "lineIndex": 2,
-              "cueIn": 1180.02
+              "cueIn": 1013.8
             },
             {
               "lineIndex": 3,
-              "cueIn": 1180.02
+              "cueIn": 1025.4
             },
             {
               "lineIndex": 4,
-              "cueIn": 1180.02
+              "cueIn": 1029.58
             },
             {
               "lineIndex": 5,
-              "cueIn": 1180.02
+              "cueIn": 1029.58
             },
             {
               "lineIndex": 7,
-              "cueIn": 1180.02
+              "cueIn": 1029.94
             },
             {
               "lineIndex": 8,
-              "cueIn": 1180.02
+              "cueIn": 1042.84
             },
             {
               "lineIndex": 9,
-              "cueIn": 1180.02
+              "cueIn": 1047.52
             },
             {
               "lineIndex": 10,
-              "cueIn": 1180.02
+              "cueIn": 1050.0
             }
           ]
         }

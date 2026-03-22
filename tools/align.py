@@ -5,6 +5,7 @@ Align chant audio to text lines using stable-whisper forced alignment.
 Usage:
     python3 tools/align.py sanghas/sfzc.json
     python3 tools/align.py sanghas/sfzc.json --dry-run
+    python3 tools/align.py sanghas/sfzc.json --chant names-buddhas-ancestors --audio audio/sfzc/clips/names_buddhas_monday.mp3
 """
 
 import argparse
@@ -37,11 +38,12 @@ def flatten_words(segments) -> list[tuple[str, float]]:
     return words
 
 
-def process_chant(chant: dict, model, dry_run: bool) -> int:
+def process_chant(chant: dict, model, dry_run: bool, audio_override=None) -> int:
     """
     Align one chant.  Returns the number of lines that received a cueIn.
+    If audio_override is given, use it for alignment but do not persist it.
     """
-    audio_path = chant.get("audio")
+    audio_path = audio_override or chant.get("audio")
     lines = chant.get("lines", [])
 
     # Collect non-null text lines for the transcript
@@ -82,7 +84,13 @@ def main():
     parser = argparse.ArgumentParser(description="Align chant audio with stable-whisper.")
     parser.add_argument("sangha_json", help="Path to sangha JSON file")
     parser.add_argument("--dry-run", action="store_true", help="Print what would happen without writing")
+    parser.add_argument("--chant", metavar="ID", help="Only process the chant with this id")
+    parser.add_argument("--audio", metavar="PATH", help="Override audio path for the selected chant (not written to JSON)")
     args = parser.parse_args()
+
+    if args.audio and not args.chant:
+        print("Error: --audio requires --chant", file=sys.stderr)
+        sys.exit(1)
 
     json_path = Path(args.sangha_json)
     if not json_path.exists():
@@ -92,7 +100,16 @@ def main():
     with open(json_path) as f:
         data = json.load(f)
 
-    chants_with_audio = [c for c in data.get("chants", []) if c.get("audio") is not None]
+    if args.chant:
+        chants_with_audio = [c for c in data.get("chants", []) if c["id"] == args.chant]
+        if not chants_with_audio:
+            print(f"Error: chant '{args.chant}' not found in {json_path}", file=sys.stderr)
+            sys.exit(1)
+        if not args.audio and not chants_with_audio[0].get("audio"):
+            print(f"Error: chant '{args.chant}' has no audio field and --audio was not provided", file=sys.stderr)
+            sys.exit(1)
+    else:
+        chants_with_audio = [c for c in data.get("chants", []) if c.get("audio") is not None]
 
     if not chants_with_audio:
         print("No chants with audio found.")
@@ -111,7 +128,8 @@ def main():
     total_lines = 0
 
     for chant in chants_with_audio:
-        lines_matched = process_chant(chant, model, dry_run=args.dry_run)
+        audio_override = args.audio if (args.chant and chant["id"] == args.chant) else None
+        lines_matched = process_chant(chant, model, dry_run=args.dry_run, audio_override=audio_override)
         total_chants += 1
         total_lines += lines_matched
 
