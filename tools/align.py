@@ -38,10 +38,12 @@ def flatten_words(segments) -> list[tuple[str, float]]:
     return words
 
 
-def process_chant(chant: dict, model, dry_run: bool, audio_override=None) -> int:
+def process_chant(chant: dict, model, dry_run: bool, audio_override=None, no_write_cuein: bool = False) -> int:
     """
     Align one chant.  Returns the number of lines that received a cueIn.
     If audio_override is given, use it for alignment but do not persist it.
+    If no_write_cuein is True, run alignment and print results but do not
+    write cueIn values back to the chant object.
     """
     audio_path = audio_override or chant.get("audio")
     lines = chant.get("lines", [])
@@ -71,7 +73,11 @@ def process_chant(chant: dict, model, dry_run: bool, audio_override=None) -> int
         # Scan forward from pointer for the next occurrence of this line's first word
         for i in range(pointer, len(words)):
             if words[i][0] == key:
-                line["cueIn"] = round(words[i][1], 2)
+                cue = round(words[i][1], 2)
+                if no_write_cuein:
+                    print(f"    [no-write] {text[:40]!r} → {cue}")
+                else:
+                    line["cueIn"] = cue
                 pointer = i + 1
                 matched += 1
                 break
@@ -86,6 +92,7 @@ def main():
     parser.add_argument("--dry-run", action="store_true", help="Print what would happen without writing")
     parser.add_argument("--chant", metavar="ID", help="Only process the chant with this id")
     parser.add_argument("--audio", metavar="PATH", help="Override audio path for the selected chant (not written to JSON)")
+    parser.add_argument("--no-write-cuein", action="store_true", help="Run alignment but do not write cueIn values back to the chant object")
     args = parser.parse_args()
 
     if args.audio and not args.chant:
@@ -129,7 +136,7 @@ def main():
 
     for chant in chants_with_audio:
         audio_override = args.audio if (args.chant and chant["id"] == args.chant) else None
-        lines_matched = process_chant(chant, model, dry_run=args.dry_run, audio_override=audio_override)
+        lines_matched = process_chant(chant, model, dry_run=args.dry_run, audio_override=audio_override, no_write_cuein=args.no_write_cuein)
         total_chants += 1
         total_lines += lines_matched
 
@@ -137,6 +144,8 @@ def main():
         print(f"\n[dry-run] Would process {total_chants} chant(s).")
         print(f"[dry-run] Would back up {json_path} → {json_path}.bak")
         print(f"[dry-run] Would write updated JSON to {json_path}")
+    elif args.no_write_cuein:
+        print(f"\n[no-write-cuein] Alignment complete — cueIn values not written to JSON.")
     else:
         bak_path = json_path.with_suffix(json_path.suffix + ".bak")
         shutil.copy2(json_path, bak_path)

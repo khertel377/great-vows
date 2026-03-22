@@ -162,6 +162,17 @@
   #chantScreen.spotlight .chant-line.next   { opacity: 0.08; }
   #chantScreen.spotlight .chant-line.future { opacity: 0; }
   .section-gap { height: 28px; }
+  #ceremonyLine {
+    position: fixed; top: 50%; transform: translateY(-50%);
+    left: 8vw;
+    font-family: 'DM Sans', sans-serif;
+    font-size: clamp(24px, 5vw, 50px); font-weight: 700;
+    line-height: 1.3; letter-spacing: -0.01em;
+    color: var(--text);
+    opacity: 0; pointer-events: none;
+    z-index: 15;
+    transition: opacity 0.4s ease;
+  }
 
   /* top bar */
   .top-bar {
@@ -310,6 +321,7 @@
     </div>
     <div class="lineage-tag" id="lineageTag"></div>
   </div>
+  <div id="ceremonyLine"></div>
   <div id="chantStage">
     <div id="chantTrack"></div>
   </div>
@@ -348,6 +360,8 @@ var isPlaying = false;
 var tweenRaf = null;
 var isScrubbing = false;
 var scrubTimer = null;
+var _lastCeremonyIdx = -2;  // -2 = uninitialized, -1 = hidden
+var _ceremonyFadeTimer = null;
 var lineTranslates = {};
 var currentBoost = 1.0;
 var currentSpeedBoost = 1.0;
@@ -553,6 +567,17 @@ function loadService(svc) {
   });
   ceremonyCues.sort(function(a, b) { return a.time - b.time; });
 
+  // compute chant window (first startTime → last line cueIn) for ceremony cue splitting
+  var chantWindowStart, chantWindowEnd;
+  if (svc.timestampMap && svc.timestampMap.length > 0) {
+    chantWindowStart = svc.timestampMap[0].startTime;
+    var lastEntry = svc.timestampMap[svc.timestampMap.length - 1];
+    var lastEntryLines = lastEntry.lines;
+    chantWindowEnd = lastEntryLines.length > 0
+      ? lastEntryLines[lastEntryLines.length - 1].cueIn
+      : chantWindowStart;
+  }
+
   // use the service's own recording if it has one
   var virtual = {
     id: svc.id,
@@ -561,7 +586,9 @@ function loadService(svc) {
     lines: lines,
     chantNames: chantNames,
     timestampMap: svc.timestampMap || null,
-    ceremonyCues: ceremonyCues.length > 0 ? ceremonyCues : null
+    ceremonyCues: ceremonyCues.length > 0 ? ceremonyCues : null,
+    chantWindowStart: chantWindowStart,
+    chantWindowEnd: chantWindowEnd
   };
   openChant(virtual);
 }
@@ -579,6 +606,10 @@ function openChant(chant) {
   lineTranslates = {};
   window._scrollAccum = 0;
   if (tweenRaf) { cancelAnimationFrame(tweenRaf); tweenRaf = null; }
+  if (_ceremonyFadeTimer) { clearTimeout(_ceremonyFadeTimer); _ceremonyFadeTimer = null; }
+  _lastCeremonyIdx = -2;
+  var _clEl = document.getElementById('ceremonyLine');
+  if (_clEl) { _clEl.style.opacity = '0'; _clEl.textContent = ''; }
   audioEl.pause();
   audioEl.src = '';
 
@@ -711,22 +742,6 @@ function buildTrack() {
   var track = document.getElementById('chantTrack');
   track.innerHTML = '';
 
-  // prepend ceremony cue nodes
-  if (currentChant.ceremonyCues && currentChant.ceremonyCues.length > 0) {
-    var cues = currentChant.ceremonyCues;
-    for (var ci = 0; ci < cues.length; ci++) {
-      var cue = cues[ci];
-      var cspan = document.createElement('span');
-      cspan.className = 'chant-line future';
-      cspan.id = 'line-C-' + ci;
-      cspan.textContent = cue.emoji + (cue.text ? ' ' + cue.text : '');
-      track.appendChild(cspan);
-    }
-    var cgap = document.createElement('div');
-    cgap.className = 'section-gap';
-    track.appendChild(cgap);
-  }
-
   var lines = currentChant.lines;
   for (var i = 0; i < lines.length; i++) {
     if (lines[i].text === null) {
@@ -755,12 +770,6 @@ function getTranslateForLine(idx) {
 function cacheTranslates() {
   var track = document.getElementById('chantTrack');
   track.style.transform = 'translateY(0px)';
-  // cache ceremony cue positions
-  if (currentChant.ceremonyCues) {
-    for (var ci = 0; ci < currentChant.ceremonyCues.length; ci++) {
-      lineTranslates['C-' + ci] = getTranslateForLine('C-' + ci);
-    }
-  }
   var lines = currentChant.lines;
   for (var i = 0; i < lines.length; i++) {
     if (lines[i].text !== null) {
@@ -777,8 +786,6 @@ function applyTranslate(y) {
 // LINE HELPERS
 // ══════════════════════════════
 function firstTextIndex() {
-  // if ceremony cues exist, the first displayable item is C-0
-  if (currentChant.ceremonyCues && currentChant.ceremonyCues.length > 0) return 'C-0';
   var lines = currentChant.lines;
   for (var i = 0; i < lines.length; i++) {
     if (lines[i].text !== null) return i;
@@ -787,11 +794,7 @@ function firstTextIndex() {
 }
 
 function prevItemIndex(from) {
-  // build ordered list from DOM order (ceremony cues then chant lines)
   var orderedItems = [];
-  if (currentChant.ceremonyCues) {
-    currentChant.ceremonyCues.forEach(function(c, ci) { orderedItems.push('C-' + ci); });
-  }
   var lines = currentChant.lines;
   for (var li = 0; li < lines.length; li++) {
     if (lines[li].text !== null) orderedItems.push(li);
@@ -809,9 +812,6 @@ function nextTextIndex(from) {
   var allItems = getAllTimedItems();
   var orderedItems = allItems.length > 0 ? allItems : (function() {
     var items = [];
-    if (currentChant.ceremonyCues) {
-      currentChant.ceremonyCues.forEach(function(c, ci) { items.push({ idx: 'C-' + ci }); });
-    }
     var lines = currentChant.lines;
     for (var li = 0; li < lines.length; li++) {
       if (lines[li].text !== null) items.push({ idx: li });
@@ -834,13 +834,8 @@ function setClasses(activeIdx) {
   var orderedItems = getAllTimedItems();
   var usingOrder = orderedItems.length > 0;
 
-  // if no timed items (tap mode), build order from ceremony cues + chant lines in DOM order
+  // if no timed items (tap mode), build order from chant lines in DOM order
   if (!usingOrder) {
-    if (currentChant.ceremonyCues) {
-      currentChant.ceremonyCues.forEach(function(c, ci) {
-        orderedItems.push({ idx: 'C-' + ci });
-      });
-    }
     var lines = currentChant.lines;
     for (var li = 0; li < lines.length; li++) {
       if (lines[li].text !== null) orderedItems.push({ idx: li });
@@ -852,23 +847,6 @@ function setClasses(activeIdx) {
     if (orderedItems[ai].idx === activeIdx || orderedItems[ai].idx == activeIdx) { activePos = ai; break; }
   }
   var nextIdx = activePos >= 0 && orderedItems[activePos + 1] ? orderedItems[activePos + 1].idx : null;
-
-  // ceremony cue elements
-  if (currentChant.ceremonyCues) {
-    for (var ci = 0; ci < currentChant.ceremonyCues.length; ci++) {
-      var ckey = 'C-' + ci;
-      var cel = document.getElementById('line-' + ckey);
-      if (!cel) continue;
-      var cpos = -1;
-      for (var ai2 = 0; ai2 < orderedItems.length; ai2++) {
-        if (orderedItems[ai2].idx === ckey) { cpos = ai2; break; }
-      }
-      if (cpos < activePos)        cel.className = 'chant-line past';
-      else if (ckey === activeIdx) cel.className = 'chant-line active';
-      else if (ckey === nextIdx)   cel.className = 'chant-line next';
-      else                         cel.className = 'chant-line future';
-    }
-  }
 
   // chant line elements
   var lines2 = currentChant.lines;
@@ -892,13 +870,6 @@ function setClasses(activeIdx) {
 // ══════════════════════════════
 function getAllTimedItems() {
   var out = [];
-  // ceremony cues first
-  if (currentChant.ceremonyCues) {
-    currentChant.ceremonyCues.forEach(function(cue, i) {
-      out.push({ idx: 'C-' + i, time: cue.time });
-    });
-  }
-  // chant lines
   var lines = currentChant.lines;
   for (var i = 0; i < lines.length; i++) {
     if (lines[i].text !== null && lines[i].cueIn !== undefined) {
@@ -909,6 +880,36 @@ function getAllTimedItems() {
   return out;
 }
 
+function updateCeremonyLine(cueIdx, visible) {
+  var el = document.getElementById('ceremonyLine');
+  if (!el) return;
+  if (!visible) {
+    if (_lastCeremonyIdx !== -1) {
+      el.style.opacity = '0';
+      _lastCeremonyIdx = -1;
+      if (_ceremonyFadeTimer) { clearTimeout(_ceremonyFadeTimer); _ceremonyFadeTimer = null; }
+    }
+    return;
+  }
+  if (cueIdx === _lastCeremonyIdx) return;
+  if (_ceremonyFadeTimer) { clearTimeout(_ceremonyFadeTimer); _ceremonyFadeTimer = null; }
+  var cues = currentChant.ceremonyCues;
+  var text = (cues && cueIdx >= 0) ? (cues[cueIdx].emoji + (cues[cueIdx].text ? ' ' + cues[cueIdx].text : '')) : '';
+  var prev = _lastCeremonyIdx;
+  _lastCeremonyIdx = cueIdx;
+  if (prev === -1 || prev === -2) {
+    el.textContent = text;
+    el.style.opacity = '1';
+  } else {
+    el.style.opacity = '0';
+    _ceremonyFadeTimer = setTimeout(function() {
+      _ceremonyFadeTimer = null;
+      el.textContent = text;
+      el.style.opacity = '1';
+    }, 400);
+  }
+}
+
 function startTween() {
   if (tweenRaf) cancelAnimationFrame(tweenRaf);
 
@@ -916,6 +917,19 @@ function startTween() {
     var t = audioEl.currentTime;
     var dur = audioEl.duration || 68;
     updateSeekBar(t / dur);
+
+    // ceremony line overlay
+    if (currentChant.ceremonyCues && currentChant.ceremonyCues.length > 0) {
+      var cues = currentChant.ceremonyCues;
+      var activeCueIdx = -1;
+      for (var ci = 0; ci < cues.length; ci++) {
+        if (t >= cues[ci].time) activeCueIdx = ci;
+      }
+      var wStart = currentChant.chantWindowStart;
+      var wEnd = currentChant.chantWindowEnd;
+      var inChantWindow = (wStart !== undefined && wEnd !== undefined && t >= wStart && t <= wEnd);
+      updateCeremonyLine(activeCueIdx, !inChantWindow && activeCueIdx >= 0);
+    }
 
     if (!listeningMode) {
       var allItems = getAllTimedItems();
@@ -1026,9 +1040,6 @@ document.getElementById('chantScreen').addEventListener('click', function(e) {
   applyTranslate(lineTranslates[next] || 0);
   // update seek bar based on position in ordered items
   var orderedForSeek = [];
-  if (currentChant.ceremonyCues) {
-    currentChant.ceremonyCues.forEach(function(c, ci) { orderedForSeek.push('C-' + ci); });
-  }
   var lines = currentChant.lines;
   for (var si = 0; si < lines.length; si++) {
     if (lines[si].text !== null) orderedForSeek.push(si);
