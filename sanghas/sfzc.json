@@ -493,145 +493,183 @@
       "audio": null,
       "lines": [
         {
-          "text": "Kan ji zai bo satsu"
+          "text": "Kan ji zai bo satsu",
+          "cueIn": 0.0
         },
         {
-          "text": "gyo jin han nya ha ra mit ta ji"
+          "text": "gyo jin han nya ha ra mit ta ji",
+          "cueIn": 3.6
         },
         {
-          "text": "sho ken go on kai ku"
+          "text": "sho ken go on kai ku",
+          "cueIn": 9.24
         },
         {
-          "text": "do is sai ku yaku"
-        },
-        {
-          "text": null
-        },
-        {
-          "text": "sha ri shi shiki fu i ku"
-        },
-        {
-          "text": "ku fu i shiki"
-        },
-        {
-          "text": "shiki soku ze ku"
-        },
-        {
-          "text": "ku soku ze shiki"
-        },
-        {
-          "text": "ju so gyo shiki yaku bu nyo ze"
+          "text": "do is sai ku yaku",
+          "cueIn": 12.98
         },
         {
           "text": null
         },
         {
-          "text": "sha ri shi ze sho ho ku so"
+          "text": "sha ri shi shiki fu i ku",
+          "cueIn": 16.08
         },
         {
-          "text": "fu sho fu metsu"
+          "text": "ku fu i shiki",
+          "cueIn": 19.58
         },
         {
-          "text": "fu ku fu jo"
+          "text": "shiki soku ze ku",
+          "cueIn": 21.84
         },
         {
-          "text": "fu zo fu gen"
+          "text": "ku soku ze shiki",
+          "cueIn": 24.18
         },
         {
-          "text": null
-        },
-        {
-          "text": "ze ko ku chu mu shiki"
-        },
-        {
-          "text": "mu ju so gyo shiki"
-        },
-        {
-          "text": "mu gen ni bi zes shin ni"
-        },
-        {
-          "text": "mu shiki sho ko mi soku ho"
-        },
-        {
-          "text": "mu gen kai nai shi mu i shiki kai"
+          "text": "ju so gyo shiki yaku bu nyo ze",
+          "cueIn": 27.16
         },
         {
           "text": null
         },
         {
-          "text": "mu mu myo yaku mu mu myo jin"
+          "text": "sha ri shi ze sho ho ku so",
+          "cueIn": 31.92
         },
         {
-          "text": "nai shi mu ro shi yaku mu ro shi jin"
+          "text": "fu sho fu metsu",
+          "cueIn": 36.56
         },
         {
-          "text": "mu ku shu metsu do"
+          "text": "fu ku fu jo",
+          "cueIn": 37.82
         },
         {
-          "text": "mu chi yaku mu toku"
-        },
-        {
-          "text": null
-        },
-        {
-          "text": "i mu sho tok ko bo dai sat ta"
-        },
-        {
-          "text": "e han nya ha ra mit ta ko"
-        },
-        {
-          "text": "shin mu ke ge mu ke ge ko"
-        },
-        {
-          "text": "mu u ku fu on ri is sai ten do mu so"
-        },
-        {
-          "text": "ku gyo ne han"
+          "text": "fu zo fu gen",
+          "cueIn": 39.12
         },
         {
           "text": null
         },
         {
-          "text": "san ze sho butsu e han nya ha ra mit ta ko"
+          "text": "ze ko ku chu mu shiki",
+          "cueIn": 43.76
         },
         {
-          "text": "toku a noku ta ra sam myaku sam bo dai"
+          "text": "mu ju so gyo shiki",
+          "cueIn": 46.08
         },
         {
-          "text": null
+          "text": "mu gen ni bi zes shin ni",
+          "cueIn": 47.48
         },
         {
-          "text": "ko chi han nya ha ra mi ta"
+          "text": "mu shiki sho ko mi soku ho",
+          "cueIn": 50.4
         },
         {
-          "text": "ze dai jin shu ze dai myo shu"
-        },
-        {
-          "text": "ze mu jo shu ze mu to do shu"
-        },
-        {
-          "text": "no jo is sai ku shin jitsu fu ko"
-        },
-        {
-          "text": null
-        },
-        {
-          "text": "ko setsu han nya ha ra mit ta shu"
-        },
-        {
-          "text": "soku setsu shu watsu"
+          "text": "mu gen kai nai shi mu i shiki kai",
+          "cueIn": 54.32
         },
         {
           "text": null
         },
         {
-          "text": "gya te gya te ha ra gya te"
+          "text": "mu mu myo yaku mu mu myo jin",
+          "cueIn": 58.8
         },
         {
-          "text": "hara so gya te bo ji sowa ka"
+          "text": "nai shi mu ro shi yaku mu ro shi jin",
+          "cueIn": 59.78
         },
         {
-          "text": "han nya shin gyo"
+          "text": "mu ku shu metsu do",
+          "cueIn": 59.8
+        },
+        {
+          "text": "mu chi yaku mu toku",
+          "cueIn": 59.8
+        },
+        {
+          "text": null
+        },
+        {
+          "text": "i mu sho tok ko bo dai sat ta",
+          "cueIn": 80.56
+        },
+        {
+          "text": "e han nya ha ra mit ta ko",
+          "cueIn": 85.96
+        },
+        {
+          "text": "shin mu ke ge mu ke ge ko",
+          "cueIn": 90.6
+        },
+        {
+          "text": "mu u ku fu on ri is sai ten do mu so",
+          "cueIn": 91.1
+        },
+        {
+          "text": "ku gyo ne han",
+          "cueIn": 96.92
+        },
+        {
+          "text": null
+        },
+        {
+          "text": "san ze sho butsu e han nya ha ra mit ta ko",
+          "cueIn": 104.58
+        },
+        {
+          "text": "toku a noku ta ra sam myaku sam bo dai",
+          "cueIn": 111.6
+        },
+        {
+          "text": null
+        },
+        {
+          "text": "ko chi han nya ha ra mi ta",
+          "cueIn": 117.72
+        },
+        {
+          "text": "ze dai jin shu ze dai myo shu",
+          "cueIn": 122.48
+        },
+        {
+          "text": "ze mu jo shu ze mu to do shu",
+          "cueIn": 124.98
+        },
+        {
+          "text": "no jo is sai ku shin jitsu fu ko",
+          "cueIn": 132.66
+        },
+        {
+          "text": null
+        },
+        {
+          "text": "ko setsu han nya ha ra mit ta shu",
+          "cueIn": 137.28
+        },
+        {
+          "text": "soku setsu shu watsu",
+          "cueIn": 143.26
+        },
+        {
+          "text": null
+        },
+        {
+          "text": "gya te gya te ha ra gya te",
+          "cueIn": 145.6
+        },
+        {
+          "text": "hara so gya te bo ji sowa ka",
+          "cueIn": 150.34
+        },
+        {
+          "text": "han nya shin gyo",
+          "cueIn": 155.48
         }
       ]
     },
@@ -642,64 +680,81 @@
       "audio": null,
       "lines": [
         {
-          "text": "Homage to the Perfection of Wisdom,"
+          "text": "Homage to the Perfection of Wisdom,",
+          "cueIn": 0.98
         },
         {
-          "text": "the lovely, the holy."
+          "text": "the lovely, the holy.",
+          "cueIn": 2.64
         },
         {
-          "text": "The Perfection of Wisdom gives light."
+          "text": "The Perfection of Wisdom gives light.",
+          "cueIn": 5.92
         },
         {
-          "text": "Unstained, the entire world cannot stain her."
-        },
-        {
-          "text": null
-        },
-        {
-          "text": "She is a source of light"
-        },
-        {
-          "text": "and from everyone in the triple world"
-        },
-        {
-          "text": "she removes darkness."
-        },
-        {
-          "text": "Most excellent are her works."
+          "text": "Unstained, the entire world cannot stain her.",
+          "cueIn": 13.14
         },
         {
           "text": null
         },
         {
-          "text": "She brings light so that all fear and distress"
+          "text": "She is a source of light",
+          "cueIn": 18.32
         },
         {
-          "text": "may be forsaken,"
+          "text": "and from everyone in the triple world",
+          "cueIn": 20.16
         },
         {
-          "text": "and disperses the gloom and darkness of delusion."
+          "text": "she removes darkness.",
+          "cueIn": 23.64
         },
         {
-          "text": "She herself is an organ of vision."
+          "text": "Most excellent are her works.",
+          "cueIn": 26.22
         },
         {
           "text": null
         },
         {
-          "text": "She has a clear knowledge of the own-being"
+          "text": "She brings light so that all fear and distress",
+          "cueIn": 29.46
         },
         {
-          "text": "of all dharmas,"
+          "text": "may be forsaken,",
+          "cueIn": 33.2
         },
         {
-          "text": "for she does not stray away from it."
+          "text": "and disperses the gloom and darkness of delusion.",
+          "cueIn": 36.02
         },
         {
-          "text": "The Perfection of Wisdom of the buddhas"
+          "text": "She herself is an organ of vision.",
+          "cueIn": 40.84
         },
         {
-          "text": "sets in motion the wheel of dharma."
+          "text": null
+        },
+        {
+          "text": "She has a clear knowledge of the own-being",
+          "cueIn": 44.56
+        },
+        {
+          "text": "of all dharmas,",
+          "cueIn": 46.46
+        },
+        {
+          "text": "for she does not stray away from it.",
+          "cueIn": 50.36
+        },
+        {
+          "text": "The Perfection of Wisdom of the buddhas",
+          "cueIn": 54.16
+        },
+        {
+          "text": "sets in motion the wheel of dharma.",
+          "cueIn": 58.36
         }
       ]
     },
@@ -824,142 +879,182 @@
       "audio": null,
       "lines": [
         {
-          "text": "This is what should be accomplished"
+          "text": "This is what should be accomplished",
+          "cueIn": 9.66
         },
         {
-          "text": "by the one who is wise,"
+          "text": "by the one who is wise,",
+          "cueIn": 12.54
         },
         {
-          "text": "Who seeks the good,"
+          "text": "Who seeks the good,",
+          "cueIn": 13.72
         },
         {
-          "text": "and has obtained peace."
-        },
-        {
-          "text": null
-        },
-        {
-          "text": "Let one be strenuous, upright, and sincere,"
-        },
-        {
-          "text": "Without pride, easily contented, and joyous."
-        },
-        {
-          "text": "Let one not be submerged by the things of the world."
-        },
-        {
-          "text": "Let one not take upon oneself the burden of riches."
-        },
-        {
-          "text": "Let one's senses be controlled."
-        },
-        {
-          "text": "Let one be wise but not puffed up"
-        },
-        {
-          "text": "and let one not desire great possessions"
-        },
-        {
-          "text": "even for one's family."
-        },
-        {
-          "text": "Let one do nothing that is mean"
-        },
-        {
-          "text": "or that the wise would reprove."
+          "text": "and has obtained peace.",
+          "cueIn": 16.68
         },
         {
           "text": null
         },
         {
-          "text": "May all beings be happy."
+          "text": "Let one be strenuous, upright, and sincere,",
+          "cueIn": 18.84
         },
         {
-          "text": "May they be joyous and live in safety,"
+          "text": "Without pride, easily contented, and joyous.",
+          "cueIn": 22.7
         },
         {
-          "text": "All living beings, whether weak or strong,"
+          "text": "Let one not be submerged by the things of the world.",
+          "cueIn": 26.88
         },
         {
-          "text": "In high or middle or low realms of existence."
+          "text": "Let one not take upon oneself the burden of riches.",
+          "cueIn": 30.98
         },
         {
-          "text": "Small or great, visible or invisible,"
+          "text": "Let one's senses be controlled.",
+          "cueIn": 34.96
         },
         {
-          "text": "Near or far, born or to be born,"
+          "text": "Let one be wise but not puffed up",
+          "cueIn": 38.24
         },
         {
-          "text": "May all beings be happy."
+          "text": "and let one not desire great possessions",
+          "cueIn": 40.84
         },
         {
-          "text": null
+          "text": "even for one's family.",
+          "cueIn": 43.74
         },
         {
-          "text": "Let no one deceive another"
+          "text": "Let one do nothing that is mean",
+          "cueIn": 46.6
         },
         {
-          "text": "nor despise any being in any state."
-        },
-        {
-          "text": "Let none by anger or hatred wish harm to another."
-        },
-        {
-          "text": "Even as a mother at the risk of her life"
-        },
-        {
-          "text": "Watches over and protects her only child,"
-        },
-        {
-          "text": "So with a boundless mind"
-        },
-        {
-          "text": "should one cherish all living things."
+          "text": "or that the wise would reprove.",
+          "cueIn": 48.86
         },
         {
           "text": null
         },
         {
-          "text": "Suffusing love over the entire world,"
+          "text": "May all beings be happy.",
+          "cueIn": 51.78
         },
         {
-          "text": "Above, below, and all around, without limit,"
+          "text": "May they be joyous and live in safety,",
+          "cueIn": 54.38
         },
         {
-          "text": "So let one cultivate an infinite good will"
+          "text": "All living beings, whether weak or strong,",
+          "cueIn": 57.4
         },
         {
-          "text": "toward the whole world."
+          "text": "In high or middle or low realms of existence.",
+          "cueIn": 60.96
+        },
+        {
+          "text": "Small or great, visible or invisible,",
+          "cueIn": 64.72
+        },
+        {
+          "text": "Near or far, born or to be born,",
+          "cueIn": 68.66
+        },
+        {
+          "text": "May all beings be happy.",
+          "cueIn": 71.74
         },
         {
           "text": null
         },
         {
-          "text": "Standing or walking, sitting or lying down,"
+          "text": "Let no one deceive another",
+          "cueIn": 74.2
         },
         {
-          "text": "During all one's waking hours,"
+          "text": "nor despise any being in any state.",
+          "cueIn": 76.2
         },
         {
-          "text": "Let one practice the way with gratitude."
+          "text": "Let none by anger or hatred wish harm to another.",
+          "cueIn": 80.08
+        },
+        {
+          "text": "Even as a mother at the risk of her life",
+          "cueIn": 84.5
+        },
+        {
+          "text": "Watches over and protects her only child,",
+          "cueIn": 87.26
+        },
+        {
+          "text": "So with a boundless mind",
+          "cueIn": 90.92
+        },
+        {
+          "text": "should one cherish all living things.",
+          "cueIn": 92.54
         },
         {
           "text": null
         },
         {
-          "text": "Not holding to fixed views,"
+          "text": "Suffusing love over the entire world,",
+          "cueIn": 95.86
         },
         {
-          "text": "Endowed with insight,"
+          "text": "Above, below, and all around, without limit,",
+          "cueIn": 99.52
         },
         {
-          "text": "Freed from sense appetites,"
+          "text": "So let one cultivate an infinite good will",
+          "cueIn": 102.48
         },
         {
-          "text": "One who achieves the way"
+          "text": "toward the whole world.",
+          "cueIn": 105.8
         },
         {
-          "text": "Will be freed from the duality of birth and death."
+          "text": null
+        },
+        {
+          "text": "Standing or walking, sitting or lying down,",
+          "cueIn": 108.0
+        },
+        {
+          "text": "During all one's waking hours,",
+          "cueIn": 111.56
+        },
+        {
+          "text": "Let one practice the way with gratitude.",
+          "cueIn": 114.2
+        },
+        {
+          "text": null
+        },
+        {
+          "text": "Not holding to fixed views,",
+          "cueIn": 117.56
+        },
+        {
+          "text": "Endowed with insight,",
+          "cueIn": 119.78
+        },
+        {
+          "text": "Freed from sense appetites,",
+          "cueIn": 121.68
+        },
+        {
+          "text": "One who achieves the way",
+          "cueIn": 123.86
+        },
+        {
+          "text": "Will be freed from the duality of birth and death.",
+          "cueIn": 125.44
         }
       ]
     },
@@ -3553,22 +3648,28 @@
       "audio": null,
       "lines": [
         {
-          "text": "Ji ho san shi"
+          "text": "Ji ho san shi",
+          "cueIn": 0.0
         },
         {
-          "text": "i shi fu"
+          "text": "i shi fu",
+          "cueIn": 7.98
         },
         {
-          "text": "shi son bu sa"
+          "text": "shi son bu sa",
+          "cueIn": 9.08
         },
         {
-          "text": "mo ko sa"
+          "text": "mo ko sa",
+          "cueIn": 20.74
         },
         {
-          "text": "mo ko ho ja"
+          "text": "mo ko ho ja",
+          "cueIn": 24.94
         },
         {
-          "text": "ho ro mi"
+          "text": "ho ro mi",
+          "cueIn": 24.94
         }
       ]
     },
@@ -3599,208 +3700,268 @@
       "audio": null,
       "lines": [
         {
-          "text": "No mo san man da"
+          "text": "No mo san man da",
+          "cueIn": 0.09
         },
         {
-          "text": "moto nan namu butsu"
+          "text": "moto nan namu butsu",
+          "cueIn": 3.32
         },
         {
-          "text": "oha ra chi koto sha"
+          "text": "oha ra chi koto sha",
+          "cueIn": 5.76
         },
         {
-          "text": "yo butsu u in"
+          "text": "yo butsu u in",
+          "cueIn": 7.5
         },
         {
-          "text": "sono nan to ji to"
+          "text": "sono nan to ji to",
+          "cueIn": 8.38
         },
         {
-          "text": "yo butsu u en"
+          "text": "yo butsu u en",
+          "cueIn": 10.36
         },
         {
-          "text": "en buppo so en"
+          "text": "en buppo so en",
+          "cueIn": 11.14
         },
         {
-          "text": "gya gya jo raku ga jo"
-        },
-        {
-          "text": null
-        },
-        {
-          "text": "gya ki gya ki"
-        },
-        {
-          "text": "cho nen kanzeon"
-        },
-        {
-          "text": "un nun bo nen kanzeon"
-        },
-        {
-          "text": "shifu ra shifu ra"
-        },
-        {
-          "text": "nen nen ju shin ki"
-        },
-        {
-          "text": "hara shifu ra hara shifu ra"
-        },
-        {
-          "text": "nen nen fu ri shin"
+          "text": "gya gya jo raku ga jo",
+          "cueIn": 11.36
         },
         {
           "text": null
         },
         {
-          "text": "chisu sha chisu sha"
+          "text": "gya ki gya ki",
+          "cueIn": 11.62
         },
         {
-          "text": "chishu ri chishu ri"
+          "text": "cho nen kanzeon",
+          "cueIn": 15.24
         },
         {
-          "text": "soha ja soha ja"
+          "text": "un nun bo nen kanzeon",
+          "cueIn": 16.24
         },
         {
-          "text": "sen chi gya"
+          "text": "shifu ra shifu ra",
+          "cueIn": 16.24
         },
         {
-          "text": "shiri ei so mo ko"
+          "text": "nen nen ju shin ki",
+          "cueIn": 16.7
         },
         {
-          "text": null
+          "text": "hara shifu ra hara shifu ra",
+          "cueIn": 16.7
         },
         {
-          "text": "No mo san man da"
-        },
-        {
-          "text": "moto nan namu butsu"
-        },
-        {
-          "text": "oha ra chi koto sha"
-        },
-        {
-          "text": "yo butsu u in"
-        },
-        {
-          "text": "sono nan to ji to"
-        },
-        {
-          "text": "yo butsu u en"
-        },
-        {
-          "text": "en buppo so en"
-        },
-        {
-          "text": "gya gya jo raku ga jo"
+          "text": "nen nen fu ri shin",
+          "cueIn": 21.18
         },
         {
           "text": null
         },
         {
-          "text": "gya ki gya ki"
+          "text": "chisu sha chisu sha",
+          "cueIn": 22.22
         },
         {
-          "text": "cho nen kanzeon"
+          "text": "chishu ri chishu ri",
+          "cueIn": 24.14
         },
         {
-          "text": "un nun bo nen kanzeon"
+          "text": "soha ja soha ja",
+          "cueIn": 25.72
         },
         {
-          "text": "shifu ra shifu ra"
+          "text": "sen chi gya",
+          "cueIn": 28.02
         },
         {
-          "text": "nen nen ju shin ki"
-        },
-        {
-          "text": "hara shifu ra hara shifu ra"
-        },
-        {
-          "text": "nen nen fu ri shin"
-        },
-        {
-          "text": null
-        },
-        {
-          "text": "chisu sha chisu sha"
-        },
-        {
-          "text": "chishu ri chishu ri"
-        },
-        {
-          "text": "soha ja soha ja"
-        },
-        {
-          "text": "sen chi gya"
-        },
-        {
-          "text": "shiri ei so mo ko"
+          "text": "shiri ei so mo ko",
+          "cueIn": 29.82
         },
         {
           "text": null
         },
         {
-          "text": "No mo san man da"
+          "text": "No mo san man da",
+          "cueIn": 32.3
         },
         {
-          "text": "moto nan namu butsu"
+          "text": "moto nan namu butsu",
+          "cueIn": 35.04
         },
         {
-          "text": "oha ra chi koto sha"
+          "text": "oha ra chi koto sha",
+          "cueIn": 37.44
         },
         {
-          "text": "yo butsu u in"
+          "text": "yo butsu u in",
+          "cueIn": 39.2
         },
         {
-          "text": "sono nan to ji to"
+          "text": "sono nan to ji to",
+          "cueIn": 40.02
         },
         {
-          "text": "yo butsu u en"
+          "text": "yo butsu u en",
+          "cueIn": 42.08
         },
         {
-          "text": "en buppo so en"
+          "text": "en buppo so en",
+          "cueIn": 42.8
         },
         {
-          "text": "gya gya jo raku ga jo"
-        },
-        {
-          "text": null
-        },
-        {
-          "text": "gya ki gya ki"
-        },
-        {
-          "text": "cho nen kanzeon"
-        },
-        {
-          "text": "un nun bo nen kanzeon"
-        },
-        {
-          "text": "shifu ra shifu ra"
-        },
-        {
-          "text": "nen nen ju shin ki"
-        },
-        {
-          "text": "hara shifu ra hara shifu ra"
-        },
-        {
-          "text": "nen nen fu ri shin"
+          "text": "gya gya jo raku ga jo",
+          "cueIn": 43.04
         },
         {
           "text": null
         },
         {
-          "text": "chisu sha chisu sha"
+          "text": "gya ki gya ki",
+          "cueIn": 43.22
         },
         {
-          "text": "chishu ri chishu ri"
+          "text": "cho nen kanzeon",
+          "cueIn": 46.08
         },
         {
-          "text": "soha ja soha ja"
+          "text": "un nun bo nen kanzeon",
+          "cueIn": 48.08
         },
         {
-          "text": "sen chi gya"
+          "text": "shifu ra shifu ra",
+          "cueIn": 48.08
         },
         {
-          "text": "shiri ei so mo ko"
+          "text": "nen nen ju shin ki",
+          "cueIn": 49.6
+        },
+        {
+          "text": "hara shifu ra hara shifu ra",
+          "cueIn": 52.9
+        },
+        {
+          "text": "nen nen fu ri shin",
+          "cueIn": 54.4
+        },
+        {
+          "text": null
+        },
+        {
+          "text": "chisu sha chisu sha",
+          "cueIn": 54.4
+        },
+        {
+          "text": "chishu ri chishu ri",
+          "cueIn": 55.46
+        },
+        {
+          "text": "soha ja soha ja",
+          "cueIn": 57.72
+        },
+        {
+          "text": "sen chi gya",
+          "cueIn": 60.08
+        },
+        {
+          "text": "shiri ei so mo ko",
+          "cueIn": 61.78
+        },
+        {
+          "text": null
+        },
+        {
+          "text": "No mo san man da",
+          "cueIn": 64.04
+        },
+        {
+          "text": "moto nan namu butsu",
+          "cueIn": 67.02
+        },
+        {
+          "text": "oha ra chi koto sha",
+          "cueIn": 69.08
+        },
+        {
+          "text": "yo butsu u in",
+          "cueIn": 71.08
+        },
+        {
+          "text": "sono nan to ji to",
+          "cueIn": 71.94
+        },
+        {
+          "text": "yo butsu u en",
+          "cueIn": 73.96
+        },
+        {
+          "text": "en buppo so en",
+          "cueIn": 74.56
+        },
+        {
+          "text": "gya gya jo raku ga jo",
+          "cueIn": 75.12
+        },
+        {
+          "text": null
+        },
+        {
+          "text": "gya ki gya ki",
+          "cueIn": 75.14
+        },
+        {
+          "text": "cho nen kanzeon",
+          "cueIn": 78.88
+        },
+        {
+          "text": "un nun bo nen kanzeon",
+          "cueIn": 79.34
+        },
+        {
+          "text": "shifu ra shifu ra",
+          "cueIn": 79.5
+        },
+        {
+          "text": "nen nen ju shin ki",
+          "cueIn": 81.46
+        },
+        {
+          "text": "hara shifu ra hara shifu ra",
+          "cueIn": 81.46
+        },
+        {
+          "text": "nen nen fu ri shin",
+          "cueIn": 84.88
+        },
+        {
+          "text": null
+        },
+        {
+          "text": "chisu sha chisu sha",
+          "cueIn": 85.56
+        },
+        {
+          "text": "chishu ri chishu ri",
+          "cueIn": 86.7
+        },
+        {
+          "text": "soha ja soha ja",
+          "cueIn": 87.0
+        },
+        {
+          "text": "sen chi gya",
+          "cueIn": 87.0
+        },
+        {
+          "text": "shiri ei so mo ko",
+          "cueIn": 87.0
         }
       ]
     },
@@ -3811,232 +3972,302 @@
       "audio": null,
       "lines": [
         {
-          "text": "Kanzeon"
+          "text": "Kanzeon",
+          "cueIn": 1.07
         },
         {
-          "text": "namu butsu"
+          "text": "namu butsu",
+          "cueIn": 2.32
         },
         {
-          "text": "yo butsu u in"
+          "text": "yo butsu u in",
+          "cueIn": 4.42
         },
         {
-          "text": "yo butsu u en"
+          "text": "yo butsu u en",
+          "cueIn": 6.48
         },
         {
-          "text": "buppo so en"
+          "text": "buppo so en",
+          "cueIn": 8.94
         },
         {
-          "text": "jo raku ga jo"
+          "text": "jo raku ga jo",
+          "cueIn": 11.16
         },
         {
-          "text": "cho nen kanzeon"
+          "text": "cho nen kanzeon",
+          "cueIn": 13.48
         },
         {
-          "text": "bo nen kanzeon"
+          "text": "bo nen kanzeon",
+          "cueIn": 16.36
         },
         {
-          "text": "nen nen ju shin ki"
+          "text": "nen nen ju shin ki",
+          "cueIn": 16.88
         },
         {
-          "text": "nen nen fu ri shin"
-        },
-        {
-          "text": null
-        },
-        {
-          "text": "Kanzeon"
-        },
-        {
-          "text": "namu butsu"
-        },
-        {
-          "text": "yo butsu u in"
-        },
-        {
-          "text": "yo butsu u en"
-        },
-        {
-          "text": "buppo so en"
-        },
-        {
-          "text": "jo raku ga jo"
-        },
-        {
-          "text": "cho nen kanzeon"
-        },
-        {
-          "text": "bo nen kanzeon"
-        },
-        {
-          "text": "nen nen ju shin ki"
-        },
-        {
-          "text": "nen nen fu ri shin"
+          "text": "nen nen fu ri shin",
+          "cueIn": 19.0
         },
         {
           "text": null
         },
         {
-          "text": "Kanzeon"
+          "text": "Kanzeon",
+          "cueIn": 24.7
         },
         {
-          "text": "namu butsu"
+          "text": "namu butsu",
+          "cueIn": 26.52
         },
         {
-          "text": "yo butsu u in"
+          "text": "yo butsu u in",
+          "cueIn": 28.26
         },
         {
-          "text": "yo butsu u en"
+          "text": "yo butsu u en",
+          "cueIn": 30.38
         },
         {
-          "text": "buppo so en"
+          "text": "buppo so en",
+          "cueIn": 32.6
         },
         {
-          "text": "jo raku ga jo"
+          "text": "jo raku ga jo",
+          "cueIn": 34.86
         },
         {
-          "text": "cho nen kanzeon"
+          "text": "cho nen kanzeon",
+          "cueIn": 37.0
         },
         {
-          "text": "bo nen kanzeon"
+          "text": "bo nen kanzeon",
+          "cueIn": 39.74
         },
         {
-          "text": "nen nen ju shin ki"
+          "text": "nen nen ju shin ki",
+          "cueIn": 40.26
         },
         {
-          "text": "nen nen fu ri shin"
-        },
-        {
-          "text": null
-        },
-        {
-          "text": "Kanzeon"
-        },
-        {
-          "text": "namu butsu"
-        },
-        {
-          "text": "yo butsu u in"
-        },
-        {
-          "text": "yo butsu u en"
-        },
-        {
-          "text": "buppo so en"
-        },
-        {
-          "text": "jo raku ga jo"
-        },
-        {
-          "text": "cho nen kanzeon"
-        },
-        {
-          "text": "bo nen kanzeon"
-        },
-        {
-          "text": "nen nen ju shin ki"
-        },
-        {
-          "text": "nen nen fu ri shin"
+          "text": "nen nen fu ri shin",
+          "cueIn": 42.54
         },
         {
           "text": null
         },
         {
-          "text": "Kanzeon"
+          "text": "Kanzeon",
+          "cueIn": 47.98
         },
         {
-          "text": "namu butsu"
+          "text": "namu butsu",
+          "cueIn": 49.78
         },
         {
-          "text": "yo butsu u in"
+          "text": "yo butsu u in",
+          "cueIn": 51.42
         },
         {
-          "text": "yo butsu u en"
+          "text": "yo butsu u en",
+          "cueIn": 53.54
         },
         {
-          "text": "buppo so en"
+          "text": "buppo so en",
+          "cueIn": 55.6
         },
         {
-          "text": "jo raku ga jo"
+          "text": "jo raku ga jo",
+          "cueIn": 57.7
         },
         {
-          "text": "cho nen kanzeon"
+          "text": "cho nen kanzeon",
+          "cueIn": 59.98
         },
         {
-          "text": "bo nen kanzeon"
+          "text": "bo nen kanzeon",
+          "cueIn": 62.48
         },
         {
-          "text": "nen nen ju shin ki"
+          "text": "nen nen ju shin ki",
+          "cueIn": 62.96
         },
         {
-          "text": "nen nen fu ri shin"
-        },
-        {
-          "text": null
-        },
-        {
-          "text": "Kanzeon"
-        },
-        {
-          "text": "namu butsu"
-        },
-        {
-          "text": "yo butsu u in"
-        },
-        {
-          "text": "yo butsu u en"
-        },
-        {
-          "text": "buppo so en"
-        },
-        {
-          "text": "jo raku ga jo"
-        },
-        {
-          "text": "cho nen kanzeon"
-        },
-        {
-          "text": "bo nen kanzeon"
-        },
-        {
-          "text": "nen nen ju shin ki"
-        },
-        {
-          "text": "nen nen fu ri shin"
+          "text": "nen nen fu ri shin",
+          "cueIn": 65.26
         },
         {
           "text": null
         },
         {
-          "text": "Kanzeon"
+          "text": "Kanzeon",
+          "cueIn": 70.5
         },
         {
-          "text": "namu butsu"
+          "text": "namu butsu",
+          "cueIn": 72.12
         },
         {
-          "text": "yo butsu u in"
+          "text": "yo butsu u in",
+          "cueIn": 73.72
         },
         {
-          "text": "yo butsu u en"
+          "text": "yo butsu u en",
+          "cueIn": 75.5
         },
         {
-          "text": "buppo so en"
+          "text": "buppo so en",
+          "cueIn": 77.58
         },
         {
-          "text": "jo raku ga jo"
+          "text": "jo raku ga jo",
+          "cueIn": 79.52
         },
         {
-          "text": "cho nen kanzeon"
+          "text": "cho nen kanzeon",
+          "cueIn": 81.46
         },
         {
-          "text": "bo nen kanzeon"
+          "text": "bo nen kanzeon",
+          "cueIn": 83.9
         },
         {
-          "text": "nen nen ju shin ki"
+          "text": "nen nen ju shin ki",
+          "cueIn": 84.4
         },
         {
-          "text": "nen nen fu ri shin"
+          "text": "nen nen fu ri shin",
+          "cueIn": 86.42
+        },
+        {
+          "text": null
+        },
+        {
+          "text": "Kanzeon",
+          "cueIn": 91.22
+        },
+        {
+          "text": "namu butsu",
+          "cueIn": 92.8
+        },
+        {
+          "text": "yo butsu u in",
+          "cueIn": 94.3
+        },
+        {
+          "text": "yo butsu u en",
+          "cueIn": 96.0
+        },
+        {
+          "text": "buppo so en",
+          "cueIn": 97.86
+        },
+        {
+          "text": "jo raku ga jo",
+          "cueIn": 99.68
+        },
+        {
+          "text": "cho nen kanzeon",
+          "cueIn": 101.6
+        },
+        {
+          "text": "bo nen kanzeon",
+          "cueIn": 103.82
+        },
+        {
+          "text": "nen nen ju shin ki",
+          "cueIn": 104.36
+        },
+        {
+          "text": "nen nen fu ri shin",
+          "cueIn": 106.2
+        },
+        {
+          "text": null
+        },
+        {
+          "text": "Kanzeon",
+          "cueIn": 110.8
+        },
+        {
+          "text": "namu butsu",
+          "cueIn": 112.28
+        },
+        {
+          "text": "yo butsu u in",
+          "cueIn": 113.66
+        },
+        {
+          "text": "yo butsu u en",
+          "cueIn": 115.22
+        },
+        {
+          "text": "buppo so en",
+          "cueIn": 116.88
+        },
+        {
+          "text": "jo raku ga jo",
+          "cueIn": 118.64
+        },
+        {
+          "text": "cho nen kanzeon",
+          "cueIn": 120.4
+        },
+        {
+          "text": "bo nen kanzeon",
+          "cueIn": 122.44
+        },
+        {
+          "text": "nen nen ju shin ki",
+          "cueIn": 122.9
+        },
+        {
+          "text": "nen nen fu ri shin",
+          "cueIn": 124.6
+        },
+        {
+          "text": null
+        },
+        {
+          "text": "Kanzeon",
+          "cueIn": 128.7
+        },
+        {
+          "text": "namu butsu",
+          "cueIn": 130.02
+        },
+        {
+          "text": "yo butsu u in",
+          "cueIn": 131.44
+        },
+        {
+          "text": "yo butsu u en",
+          "cueIn": 132.7
+        },
+        {
+          "text": "buppo so en",
+          "cueIn": 134.16
+        },
+        {
+          "text": "jo raku ga jo",
+          "cueIn": 135.72
+        },
+        {
+          "text": "cho nen kanzeon",
+          "cueIn": 137.32
+        },
+        {
+          "text": "bo nen kanzeon",
+          "cueIn": 139.12
+        },
+        {
+          "text": "nen nen ju shin ki",
+          "cueIn": 139.54
+        },
+        {
+          "text": "nen nen fu ri shin",
+          "cueIn": 141.12
         }
       ]
     },
@@ -4047,16 +4278,20 @@
       "audio": null,
       "lines": [
         {
-          "text": "All buddhas, ten directions, three times."
+          "text": "All buddhas, ten directions, three times.",
+          "cueIn": 3.26
         },
         {
-          "text": "All honored ones, bodhisattva-mahasattvas,"
+          "text": "All honored ones, bodhisattva-mahasattvas,",
+          "cueIn": 12.92
         },
         {
-          "text": "Wisdom beyond wisdom,"
+          "text": "Wisdom beyond wisdom,",
+          "cueIn": 26.08
         },
         {
-          "text": "Maha Prajña Paramita"
+          "text": "Maha Prajña Paramita",
+          "cueIn": 31.88
         }
       ]
     },
@@ -4067,16 +4302,20 @@
       "audio": null,
       "lines": [
         {
-          "text": "All buddhas, ten directions, three times."
+          "text": "All buddhas, ten directions, three times.",
+          "cueIn": 2.74
         },
         {
-          "text": "All honored ones, bodhisattva-mahasattvas,"
+          "text": "All honored ones, bodhisattva-mahasattvas,",
+          "cueIn": 8.74
         },
         {
-          "text": "Wisdom beyond wisdom,"
+          "text": "Wisdom beyond wisdom,",
+          "cueIn": 25.78
         },
         {
-          "text": "Maha Prajña Paramita"
+          "text": "Maha Prajña Paramita",
+          "cueIn": 30.0
         }
       ]
     }
@@ -5525,6 +5764,1012 @@
               "time": 1247,
               "emoji": "🙇",
               "text": "Bow to each other — process out"
+            }
+          ]
+        }
+      ],
+      "timestampMap": [
+        {
+          "chantId": "maka-hannya",
+          "startTime": 245.0,
+          "lines": [
+            {
+              "lineIndex": 0,
+              "cueIn": 245.0
+            },
+            {
+              "lineIndex": 1,
+              "cueIn": 248.6
+            },
+            {
+              "lineIndex": 2,
+              "cueIn": 254.24
+            },
+            {
+              "lineIndex": 3,
+              "cueIn": 257.98
+            },
+            {
+              "lineIndex": 5,
+              "cueIn": 261.08
+            },
+            {
+              "lineIndex": 6,
+              "cueIn": 264.58
+            },
+            {
+              "lineIndex": 7,
+              "cueIn": 266.84
+            },
+            {
+              "lineIndex": 8,
+              "cueIn": 269.18
+            },
+            {
+              "lineIndex": 9,
+              "cueIn": 272.16
+            },
+            {
+              "lineIndex": 11,
+              "cueIn": 276.92
+            },
+            {
+              "lineIndex": 12,
+              "cueIn": 281.56
+            },
+            {
+              "lineIndex": 13,
+              "cueIn": 282.82
+            },
+            {
+              "lineIndex": 14,
+              "cueIn": 284.12
+            },
+            {
+              "lineIndex": 16,
+              "cueIn": 288.76
+            },
+            {
+              "lineIndex": 17,
+              "cueIn": 291.08
+            },
+            {
+              "lineIndex": 18,
+              "cueIn": 292.48
+            },
+            {
+              "lineIndex": 19,
+              "cueIn": 295.4
+            },
+            {
+              "lineIndex": 20,
+              "cueIn": 299.32
+            },
+            {
+              "lineIndex": 22,
+              "cueIn": 303.8
+            },
+            {
+              "lineIndex": 23,
+              "cueIn": 304.78
+            },
+            {
+              "lineIndex": 24,
+              "cueIn": 304.8
+            },
+            {
+              "lineIndex": 25,
+              "cueIn": 304.8
+            },
+            {
+              "lineIndex": 27,
+              "cueIn": 325.56
+            },
+            {
+              "lineIndex": 28,
+              "cueIn": 330.96
+            },
+            {
+              "lineIndex": 29,
+              "cueIn": 335.6
+            },
+            {
+              "lineIndex": 30,
+              "cueIn": 336.1
+            },
+            {
+              "lineIndex": 31,
+              "cueIn": 341.92
+            },
+            {
+              "lineIndex": 33,
+              "cueIn": 349.58
+            },
+            {
+              "lineIndex": 34,
+              "cueIn": 356.6
+            },
+            {
+              "lineIndex": 36,
+              "cueIn": 362.72
+            },
+            {
+              "lineIndex": 37,
+              "cueIn": 367.48
+            },
+            {
+              "lineIndex": 38,
+              "cueIn": 369.98
+            },
+            {
+              "lineIndex": 39,
+              "cueIn": 377.66
+            },
+            {
+              "lineIndex": 41,
+              "cueIn": 382.28
+            },
+            {
+              "lineIndex": 42,
+              "cueIn": 388.26
+            },
+            {
+              "lineIndex": 44,
+              "cueIn": 390.6
+            },
+            {
+              "lineIndex": 45,
+              "cueIn": 395.34
+            },
+            {
+              "lineIndex": 46,
+              "cueIn": 400.48
+            }
+          ]
+        },
+        {
+          "chantId": "hymn-perfection-wisdom",
+          "startTime": 413.98,
+          "lines": [
+            {
+              "lineIndex": 0,
+              "cueIn": 413.98
+            },
+            {
+              "lineIndex": 1,
+              "cueIn": 415.64
+            },
+            {
+              "lineIndex": 2,
+              "cueIn": 418.92
+            },
+            {
+              "lineIndex": 3,
+              "cueIn": 426.14
+            },
+            {
+              "lineIndex": 5,
+              "cueIn": 431.32
+            },
+            {
+              "lineIndex": 6,
+              "cueIn": 433.16
+            },
+            {
+              "lineIndex": 7,
+              "cueIn": 436.64
+            },
+            {
+              "lineIndex": 8,
+              "cueIn": 439.22
+            },
+            {
+              "lineIndex": 10,
+              "cueIn": 442.46
+            },
+            {
+              "lineIndex": 11,
+              "cueIn": 446.2
+            },
+            {
+              "lineIndex": 12,
+              "cueIn": 449.02
+            },
+            {
+              "lineIndex": 13,
+              "cueIn": 453.84
+            },
+            {
+              "lineIndex": 15,
+              "cueIn": 457.56
+            },
+            {
+              "lineIndex": 16,
+              "cueIn": 459.46
+            },
+            {
+              "lineIndex": 17,
+              "cueIn": 463.36
+            },
+            {
+              "lineIndex": 18,
+              "cueIn": 467.16
+            },
+            {
+              "lineIndex": 19,
+              "cueIn": 471.36
+            }
+          ]
+        },
+        {
+          "chantId": "shosaimyo-x3",
+          "startTime": 486.09,
+          "lines": [
+            {
+              "lineIndex": 0,
+              "cueIn": 486.09
+            },
+            {
+              "lineIndex": 1,
+              "cueIn": 489.32
+            },
+            {
+              "lineIndex": 2,
+              "cueIn": 491.76
+            },
+            {
+              "lineIndex": 3,
+              "cueIn": 493.5
+            },
+            {
+              "lineIndex": 4,
+              "cueIn": 494.38
+            },
+            {
+              "lineIndex": 5,
+              "cueIn": 496.36
+            },
+            {
+              "lineIndex": 6,
+              "cueIn": 497.14
+            },
+            {
+              "lineIndex": 7,
+              "cueIn": 497.36
+            },
+            {
+              "lineIndex": 9,
+              "cueIn": 497.62
+            },
+            {
+              "lineIndex": 10,
+              "cueIn": 501.24
+            },
+            {
+              "lineIndex": 11,
+              "cueIn": 502.24
+            },
+            {
+              "lineIndex": 12,
+              "cueIn": 502.24
+            },
+            {
+              "lineIndex": 13,
+              "cueIn": 502.7
+            },
+            {
+              "lineIndex": 14,
+              "cueIn": 502.7
+            },
+            {
+              "lineIndex": 15,
+              "cueIn": 507.18
+            },
+            {
+              "lineIndex": 17,
+              "cueIn": 508.22
+            },
+            {
+              "lineIndex": 18,
+              "cueIn": 510.14
+            },
+            {
+              "lineIndex": 19,
+              "cueIn": 511.72
+            },
+            {
+              "lineIndex": 20,
+              "cueIn": 514.02
+            },
+            {
+              "lineIndex": 21,
+              "cueIn": 515.82
+            },
+            {
+              "lineIndex": 23,
+              "cueIn": 518.3
+            },
+            {
+              "lineIndex": 24,
+              "cueIn": 521.04
+            },
+            {
+              "lineIndex": 25,
+              "cueIn": 523.44
+            },
+            {
+              "lineIndex": 26,
+              "cueIn": 525.2
+            },
+            {
+              "lineIndex": 27,
+              "cueIn": 526.02
+            },
+            {
+              "lineIndex": 28,
+              "cueIn": 528.08
+            },
+            {
+              "lineIndex": 29,
+              "cueIn": 528.8
+            },
+            {
+              "lineIndex": 30,
+              "cueIn": 529.04
+            },
+            {
+              "lineIndex": 32,
+              "cueIn": 529.22
+            },
+            {
+              "lineIndex": 33,
+              "cueIn": 532.08
+            },
+            {
+              "lineIndex": 34,
+              "cueIn": 534.08
+            },
+            {
+              "lineIndex": 35,
+              "cueIn": 534.08
+            },
+            {
+              "lineIndex": 36,
+              "cueIn": 535.6
+            },
+            {
+              "lineIndex": 37,
+              "cueIn": 538.9
+            },
+            {
+              "lineIndex": 38,
+              "cueIn": 540.4
+            },
+            {
+              "lineIndex": 40,
+              "cueIn": 540.4
+            },
+            {
+              "lineIndex": 41,
+              "cueIn": 541.46
+            },
+            {
+              "lineIndex": 42,
+              "cueIn": 543.72
+            },
+            {
+              "lineIndex": 43,
+              "cueIn": 546.08
+            },
+            {
+              "lineIndex": 44,
+              "cueIn": 547.78
+            },
+            {
+              "lineIndex": 46,
+              "cueIn": 550.04
+            },
+            {
+              "lineIndex": 47,
+              "cueIn": 553.02
+            },
+            {
+              "lineIndex": 48,
+              "cueIn": 555.08
+            },
+            {
+              "lineIndex": 49,
+              "cueIn": 557.08
+            },
+            {
+              "lineIndex": 50,
+              "cueIn": 557.94
+            },
+            {
+              "lineIndex": 51,
+              "cueIn": 559.96
+            },
+            {
+              "lineIndex": 52,
+              "cueIn": 560.56
+            },
+            {
+              "lineIndex": 53,
+              "cueIn": 561.12
+            },
+            {
+              "lineIndex": 55,
+              "cueIn": 561.14
+            },
+            {
+              "lineIndex": 56,
+              "cueIn": 564.88
+            },
+            {
+              "lineIndex": 57,
+              "cueIn": 565.34
+            },
+            {
+              "lineIndex": 58,
+              "cueIn": 565.5
+            },
+            {
+              "lineIndex": 59,
+              "cueIn": 567.46
+            },
+            {
+              "lineIndex": 60,
+              "cueIn": 567.46
+            },
+            {
+              "lineIndex": 61,
+              "cueIn": 570.88
+            },
+            {
+              "lineIndex": 63,
+              "cueIn": 571.56
+            },
+            {
+              "lineIndex": 64,
+              "cueIn": 572.7
+            },
+            {
+              "lineIndex": 65,
+              "cueIn": 573.0
+            },
+            {
+              "lineIndex": 66,
+              "cueIn": 573.0
+            },
+            {
+              "lineIndex": 67,
+              "cueIn": 573.0
+            }
+          ]
+        },
+        {
+          "chantId": "after-dedication-english-tuesday-1",
+          "startTime": 663.26,
+          "lines": [
+            {
+              "lineIndex": 0,
+              "cueIn": 663.26
+            },
+            {
+              "lineIndex": 1,
+              "cueIn": 672.92
+            },
+            {
+              "lineIndex": 2,
+              "cueIn": 686.08
+            },
+            {
+              "lineIndex": 3,
+              "cueIn": 691.88
+            }
+          ]
+        },
+        {
+          "chantId": "loving-kindness",
+          "startTime": 709.66,
+          "lines": [
+            {
+              "lineIndex": 0,
+              "cueIn": 709.66
+            },
+            {
+              "lineIndex": 1,
+              "cueIn": 712.54
+            },
+            {
+              "lineIndex": 2,
+              "cueIn": 713.72
+            },
+            {
+              "lineIndex": 3,
+              "cueIn": 716.68
+            },
+            {
+              "lineIndex": 5,
+              "cueIn": 718.84
+            },
+            {
+              "lineIndex": 6,
+              "cueIn": 722.7
+            },
+            {
+              "lineIndex": 7,
+              "cueIn": 726.88
+            },
+            {
+              "lineIndex": 8,
+              "cueIn": 730.98
+            },
+            {
+              "lineIndex": 9,
+              "cueIn": 734.96
+            },
+            {
+              "lineIndex": 10,
+              "cueIn": 738.24
+            },
+            {
+              "lineIndex": 11,
+              "cueIn": 740.84
+            },
+            {
+              "lineIndex": 12,
+              "cueIn": 743.74
+            },
+            {
+              "lineIndex": 13,
+              "cueIn": 746.6
+            },
+            {
+              "lineIndex": 14,
+              "cueIn": 748.86
+            },
+            {
+              "lineIndex": 16,
+              "cueIn": 751.78
+            },
+            {
+              "lineIndex": 17,
+              "cueIn": 754.38
+            },
+            {
+              "lineIndex": 18,
+              "cueIn": 757.4
+            },
+            {
+              "lineIndex": 19,
+              "cueIn": 760.96
+            },
+            {
+              "lineIndex": 20,
+              "cueIn": 764.72
+            },
+            {
+              "lineIndex": 21,
+              "cueIn": 768.66
+            },
+            {
+              "lineIndex": 22,
+              "cueIn": 771.74
+            },
+            {
+              "lineIndex": 24,
+              "cueIn": 774.2
+            },
+            {
+              "lineIndex": 25,
+              "cueIn": 776.2
+            },
+            {
+              "lineIndex": 26,
+              "cueIn": 780.08
+            },
+            {
+              "lineIndex": 27,
+              "cueIn": 784.5
+            },
+            {
+              "lineIndex": 28,
+              "cueIn": 787.26
+            },
+            {
+              "lineIndex": 29,
+              "cueIn": 790.92
+            },
+            {
+              "lineIndex": 30,
+              "cueIn": 792.54
+            },
+            {
+              "lineIndex": 32,
+              "cueIn": 795.86
+            },
+            {
+              "lineIndex": 33,
+              "cueIn": 799.52
+            },
+            {
+              "lineIndex": 34,
+              "cueIn": 802.48
+            },
+            {
+              "lineIndex": 35,
+              "cueIn": 805.8
+            },
+            {
+              "lineIndex": 37,
+              "cueIn": 808.0
+            },
+            {
+              "lineIndex": 38,
+              "cueIn": 811.56
+            },
+            {
+              "lineIndex": 39,
+              "cueIn": 814.2
+            },
+            {
+              "lineIndex": 41,
+              "cueIn": 817.56
+            },
+            {
+              "lineIndex": 42,
+              "cueIn": 819.78
+            },
+            {
+              "lineIndex": 43,
+              "cueIn": 821.68
+            },
+            {
+              "lineIndex": 44,
+              "cueIn": 823.86
+            },
+            {
+              "lineIndex": 45,
+              "cueIn": 825.44
+            }
+          ]
+        },
+        {
+          "chantId": "enmei-jukku-x7",
+          "startTime": 841.07,
+          "lines": [
+            {
+              "lineIndex": 0,
+              "cueIn": 841.07
+            },
+            {
+              "lineIndex": 1,
+              "cueIn": 842.32
+            },
+            {
+              "lineIndex": 2,
+              "cueIn": 844.42
+            },
+            {
+              "lineIndex": 3,
+              "cueIn": 846.48
+            },
+            {
+              "lineIndex": 4,
+              "cueIn": 848.94
+            },
+            {
+              "lineIndex": 5,
+              "cueIn": 851.16
+            },
+            {
+              "lineIndex": 6,
+              "cueIn": 853.48
+            },
+            {
+              "lineIndex": 7,
+              "cueIn": 856.36
+            },
+            {
+              "lineIndex": 8,
+              "cueIn": 856.88
+            },
+            {
+              "lineIndex": 9,
+              "cueIn": 859.0
+            },
+            {
+              "lineIndex": 11,
+              "cueIn": 864.7
+            },
+            {
+              "lineIndex": 12,
+              "cueIn": 866.52
+            },
+            {
+              "lineIndex": 13,
+              "cueIn": 868.26
+            },
+            {
+              "lineIndex": 14,
+              "cueIn": 870.38
+            },
+            {
+              "lineIndex": 15,
+              "cueIn": 872.6
+            },
+            {
+              "lineIndex": 16,
+              "cueIn": 874.86
+            },
+            {
+              "lineIndex": 17,
+              "cueIn": 877.0
+            },
+            {
+              "lineIndex": 18,
+              "cueIn": 879.74
+            },
+            {
+              "lineIndex": 19,
+              "cueIn": 880.26
+            },
+            {
+              "lineIndex": 20,
+              "cueIn": 882.54
+            },
+            {
+              "lineIndex": 22,
+              "cueIn": 887.98
+            },
+            {
+              "lineIndex": 23,
+              "cueIn": 889.78
+            },
+            {
+              "lineIndex": 24,
+              "cueIn": 891.42
+            },
+            {
+              "lineIndex": 25,
+              "cueIn": 893.54
+            },
+            {
+              "lineIndex": 26,
+              "cueIn": 895.6
+            },
+            {
+              "lineIndex": 27,
+              "cueIn": 897.7
+            },
+            {
+              "lineIndex": 28,
+              "cueIn": 899.98
+            },
+            {
+              "lineIndex": 29,
+              "cueIn": 902.48
+            },
+            {
+              "lineIndex": 30,
+              "cueIn": 902.96
+            },
+            {
+              "lineIndex": 31,
+              "cueIn": 905.26
+            },
+            {
+              "lineIndex": 33,
+              "cueIn": 910.5
+            },
+            {
+              "lineIndex": 34,
+              "cueIn": 912.12
+            },
+            {
+              "lineIndex": 35,
+              "cueIn": 913.72
+            },
+            {
+              "lineIndex": 36,
+              "cueIn": 915.5
+            },
+            {
+              "lineIndex": 37,
+              "cueIn": 917.58
+            },
+            {
+              "lineIndex": 38,
+              "cueIn": 919.52
+            },
+            {
+              "lineIndex": 39,
+              "cueIn": 921.46
+            },
+            {
+              "lineIndex": 40,
+              "cueIn": 923.9
+            },
+            {
+              "lineIndex": 41,
+              "cueIn": 924.4
+            },
+            {
+              "lineIndex": 42,
+              "cueIn": 926.42
+            },
+            {
+              "lineIndex": 44,
+              "cueIn": 931.22
+            },
+            {
+              "lineIndex": 45,
+              "cueIn": 932.8
+            },
+            {
+              "lineIndex": 46,
+              "cueIn": 934.3
+            },
+            {
+              "lineIndex": 47,
+              "cueIn": 936.0
+            },
+            {
+              "lineIndex": 48,
+              "cueIn": 937.86
+            },
+            {
+              "lineIndex": 49,
+              "cueIn": 939.68
+            },
+            {
+              "lineIndex": 50,
+              "cueIn": 941.6
+            },
+            {
+              "lineIndex": 51,
+              "cueIn": 943.82
+            },
+            {
+              "lineIndex": 52,
+              "cueIn": 944.36
+            },
+            {
+              "lineIndex": 53,
+              "cueIn": 946.2
+            },
+            {
+              "lineIndex": 55,
+              "cueIn": 950.8
+            },
+            {
+              "lineIndex": 56,
+              "cueIn": 952.28
+            },
+            {
+              "lineIndex": 57,
+              "cueIn": 953.66
+            },
+            {
+              "lineIndex": 58,
+              "cueIn": 955.22
+            },
+            {
+              "lineIndex": 59,
+              "cueIn": 956.88
+            },
+            {
+              "lineIndex": 60,
+              "cueIn": 958.64
+            },
+            {
+              "lineIndex": 61,
+              "cueIn": 960.4
+            },
+            {
+              "lineIndex": 62,
+              "cueIn": 962.44
+            },
+            {
+              "lineIndex": 63,
+              "cueIn": 962.9
+            },
+            {
+              "lineIndex": 64,
+              "cueIn": 964.6
+            },
+            {
+              "lineIndex": 66,
+              "cueIn": 968.7
+            },
+            {
+              "lineIndex": 67,
+              "cueIn": 970.02
+            },
+            {
+              "lineIndex": 68,
+              "cueIn": 971.44
+            },
+            {
+              "lineIndex": 69,
+              "cueIn": 972.7
+            },
+            {
+              "lineIndex": 70,
+              "cueIn": 974.16
+            },
+            {
+              "lineIndex": 71,
+              "cueIn": 975.72
+            },
+            {
+              "lineIndex": 72,
+              "cueIn": 977.32
+            },
+            {
+              "lineIndex": 73,
+              "cueIn": 979.12
+            },
+            {
+              "lineIndex": 74,
+              "cueIn": 979.54
+            },
+            {
+              "lineIndex": 75,
+              "cueIn": 981.12
+            }
+          ]
+        },
+        {
+          "chantId": "after-dedication-japanese",
+          "startTime": 1110.0,
+          "lines": [
+            {
+              "lineIndex": 0,
+              "cueIn": 1110.0
+            },
+            {
+              "lineIndex": 1,
+              "cueIn": 1117.98
+            },
+            {
+              "lineIndex": 2,
+              "cueIn": 1119.08
+            },
+            {
+              "lineIndex": 3,
+              "cueIn": 1130.74
+            },
+            {
+              "lineIndex": 4,
+              "cueIn": 1134.94
+            },
+            {
+              "lineIndex": 5,
+              "cueIn": 1134.94
+            }
+          ]
+        },
+        {
+          "chantId": "after-dedication-english-tuesday-2",
+          "startTime": 1127.74,
+          "lines": [
+            {
+              "lineIndex": 0,
+              "cueIn": 1127.74
+            },
+            {
+              "lineIndex": 1,
+              "cueIn": 1133.74
+            },
+            {
+              "lineIndex": 2,
+              "cueIn": 1150.78
+            },
+            {
+              "lineIndex": 3,
+              "cueIn": 1155.0
             }
           ]
         }
