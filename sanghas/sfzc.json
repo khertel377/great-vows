@@ -4698,7 +4698,47 @@
             }
           ]
         }
-      ]
+      ],
+      "timestampCorrections": {
+        "heart-sutra": [
+          {
+            "lineIndex": 17,
+            "cueIn": 302.5
+          },
+          {
+            "lineIndex": 18,
+            "cueIn": 306.0
+          },
+          {
+            "lineIndex": 19,
+            "cueIn": 309.0
+          },
+          {
+            "lineIndex": 20,
+            "cueIn": 312.0
+          },
+          {
+            "lineIndex": 21,
+            "cueIn": 315.0
+          },
+          {
+            "lineIndex": 22,
+            "cueIn": 318.0
+          },
+          {
+            "lineIndex": 23,
+            "cueIn": 321.0
+          },
+          {
+            "lineIndex": 24,
+            "cueIn": 325.0
+          },
+          {
+            "lineIndex": 25,
+            "cueIn": 326.5
+          }
+        ]
+      }
     },
     {
       "id": "morning-service-tuesday",

@@ -14,6 +14,9 @@ import shutil
 import sys
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).parent))
+from apply_corrections import apply_corrections
+
 
 def normalize(word: str) -> str:
     """Strip punctuation and lowercase for matching."""
@@ -179,6 +182,7 @@ def main():
                 "lines": entry["lines"],
             })
 
+    apply_corrections(service, timestamp_map)
     service["timestampMap"] = timestamp_map
 
     # Back up and write

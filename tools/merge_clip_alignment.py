@@ -16,6 +16,9 @@ import shutil
 import sys
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).parent))
+from apply_corrections import apply_corrections
+
 
 def main():
     parser = argparse.ArgumentParser(
@@ -75,6 +78,9 @@ def main():
             "startTime": start_time,
             "lines": abs_lines,
         })
+
+    # Apply manual corrections on top
+    apply_corrections(service, timestamp_map)
 
     # Back up and write
     bak_path = json_path.with_suffix(json_path.suffix + ".bak")

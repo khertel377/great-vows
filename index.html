@@ -511,6 +511,19 @@ function loadService(svc) {
 
   var chantNames = [];
   if (svc.timestampMap && svc.timestampMap.length > 0) {
+    // apply manual corrections on top of auto-generated timestamps
+    var corrections = svc.timestampCorrections || {};
+    svc.timestampMap.forEach(function(entry) {
+      var chantCorrections = corrections[entry.chantId];
+      if (chantCorrections) {
+        var corrMap = {};
+        chantCorrections.forEach(function(c) { corrMap[c.lineIndex] = c.cueIn; });
+        entry.lines.forEach(function(l) {
+          if (corrMap[l.lineIndex] !== undefined) l.cueIn = corrMap[l.lineIndex];
+        });
+      }
+    });
+
     svc.timestampMap.forEach(function(entry, i) {
       var chant = DATA.chants.find(function(c) { return c.id === entry.chantId; });
       if (!chant) return;
