@@ -172,7 +172,7 @@
     color: var(--text);
     opacity: 0; pointer-events: none;
     z-index: 15;
-    transition: opacity 0.4s ease;
+    transition: opacity 0.2s ease;
   }
 
   /* top bar */
@@ -363,6 +363,7 @@ var isScrubbing = false;
 var scrubTimer = null;
 var _lastCeremonyIdx = -2;  // -2 = uninitialized, -1 = hidden
 var _ceremonyFadeTimer = null;
+var _cueIdxOnChantEnter = -1;  // highest cueIdx seen while inside a chant window; suppresses stale re-display
 var lineTranslates = {};
 var currentBoost = 1.0;
 var currentSpeedBoost = 1.0;
@@ -553,12 +554,12 @@ function loadService(svc) {
 
     // build chantEndTimes: endTime for each chant (used to dim all lines after chant ends)
     svc.timestampMap.forEach(function(entry, i) {
+      var lastLines = entry.lines;
+      var lastCueIn = lastLines.length > 0 ? lastLines[lastLines.length - 1].cueIn : entry.startTime;
       var endTime;
       if (i < svc.timestampMap.length - 1) {
-        endTime = svc.timestampMap[i + 1].startTime - 1;
+        endTime = lastCueIn + 3;
       } else {
-        var lastLines = entry.lines;
-        var lastCueIn = lastLines.length > 0 ? lastLines[lastLines.length - 1].cueIn : entry.startTime;
         endTime = svc.duration !== undefined ? svc.duration : lastCueIn + 10;
       }
       chantEndTimes[entry.chantId] = endTime;
@@ -603,7 +604,7 @@ function loadService(svc) {
       svc.timestampMap.forEach(function(entry) {
         var eEnd = chantEndTimes[entry.chantId];
         if (eEnd !== undefined && cueTime > entry.startTime && cueTime <= eEnd) {
-          cueTime = eEnd + 0.5;
+          cueTime = Math.max(eEnd + 0.5, chantStart - 10);
         }
       });
       ceremonyCues.push({ time: cueTime, emoji: '📖', text: cueText });
@@ -653,6 +654,7 @@ function openChant(chant) {
   if (tweenRaf) { cancelAnimationFrame(tweenRaf); tweenRaf = null; }
   if (_ceremonyFadeTimer) { clearTimeout(_ceremonyFadeTimer); _ceremonyFadeTimer = null; }
   _lastCeremonyIdx = -2;
+  _cueIdxOnChantEnter = -1;
   var _clEl = document.getElementById('ceremonyLine');
   if (_clEl) { _clEl.style.opacity = '0'; _clEl.textContent = ''; }
   audioEl.pause();
@@ -693,9 +695,16 @@ function openChant(chant) {
         for (var ci = 0; ci < initCues.length; ci++) {
           if (0 >= initCues[ci].time) initCueIdx = ci;
         }
-        var wS = currentChant.chantWindowStart;
-        var wE = currentChant.chantWindowEnd;
-        var initInWindow = wS !== undefined && wE !== undefined && 0 >= wS && 0 <= wE;
+        var initInWindow = false;
+        if (currentChant.timestampMap && currentChant.chantEndTimes) {
+          for (var iti = 0; iti < currentChant.timestampMap.length; iti++) {
+            var iEntry = currentChant.timestampMap[iti];
+            var iEnd = currentChant.chantEndTimes[iEntry.chantId];
+            if (iEnd !== undefined && 0 >= iEntry.startTime && 0 <= iEnd) {
+              initInWindow = true; break;
+            }
+          }
+        }
         updateCeremonyLine(initCueIdx, !initInWindow && initCueIdx >= 0);
       }
 
@@ -985,7 +994,7 @@ function updateCeremonyLine(cueIdx, visible) {
       _ceremonyFadeTimer = null;
       el.textContent = text;
       el.style.opacity = '1';
-    }, 400);
+    }, 200);
   }
 }
 
@@ -1004,10 +1013,20 @@ function startTween() {
       for (var ci = 0; ci < cues.length; ci++) {
         if (t >= cues[ci].time) activeCueIdx = ci;
       }
-      var wStart = currentChant.chantWindowStart;
-      var wEnd = currentChant.chantWindowEnd;
-      var inChantWindow = (wStart !== undefined && wEnd !== undefined && t >= wStart && t <= wEnd);
-      updateCeremonyLine(activeCueIdx, !inChantWindow && activeCueIdx >= 0);
+      var inChantWindow = false;
+      if (currentChant.timestampMap && currentChant.chantEndTimes) {
+        for (var ti = 0; ti < currentChant.timestampMap.length; ti++) {
+          var tEntry = currentChant.timestampMap[ti];
+          var tEnd = currentChant.chantEndTimes[tEntry.chantId];
+          if (tEnd !== undefined && t >= tEntry.startTime && t <= tEnd) {
+            inChantWindow = true; break;
+          }
+        }
+      }
+      if (inChantWindow && activeCueIdx > _cueIdxOnChantEnter) {
+        _cueIdxOnChantEnter = activeCueIdx;
+      }
+      updateCeremonyLine(activeCueIdx, !inChantWindow && activeCueIdx > _cueIdxOnChantEnter);
     }
 
     if (!listeningMode) {
