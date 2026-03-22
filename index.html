@@ -973,6 +973,7 @@ function updateCeremonyLine(cueIdx, visible) {
   if (!el) return;
   if (!visible) {
     if (_lastCeremonyIdx !== -1) {
+      el.style.transition = 'opacity 0.2s ease';
       el.style.opacity = '0';
       _lastCeremonyIdx = -1;
       if (_ceremonyFadeTimer) { clearTimeout(_ceremonyFadeTimer); _ceremonyFadeTimer = null; }
@@ -986,16 +987,42 @@ function updateCeremonyLine(cueIdx, visible) {
   var prev = _lastCeremonyIdx;
   _lastCeremonyIdx = cueIdx;
   if (prev === -1 || prev === -2) {
+    el.style.transition = 'opacity 0.6s ease';
     el.textContent = text;
     el.style.opacity = '1';
   } else {
+    el.style.transition = 'opacity 0.2s ease';
     el.style.opacity = '0';
     _ceremonyFadeTimer = setTimeout(function() {
       _ceremonyFadeTimer = null;
+      el.style.transition = 'opacity 0.6s ease';
       el.textContent = text;
       el.style.opacity = '1';
     }, 200);
   }
+}
+
+function updateCeremonyAtTime(t) {
+  if (!currentChant.ceremonyCues || !currentChant.ceremonyCues.length) return;
+  var cues = currentChant.ceremonyCues;
+  var activeCueIdx = -1;
+  for (var ci = 0; ci < cues.length; ci++) {
+    if (t >= cues[ci].time) activeCueIdx = ci;
+  }
+  var inChantWindow = false;
+  if (currentChant.timestampMap && currentChant.chantEndTimes) {
+    for (var ti = 0; ti < currentChant.timestampMap.length; ti++) {
+      var tEntry = currentChant.timestampMap[ti];
+      var tEnd = currentChant.chantEndTimes[tEntry.chantId];
+      if (tEnd !== undefined && t >= tEntry.startTime && t <= tEnd) {
+        inChantWindow = true; break;
+      }
+    }
+  }
+  if (inChantWindow && activeCueIdx > _cueIdxOnChantEnter) {
+    _cueIdxOnChantEnter = activeCueIdx;
+  }
+  updateCeremonyLine(activeCueIdx, !inChantWindow && activeCueIdx > _cueIdxOnChantEnter);
 }
 
 function startTween() {
@@ -1007,27 +1034,7 @@ function startTween() {
     updateSeekBar(t / dur);
 
     // ceremony line overlay
-    if (currentChant.ceremonyCues && currentChant.ceremonyCues.length > 0) {
-      var cues = currentChant.ceremonyCues;
-      var activeCueIdx = -1;
-      for (var ci = 0; ci < cues.length; ci++) {
-        if (t >= cues[ci].time) activeCueIdx = ci;
-      }
-      var inChantWindow = false;
-      if (currentChant.timestampMap && currentChant.chantEndTimes) {
-        for (var ti = 0; ti < currentChant.timestampMap.length; ti++) {
-          var tEntry = currentChant.timestampMap[ti];
-          var tEnd = currentChant.chantEndTimes[tEntry.chantId];
-          if (tEnd !== undefined && t >= tEntry.startTime && t <= tEnd) {
-            inChantWindow = true; break;
-          }
-        }
-      }
-      if (inChantWindow && activeCueIdx > _cueIdxOnChantEnter) {
-        _cueIdxOnChantEnter = activeCueIdx;
-      }
-      updateCeremonyLine(activeCueIdx, !inChantWindow && activeCueIdx > _cueIdxOnChantEnter);
-    }
+    updateCeremonyAtTime(t);
 
     if (!listeningMode) {
       var allItems = getAllTimedItems();
@@ -1097,8 +1104,37 @@ var seekDragStartX = null;
 function seekToPct(pct) {
   pct = Math.max(0, Math.min(1, pct));
   if (!hasAudio || !audioEl.duration) return;
-  audioEl.currentTime = pct * audioEl.duration;
+  var newTime = pct * audioEl.duration;
+  audioEl.currentTime = newTime;
   updateSeekBar(pct);
+  updateStageVisibility(newTime);
+  updateCeremonyAtTime(newTime);
+  if (!listeningMode) {
+    var allItems = getAllTimedItems();
+    var bestItem = allItems[0] || null;
+    for (var i = 0; i < allItems.length; i++) {
+      if (newTime >= allItems[i].time) bestItem = allItems[i];
+    }
+    if (bestItem) {
+      // endTime dimming
+      if (bestItem.idx >= 0 && currentChant.chantEndTimes) {
+        var lineObj = currentChant.lines[bestItem.idx];
+        var endCid = lineObj && lineObj.chantId;
+        if (endCid && newTime > currentChant.chantEndTimes[endCid]) {
+          bestItem = { idx: -1, time: bestItem.time };
+        }
+      }
+      setClasses(bestItem.idx);
+      var stageEl = document.getElementById('chantStage');
+      if (stageEl) {
+        var isCeremony = typeof bestItem.idx === 'string' && bestItem.idx.indexOf('C-') === 0;
+        stageEl.style.opacity = isCeremony ? '0' : '1';
+      }
+      if (bestItem.idx !== -1 && typeof bestItem.idx !== 'string') {
+        applyTranslate(lineTranslates[bestItem.idx] || 0);
+      }
+    }
+  }
 }
 
 function pctFromMouse(e) {
