@@ -164,7 +164,7 @@
   #chantScreen.spotlight .chant-line.future { opacity: 0; }
   .section-gap { height: 28px; }
   #ceremonyLine {
-    position: fixed; top: 50%; transform: translateY(-50%);
+    position: fixed; top: 28%;
     left: 8vw;
     font-family: 'DM Sans', sans-serif;
     font-size: clamp(24px, 5vw, 50px); font-weight: 700;
@@ -591,10 +591,12 @@ function loadService(svc) {
     for (var di = 0; di < svcItems.length; di++) {
       if (svcItems[di].type !== 'doshi') continue;
       var nextChantId = null;
+      var nextChantItem = null;
       for (var ci2 = di + 1; ci2 < svcItems.length; ci2++) {
-        if (svcItems[ci2].type === 'chant') { nextChantId = svcItems[ci2].id; break; }
+        if (svcItems[ci2].type === 'chant') { nextChantId = svcItems[ci2].id; nextChantItem = svcItems[ci2]; break; }
       }
       if (!nextChantId) continue;
+      if (nextChantItem && nextChantItem.noAnnouncement) continue;
       var chantStart = tmLookup[nextChantId];
       if (chantStart === undefined) continue;
       var announceChant = DATA.chants.find(function(c) { return c.id === nextChantId; });
@@ -953,7 +955,13 @@ function getAllTimedItems() {
       out.push({ idx: 'C-' + ci, time: cue.time });
     });
   }
-  out.sort(function(a, b) { return a.time - b.time; });
+  out.sort(function(a, b) {
+    if (a.time !== b.time) return a.time - b.time;
+    // tie-break: chant lines (numeric idx) before ceremony cues (string idx)
+    var aIsCue = typeof a.idx === 'string';
+    var bIsCue = typeof b.idx === 'string';
+    return aIsCue - bIsCue;
+  });
   return out;
 }
 
@@ -1059,13 +1067,6 @@ function startTween() {
 
         setClasses(curItem.idx);
 
-        // show/hide chantStage based on whether curItem is a ceremony cue
-        var stageEl = document.getElementById('chantStage');
-        if (stageEl) {
-          var isCeremony = typeof curItem.idx === 'string' && curItem.idx.indexOf('C-') === 0;
-          stageEl.style.opacity = isCeremony ? '0' : '1';
-        }
-
         if (curItem.idx !== -1 && typeof curItem.idx !== 'string') {
           var nextReal = nextItem && nextItem.idx !== -1 && typeof nextItem.idx !== 'string' ? nextItem : null;
           var fromY = lineTranslates[curItem.idx] || 0;
@@ -1125,11 +1126,6 @@ function seekToPct(pct) {
         }
       }
       setClasses(bestItem.idx);
-      var stageEl = document.getElementById('chantStage');
-      if (stageEl) {
-        var isCeremony = typeof bestItem.idx === 'string' && bestItem.idx.indexOf('C-') === 0;
-        stageEl.style.opacity = isCeremony ? '0' : '1';
-      }
       if (bestItem.idx !== -1 && typeof bestItem.idx !== 'string') {
         applyTranslate(lineTranslates[bestItem.idx] || 0);
       }

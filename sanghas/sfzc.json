@@ -4024,30 +4024,6 @@
           "cueIn": 31.88
         }
       ]
-    },
-    {
-      "id": "after-dedication-english-tuesday-2",
-      "title": "After Dedication (English)",
-      "section": "Short Verses",
-      "audio": null,
-      "lines": [
-        {
-          "text": "All buddhas, ten directions, three times.",
-          "cueIn": 2.74
-        },
-        {
-          "text": "All honored ones, bodhisattva-mahasattvas,",
-          "cueIn": 8.74
-        },
-        {
-          "text": "Wisdom beyond wisdom,",
-          "cueIn": 25.78
-        },
-        {
-          "text": "Maha Prajña Paramita",
-          "cueIn": 30.0
-        }
-      ]
     }
   ],
   "services": [
@@ -5256,8 +5232,7 @@
         "after-dedication-english-tuesday-1",
         "loving-kindness",
         "enmei-jukku-x7",
-        "after-dedication-japanese",
-        "after-dedication-english-tuesday-2"
+        "after-dedication-japanese"
       ],
       "items": [
         {
@@ -5400,18 +5375,15 @@
         },
         {
           "type": "chant",
-          "id": "after-dedication-japanese"
-        },
-        {
-          "type": "chant",
-          "id": "after-dedication-english-tuesday-2"
+          "id": "after-dedication-japanese",
+          "noAnnouncement": true
         },
         {
           "type": "ceremonial",
           "label": "Closing ceremony",
           "cues": [
             {
-              "time": 1110,
+              "time": 1110.5,
               "emoji": "🙏",
               "text": "Gassho"
             },
@@ -6385,49 +6357,27 @@
           "lines": [
             {
               "lineIndex": 0,
-              "cueIn": 1110.0
+              "cueIn": 1112.0
             },
             {
               "lineIndex": 1,
-              "cueIn": 1117.98
+              "cueIn": 1119.0
             },
             {
               "lineIndex": 2,
-              "cueIn": 1119.08
+              "cueIn": 1125.0
             },
             {
               "lineIndex": 3,
-              "cueIn": 1130.74
+              "cueIn": 1131.0
             },
             {
               "lineIndex": 4,
-              "cueIn": 1134.94
+              "cueIn": 1139.0
             },
             {
               "lineIndex": 5,
-              "cueIn": 1135.74
-            }
-          ]
-        },
-        {
-          "chantId": "after-dedication-english-tuesday-2",
-          "startTime": 1127.74,
-          "lines": [
-            {
-              "lineIndex": 0,
-              "cueIn": 1127.74
-            },
-            {
-              "lineIndex": 1,
-              "cueIn": 1133.74
-            },
-            {
-              "lineIndex": 2,
-              "cueIn": 1150.78
-            },
-            {
-              "lineIndex": 3,
-              "cueIn": 1155.0
+              "cueIn": 1147.0
             }
           ]
         }
