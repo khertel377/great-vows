@@ -598,7 +598,15 @@ function loadService(svc) {
       if (chantStart === undefined) continue;
       var announceChant = DATA.chants.find(function(c) { return c.id === nextChantId; });
       var cueText = (announceChant && announceChant.title) ? announceChant.title : svcItems[di].label;
-      ceremonyCues.push({ time: chantStart - 9, emoji: '📖', text: cueText });
+      var cueTime = chantStart - 10;
+      // if cueTime falls inside another chant's active window, push to that chant's endTime + 0.5
+      svc.timestampMap.forEach(function(entry) {
+        var eEnd = chantEndTimes[entry.chantId];
+        if (eEnd !== undefined && cueTime > entry.startTime && cueTime <= eEnd) {
+          cueTime = eEnd + 0.5;
+        }
+      });
+      ceremonyCues.push({ time: cueTime, emoji: '📖', text: cueText });
     }
     ceremonyCues.sort(function(a, b) { return a.time - b.time; });
   }
