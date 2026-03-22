@@ -3545,6 +3545,540 @@
           "cueIn": 162.88
         }
       ]
+    },
+    {
+      "id": "after-dedication-japanese",
+      "title": "After Dedication (Japanese)",
+      "section": "Short Verses",
+      "audio": null,
+      "lines": [
+        {
+          "text": "Ji ho san shi"
+        },
+        {
+          "text": "i shi fu"
+        },
+        {
+          "text": "shi son bu sa"
+        },
+        {
+          "text": "mo ko sa"
+        },
+        {
+          "text": "mo ko ho ja"
+        },
+        {
+          "text": "ho ro mi"
+        }
+      ]
+    },
+    {
+      "id": "after-dedication-english",
+      "title": "After Dedication (English)",
+      "section": "Short Verses",
+      "audio": null,
+      "lines": [
+        {
+          "text": "All buddhas, ten directions, three times."
+        },
+        {
+          "text": "All honored ones, bodhisattva-mahasattvas,"
+        },
+        {
+          "text": "Wisdom beyond wisdom,"
+        },
+        {
+          "text": "Maha Prajña Paramita"
+        }
+      ]
+    },
+    {
+      "id": "shosaimyo-x3",
+      "title": "Shōsaimyō Kichijō Darani (×3)",
+      "section": "Dharanis",
+      "audio": null,
+      "lines": [
+        {
+          "text": "No mo san man da"
+        },
+        {
+          "text": "moto nan namu butsu"
+        },
+        {
+          "text": "oha ra chi koto sha"
+        },
+        {
+          "text": "yo butsu u in"
+        },
+        {
+          "text": "sono nan to ji to"
+        },
+        {
+          "text": "yo butsu u en"
+        },
+        {
+          "text": "en buppo so en"
+        },
+        {
+          "text": "gya gya jo raku ga jo"
+        },
+        {
+          "text": null
+        },
+        {
+          "text": "gya ki gya ki"
+        },
+        {
+          "text": "cho nen kanzeon"
+        },
+        {
+          "text": "un nun bo nen kanzeon"
+        },
+        {
+          "text": "shifu ra shifu ra"
+        },
+        {
+          "text": "nen nen ju shin ki"
+        },
+        {
+          "text": "hara shifu ra hara shifu ra"
+        },
+        {
+          "text": "nen nen fu ri shin"
+        },
+        {
+          "text": null
+        },
+        {
+          "text": "chisu sha chisu sha"
+        },
+        {
+          "text": "chishu ri chishu ri"
+        },
+        {
+          "text": "soha ja soha ja"
+        },
+        {
+          "text": "sen chi gya"
+        },
+        {
+          "text": "shiri ei so mo ko"
+        },
+        {
+          "text": null
+        },
+        {
+          "text": "No mo san man da"
+        },
+        {
+          "text": "moto nan namu butsu"
+        },
+        {
+          "text": "oha ra chi koto sha"
+        },
+        {
+          "text": "yo butsu u in"
+        },
+        {
+          "text": "sono nan to ji to"
+        },
+        {
+          "text": "yo butsu u en"
+        },
+        {
+          "text": "en buppo so en"
+        },
+        {
+          "text": "gya gya jo raku ga jo"
+        },
+        {
+          "text": null
+        },
+        {
+          "text": "gya ki gya ki"
+        },
+        {
+          "text": "cho nen kanzeon"
+        },
+        {
+          "text": "un nun bo nen kanzeon"
+        },
+        {
+          "text": "shifu ra shifu ra"
+        },
+        {
+          "text": "nen nen ju shin ki"
+        },
+        {
+          "text": "hara shifu ra hara shifu ra"
+        },
+        {
+          "text": "nen nen fu ri shin"
+        },
+        {
+          "text": null
+        },
+        {
+          "text": "chisu sha chisu sha"
+        },
+        {
+          "text": "chishu ri chishu ri"
+        },
+        {
+          "text": "soha ja soha ja"
+        },
+        {
+          "text": "sen chi gya"
+        },
+        {
+          "text": "shiri ei so mo ko"
+        },
+        {
+          "text": null
+        },
+        {
+          "text": "No mo san man da"
+        },
+        {
+          "text": "moto nan namu butsu"
+        },
+        {
+          "text": "oha ra chi koto sha"
+        },
+        {
+          "text": "yo butsu u in"
+        },
+        {
+          "text": "sono nan to ji to"
+        },
+        {
+          "text": "yo butsu u en"
+        },
+        {
+          "text": "en buppo so en"
+        },
+        {
+          "text": "gya gya jo raku ga jo"
+        },
+        {
+          "text": null
+        },
+        {
+          "text": "gya ki gya ki"
+        },
+        {
+          "text": "cho nen kanzeon"
+        },
+        {
+          "text": "un nun bo nen kanzeon"
+        },
+        {
+          "text": "shifu ra shifu ra"
+        },
+        {
+          "text": "nen nen ju shin ki"
+        },
+        {
+          "text": "hara shifu ra hara shifu ra"
+        },
+        {
+          "text": "nen nen fu ri shin"
+        },
+        {
+          "text": null
+        },
+        {
+          "text": "chisu sha chisu sha"
+        },
+        {
+          "text": "chishu ri chishu ri"
+        },
+        {
+          "text": "soha ja soha ja"
+        },
+        {
+          "text": "sen chi gya"
+        },
+        {
+          "text": "shiri ei so mo ko"
+        }
+      ]
+    },
+    {
+      "id": "enmei-jukku-x7",
+      "title": "Enmei Jukku Kannon Gyō (×7)",
+      "section": "Dharanis",
+      "audio": null,
+      "lines": [
+        {
+          "text": "Kanzeon"
+        },
+        {
+          "text": "namu butsu"
+        },
+        {
+          "text": "yo butsu u in"
+        },
+        {
+          "text": "yo butsu u en"
+        },
+        {
+          "text": "buppo so en"
+        },
+        {
+          "text": "jo raku ga jo"
+        },
+        {
+          "text": "cho nen kanzeon"
+        },
+        {
+          "text": "bo nen kanzeon"
+        },
+        {
+          "text": "nen nen ju shin ki"
+        },
+        {
+          "text": "nen nen fu ri shin"
+        },
+        {
+          "text": null
+        },
+        {
+          "text": "Kanzeon"
+        },
+        {
+          "text": "namu butsu"
+        },
+        {
+          "text": "yo butsu u in"
+        },
+        {
+          "text": "yo butsu u en"
+        },
+        {
+          "text": "buppo so en"
+        },
+        {
+          "text": "jo raku ga jo"
+        },
+        {
+          "text": "cho nen kanzeon"
+        },
+        {
+          "text": "bo nen kanzeon"
+        },
+        {
+          "text": "nen nen ju shin ki"
+        },
+        {
+          "text": "nen nen fu ri shin"
+        },
+        {
+          "text": null
+        },
+        {
+          "text": "Kanzeon"
+        },
+        {
+          "text": "namu butsu"
+        },
+        {
+          "text": "yo butsu u in"
+        },
+        {
+          "text": "yo butsu u en"
+        },
+        {
+          "text": "buppo so en"
+        },
+        {
+          "text": "jo raku ga jo"
+        },
+        {
+          "text": "cho nen kanzeon"
+        },
+        {
+          "text": "bo nen kanzeon"
+        },
+        {
+          "text": "nen nen ju shin ki"
+        },
+        {
+          "text": "nen nen fu ri shin"
+        },
+        {
+          "text": null
+        },
+        {
+          "text": "Kanzeon"
+        },
+        {
+          "text": "namu butsu"
+        },
+        {
+          "text": "yo butsu u in"
+        },
+        {
+          "text": "yo butsu u en"
+        },
+        {
+          "text": "buppo so en"
+        },
+        {
+          "text": "jo raku ga jo"
+        },
+        {
+          "text": "cho nen kanzeon"
+        },
+        {
+          "text": "bo nen kanzeon"
+        },
+        {
+          "text": "nen nen ju shin ki"
+        },
+        {
+          "text": "nen nen fu ri shin"
+        },
+        {
+          "text": null
+        },
+        {
+          "text": "Kanzeon"
+        },
+        {
+          "text": "namu butsu"
+        },
+        {
+          "text": "yo butsu u in"
+        },
+        {
+          "text": "yo butsu u en"
+        },
+        {
+          "text": "buppo so en"
+        },
+        {
+          "text": "jo raku ga jo"
+        },
+        {
+          "text": "cho nen kanzeon"
+        },
+        {
+          "text": "bo nen kanzeon"
+        },
+        {
+          "text": "nen nen ju shin ki"
+        },
+        {
+          "text": "nen nen fu ri shin"
+        },
+        {
+          "text": null
+        },
+        {
+          "text": "Kanzeon"
+        },
+        {
+          "text": "namu butsu"
+        },
+        {
+          "text": "yo butsu u in"
+        },
+        {
+          "text": "yo butsu u en"
+        },
+        {
+          "text": "buppo so en"
+        },
+        {
+          "text": "jo raku ga jo"
+        },
+        {
+          "text": "cho nen kanzeon"
+        },
+        {
+          "text": "bo nen kanzeon"
+        },
+        {
+          "text": "nen nen ju shin ki"
+        },
+        {
+          "text": "nen nen fu ri shin"
+        },
+        {
+          "text": null
+        },
+        {
+          "text": "Kanzeon"
+        },
+        {
+          "text": "namu butsu"
+        },
+        {
+          "text": "yo butsu u in"
+        },
+        {
+          "text": "yo butsu u en"
+        },
+        {
+          "text": "buppo so en"
+        },
+        {
+          "text": "jo raku ga jo"
+        },
+        {
+          "text": "cho nen kanzeon"
+        },
+        {
+          "text": "bo nen kanzeon"
+        },
+        {
+          "text": "nen nen ju shin ki"
+        },
+        {
+          "text": "nen nen fu ri shin"
+        }
+      ]
+    },
+    {
+      "id": "after-dedication-english-tuesday-1",
+      "title": "After Dedication (English)",
+      "section": "Short Verses",
+      "audio": null,
+      "lines": [
+        {
+          "text": "All buddhas, ten directions, three times."
+        },
+        {
+          "text": "All honored ones, bodhisattva-mahasattvas,"
+        },
+        {
+          "text": "Wisdom beyond wisdom,"
+        },
+        {
+          "text": "Maha Prajña Paramita"
+        }
+      ]
+    },
+    {
+      "id": "after-dedication-english-tuesday-2",
+      "title": "After Dedication (English)",
+      "section": "Short Verses",
+      "audio": null,
+      "lines": [
+        {
+          "text": "All buddhas, ten directions, three times."
+        },
+        {
+          "text": "All honored ones, bodhisattva-mahasattvas,"
+        },
+        {
+          "text": "Wisdom beyond wisdom,"
+        },
+        {
+          "text": "Maha Prajña Paramita"
+        }
+      ]
     }
   ],
   "services": [
@@ -4746,40 +5280,253 @@
       "dayOfWeek": 2,
       "audio": "audio/sfzc/MorningService_Tuesday.mp4",
       "duration": 1255,
+      "recordingChants": [
+        "maka-hannya",
+        "hymn-perfection-wisdom",
+        "shosaimyo-x3",
+        "after-dedication-english-tuesday-1",
+        "loving-kindness",
+        "enmei-jukku-x7",
+        "after-dedication-japanese",
+        "after-dedication-english-tuesday-2"
+      ],
       "items": [
         {
           "type": "ceremonial",
-          "id": "han",
-          "label": "Han — assembly called to zendo"
+          "label": "Opening ceremony",
+          "cues": [
+            {
+              "time": 0,
+              "emoji": "🪷",
+              "text": "Offering in progress"
+            },
+            {
+              "time": 36,
+              "emoji": "〰️",
+              "text": "Prepare to bow"
+            },
+            {
+              "time": 65,
+              "emoji": "⬇️",
+              "text": "Bow"
+            }
+          ]
         },
         {
-          "type": "silence",
-          "label": "Zazen",
-          "durationMinutes": 40
-        },
-        {
-          "type": "chant",
-          "id": "purification"
-        },
-        {
-          "type": "chant",
-          "id": "heart-sutra"
+          "type": "doshi",
+          "label": "Maka Hannya announcement"
         },
         {
           "type": "chant",
           "id": "maka-hannya"
         },
         {
-          "type": "chant",
-          "id": "shosaimyo"
+          "type": "doshi",
+          "label": "Hymn to Perfection of Wisdom announcement"
         },
         {
           "type": "chant",
-          "id": "enmei-jukku"
+          "id": "hymn-perfection-wisdom"
+        },
+        {
+          "type": "doshi",
+          "label": "Shōsaimyō announcement"
         },
         {
           "type": "chant",
-          "id": "great-vows"
+          "id": "shosaimyo-x3"
+        },
+        {
+          "type": "ceremonial",
+          "label": "Warning bells and eko",
+          "cues": [
+            {
+              "time": 573,
+              "emoji": "🔔",
+              "text": ""
+            },
+            {
+              "time": 578,
+              "emoji": "🔔",
+              "text": ""
+            },
+            {
+              "time": 583,
+              "emoji": "•",
+              "text": "End knock"
+            }
+          ]
+        },
+        {
+          "type": "doshi",
+          "label": "Eko — Luminous Mirror Wisdom"
+        },
+        {
+          "type": "ceremonial",
+          "label": "Standing bow",
+          "cues": [
+            {
+              "time": 609,
+              "emoji": "🙇",
+              "text": "Hold standing bow"
+            },
+            {
+              "time": 651,
+              "emoji": "⬆️",
+              "text": "Rise"
+            }
+          ]
+        },
+        {
+          "type": "chant",
+          "id": "after-dedication-english-tuesday-1"
+        },
+        {
+          "type": "chant",
+          "id": "loving-kindness"
+        },
+        {
+          "type": "doshi",
+          "label": "Enmei Jukku announcement"
+        },
+        {
+          "type": "chant",
+          "id": "enmei-jukku-x7"
+        },
+        {
+          "type": "ceremonial",
+          "label": "Warning bells and eko",
+          "cues": [
+            {
+              "time": 981,
+              "emoji": "🔔",
+              "text": ""
+            },
+            {
+              "time": 984,
+              "emoji": "🔔",
+              "text": ""
+            },
+            {
+              "time": 986,
+              "emoji": "•",
+              "text": "End knock"
+            }
+          ]
+        },
+        {
+          "type": "doshi",
+          "label": "Eko"
+        },
+        {
+          "type": "ceremonial",
+          "label": "Shashu bow",
+          "cues": [
+            {
+              "time": 1010,
+              "emoji": "🫸",
+              "text": "Shashu bow"
+            }
+          ]
+        },
+        {
+          "type": "chant",
+          "id": "after-dedication-japanese"
+        },
+        {
+          "type": "chant",
+          "id": "after-dedication-english-tuesday-2"
+        },
+        {
+          "type": "ceremonial",
+          "label": "Closing ceremony",
+          "cues": [
+            {
+              "time": 1110,
+              "emoji": "🙏",
+              "text": "Gassho"
+            },
+            {
+              "time": 1124,
+              "emoji": "🔔",
+              "text": ""
+            },
+            {
+              "time": 1137,
+              "emoji": "🔔",
+              "text": "Stand"
+            },
+            {
+              "time": 1139,
+              "emoji": "〰️",
+              "text": "Prepare to bow"
+            },
+            {
+              "time": 1155,
+              "emoji": "⬇️",
+              "text": "Bow"
+            },
+            {
+              "time": 1166,
+              "emoji": "⬆️",
+              "text": "Rise"
+            },
+            {
+              "time": 1175.5,
+              "emoji": "⬇️",
+              "text": "Bow"
+            },
+            {
+              "time": 1182,
+              "emoji": "🔔",
+              "text": ""
+            },
+            {
+              "time": 1182,
+              "emoji": "⬇️",
+              "text": "Bow"
+            },
+            {
+              "time": 1192,
+              "emoji": "⬆️",
+              "text": "Rise"
+            },
+            {
+              "time": 1217.5,
+              "emoji": "🔔",
+              "text": ""
+            },
+            {
+              "time": 1217.5,
+              "emoji": "🙇",
+              "text": "Bow to altar 🪷"
+            },
+            {
+              "time": 1223,
+              "emoji": "🙇",
+              "text": "Bow to each other"
+            },
+            {
+              "time": 1240.9,
+              "emoji": "🔔",
+              "text": ""
+            },
+            {
+              "time": 1240.9,
+              "emoji": "🫸",
+              "text": "Shashu — procession begins"
+            },
+            {
+              "time": 1247,
+              "emoji": "🔔",
+              "text": ""
+            },
+            {
+              "time": 1247,
+              "emoji": "🙇",
+              "text": "Bow to each other — process out"
+            }
+          ]
         }
       ]
     },
