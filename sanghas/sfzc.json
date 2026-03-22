@@ -768,58 +768,34 @@
           "text": "No mo san man da"
         },
         {
-          "text": "moto nan namu butsu"
+          "text": "moto nan"
         },
         {
           "text": "oha ra chi koto sha"
         },
         {
-          "text": "yo butsu u in"
-        },
-        {
           "text": "sono nan to ji to"
         },
         {
-          "text": "yo butsu u en"
+          "text": "en"
         },
         {
-          "text": "en buppo so en"
-        },
-        {
-          "text": "gya gya jo raku ga jo"
-        },
-        {
-          "text": null
+          "text": "gya gya"
         },
         {
           "text": "gya ki gya ki"
         },
         {
-          "text": "cho nen kanzeon"
-        },
-        {
-          "text": "un nun bo nen kanzeon"
+          "text": "un nun"
         },
         {
           "text": "shifu ra shifu ra"
         },
         {
-          "text": "nen nen ju shin ki"
-        },
-        {
           "text": "hara shifu ra hara shifu ra"
         },
         {
-          "text": "nen nen fu ri shin"
-        },
-        {
-          "text": null
-        },
-        {
-          "text": "chisu sha chisu sha"
-        },
-        {
-          "text": "chishu ri chishu ri"
+          "text": "chisu sha chisu sha chishu ri chishu ri"
         },
         {
           "text": "soha ja soha ja"
@@ -3703,58 +3679,34 @@
           "text": "No mo san man da"
         },
         {
-          "text": "moto nan namu butsu"
+          "text": "moto nan"
         },
         {
           "text": "oha ra chi koto sha"
         },
         {
-          "text": "yo butsu u in"
-        },
-        {
           "text": "sono nan to ji to"
         },
         {
-          "text": "yo butsu u en"
+          "text": "en"
         },
         {
-          "text": "en buppo so en"
-        },
-        {
-          "text": "gya gya jo raku ga jo"
-        },
-        {
-          "text": null
+          "text": "gya gya"
         },
         {
           "text": "gya ki gya ki"
         },
         {
-          "text": "cho nen kanzeon"
-        },
-        {
-          "text": "un nun bo nen kanzeon"
+          "text": "un nun"
         },
         {
           "text": "shifu ra shifu ra"
         },
         {
-          "text": "nen nen ju shin ki"
-        },
-        {
           "text": "hara shifu ra hara shifu ra"
         },
         {
-          "text": "nen nen fu ri shin"
-        },
-        {
-          "text": null
-        },
-        {
-          "text": "chisu sha chisu sha"
-        },
-        {
-          "text": "chishu ri chishu ri"
+          "text": "chisu sha chisu sha chishu ri chishu ri"
         },
         {
           "text": "soha ja soha ja"
@@ -3772,58 +3724,34 @@
           "text": "No mo san man da"
         },
         {
-          "text": "moto nan namu butsu"
+          "text": "moto nan"
         },
         {
           "text": "oha ra chi koto sha"
         },
         {
-          "text": "yo butsu u in"
-        },
-        {
           "text": "sono nan to ji to"
         },
         {
-          "text": "yo butsu u en"
+          "text": "en"
         },
         {
-          "text": "en buppo so en"
-        },
-        {
-          "text": "gya gya jo raku ga jo"
-        },
-        {
-          "text": null
+          "text": "gya gya"
         },
         {
           "text": "gya ki gya ki"
         },
         {
-          "text": "cho nen kanzeon"
-        },
-        {
-          "text": "un nun bo nen kanzeon"
+          "text": "un nun"
         },
         {
           "text": "shifu ra shifu ra"
         },
         {
-          "text": "nen nen ju shin ki"
-        },
-        {
           "text": "hara shifu ra hara shifu ra"
         },
         {
-          "text": "nen nen fu ri shin"
-        },
-        {
-          "text": null
-        },
-        {
-          "text": "chisu sha chisu sha"
-        },
-        {
-          "text": "chishu ri chishu ri"
+          "text": "chisu sha chisu sha chishu ri chishu ri"
         },
         {
           "text": "soha ja soha ja"
@@ -3841,58 +3769,34 @@
           "text": "No mo san man da"
         },
         {
-          "text": "moto nan namu butsu"
+          "text": "moto nan"
         },
         {
           "text": "oha ra chi koto sha"
         },
         {
-          "text": "yo butsu u in"
-        },
-        {
           "text": "sono nan to ji to"
         },
         {
-          "text": "yo butsu u en"
+          "text": "en"
         },
         {
-          "text": "en buppo so en"
-        },
-        {
-          "text": "gya gya jo raku ga jo"
-        },
-        {
-          "text": null
+          "text": "gya gya"
         },
         {
           "text": "gya ki gya ki"
         },
         {
-          "text": "cho nen kanzeon"
-        },
-        {
-          "text": "un nun bo nen kanzeon"
+          "text": "un nun"
         },
         {
           "text": "shifu ra shifu ra"
         },
         {
-          "text": "nen nen ju shin ki"
-        },
-        {
           "text": "hara shifu ra hara shifu ra"
         },
         {
-          "text": "nen nen fu ri shin"
-        },
-        {
-          "text": null
-        },
-        {
-          "text": "chisu sha chisu sha"
-        },
-        {
-          "text": "chishu ri chishu ri"
+          "text": "chisu sha chisu sha chishu ri chishu ri"
         },
         {
           "text": "soha ja soha ja"
@@ -5873,11 +5777,11 @@
         },
         {
           "chantId": "shosaimyo-x3",
-          "startTime": 486.09,
+          "startTime": 486.0,
           "lines": [
             {
               "lineIndex": 0,
-              "cueIn": 486.09
+              "cueIn": 486.0
             },
             {
               "lineIndex": 1,
@@ -5885,7 +5789,7 @@
             },
             {
               "lineIndex": 2,
-              "cueIn": 491.76
+              "cueIn": 490.6
             },
             {
               "lineIndex": 3,
@@ -5893,226 +5797,154 @@
             },
             {
               "lineIndex": 4,
-              "cueIn": 494.38
+              "cueIn": 496.4
             },
             {
               "lineIndex": 5,
-              "cueIn": 496.36
+              "cueIn": 497.0
             },
             {
               "lineIndex": 6,
-              "cueIn": 497.14
+              "cueIn": 497.56
             },
             {
               "lineIndex": 7,
-              "cueIn": 497.36
+              "cueIn": 500.56
+            },
+            {
+              "lineIndex": 8,
+              "cueIn": 501.34
             },
             {
               "lineIndex": 9,
-              "cueIn": 497.62
+              "cueIn": 503.9
             },
             {
               "lineIndex": 10,
-              "cueIn": 501.24
+              "cueIn": 507.2
             },
             {
               "lineIndex": 11,
-              "cueIn": 502.24
+              "cueIn": 511.7
             },
             {
               "lineIndex": 12,
-              "cueIn": 502.24
+              "cueIn": 514.04
             },
             {
               "lineIndex": 13,
-              "cueIn": 502.7
-            },
-            {
-              "lineIndex": 14,
-              "cueIn": 502.7
+              "cueIn": 515.98
             },
             {
               "lineIndex": 15,
-              "cueIn": 507.18
+              "cueIn": 518.24
+            },
+            {
+              "lineIndex": 16,
+              "cueIn": 521.06
             },
             {
               "lineIndex": 17,
-              "cueIn": 508.22
+              "cueIn": 522.34
             },
             {
               "lineIndex": 18,
-              "cueIn": 510.14
+              "cueIn": 525.22
             },
             {
               "lineIndex": 19,
-              "cueIn": 511.72
+              "cueIn": 528.1
             },
             {
               "lineIndex": 20,
-              "cueIn": 514.02
+              "cueIn": 528.72
             },
             {
               "lineIndex": 21,
-              "cueIn": 515.82
+              "cueIn": 529.28
+            },
+            {
+              "lineIndex": 22,
+              "cueIn": 532.16
             },
             {
               "lineIndex": 23,
-              "cueIn": 518.3
+              "cueIn": 533.2
             },
             {
               "lineIndex": 24,
-              "cueIn": 521.04
+              "cueIn": 535.58
             },
             {
               "lineIndex": 25,
-              "cueIn": 523.44
+              "cueIn": 539.1
             },
             {
               "lineIndex": 26,
-              "cueIn": 525.2
-            },
-            {
-              "lineIndex": 27,
-              "cueIn": 526.02
-            },
-            {
-              "lineIndex": 28,
-              "cueIn": 528.08
-            },
-            {
-              "lineIndex": 29,
-              "cueIn": 528.8
-            },
-            {
-              "lineIndex": 30,
-              "cueIn": 529.04
-            },
-            {
-              "lineIndex": 32,
-              "cueIn": 529.22
-            },
-            {
-              "lineIndex": 33,
-              "cueIn": 532.08
-            },
-            {
-              "lineIndex": 34,
-              "cueIn": 534.08
-            },
-            {
-              "lineIndex": 35,
-              "cueIn": 534.08
-            },
-            {
-              "lineIndex": 36,
-              "cueIn": 535.6
-            },
-            {
-              "lineIndex": 37,
-              "cueIn": 538.9
-            },
-            {
-              "lineIndex": 38,
-              "cueIn": 540.4
-            },
-            {
-              "lineIndex": 40,
-              "cueIn": 540.4
-            },
-            {
-              "lineIndex": 41,
-              "cueIn": 541.46
-            },
-            {
-              "lineIndex": 42,
               "cueIn": 543.72
             },
             {
-              "lineIndex": 43,
-              "cueIn": 546.08
+              "lineIndex": 27,
+              "cueIn": 546.6
             },
             {
-              "lineIndex": 44,
-              "cueIn": 547.78
+              "lineIndex": 28,
+              "cueIn": 547.8
             },
             {
-              "lineIndex": 46,
-              "cueIn": 550.04
+              "lineIndex": 30,
+              "cueIn": 550.08
             },
             {
-              "lineIndex": 47,
-              "cueIn": 553.02
+              "lineIndex": 31,
+              "cueIn": 552.96
             },
             {
-              "lineIndex": 48,
-              "cueIn": 555.08
+              "lineIndex": 32,
+              "cueIn": 554.3
             },
             {
-              "lineIndex": 49,
-              "cueIn": 557.08
+              "lineIndex": 33,
+              "cueIn": 557.06
             },
             {
-              "lineIndex": 50,
-              "cueIn": 557.94
+              "lineIndex": 34,
+              "cueIn": 559.98
             },
             {
-              "lineIndex": 51,
-              "cueIn": 559.96
+              "lineIndex": 35,
+              "cueIn": 560.58
             },
             {
-              "lineIndex": 52,
-              "cueIn": 560.56
-            },
-            {
-              "lineIndex": 53,
-              "cueIn": 561.12
-            },
-            {
-              "lineIndex": 55,
+              "lineIndex": 36,
               "cueIn": 561.14
             },
             {
-              "lineIndex": 56,
-              "cueIn": 564.88
+              "lineIndex": 37,
+              "cueIn": 563.98
             },
             {
-              "lineIndex": 57,
-              "cueIn": 565.34
+              "lineIndex": 38,
+              "cueIn": 565.06
             },
             {
-              "lineIndex": 58,
-              "cueIn": 565.5
+              "lineIndex": 39,
+              "cueIn": 567.4
             },
             {
-              "lineIndex": 59,
-              "cueIn": 567.46
+              "lineIndex": 40,
+              "cueIn": 570.9
             },
             {
-              "lineIndex": 60,
-              "cueIn": 567.46
-            },
-            {
-              "lineIndex": 61,
-              "cueIn": 570.88
-            },
-            {
-              "lineIndex": 63,
-              "cueIn": 571.56
-            },
-            {
-              "lineIndex": 64,
-              "cueIn": 572.7
-            },
-            {
-              "lineIndex": 65,
+              "lineIndex": 41,
               "cueIn": 573.0
             },
             {
-              "lineIndex": 66,
+              "lineIndex": 42,
               "cueIn": 573.0
             },
             {
-              "lineIndex": 67,
+              "lineIndex": 43,
               "cueIn": 573.0
             }
           ]
