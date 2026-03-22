@@ -161,6 +161,7 @@ def main():
     parser.add_argument("--no-write-cuein", action="store_true", help="Run alignment but do not write cueIn values back to the chant object")
     parser.add_argument("--language", metavar="LANG", default="en", help="Language code for alignment (default: en)")
     parser.add_argument("--no-smooth", action="store_true", help="Skip timestamp smoothing pass")
+    parser.add_argument("--model", metavar="NAME", default="base", help="stable-whisper model name (default: base)")
     args = parser.parse_args()
 
     if args.audio and not args.chant:
@@ -194,8 +195,8 @@ def main():
 
     if not args.dry_run:
         import stable_whisper
-        print("Loading stable-whisper model (base, cpu)…")
-        model = stable_whisper.load_model("base", device="cpu")
+        print(f"Loading stable-whisper model ({args.model}, cpu)…")
+        model = stable_whisper.load_model(args.model, device="cpu")
     else:
         model = None
 
