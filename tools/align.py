@@ -38,12 +38,70 @@ def flatten_words(segments) -> list[tuple[str, float]]:
     return words
 
 
-def process_chant(chant: dict, model, dry_run: bool, audio_override=None, no_write_cuein: bool = False) -> int:
+def smooth_timestamps(lines, clip_duration, min_gap=0.8):
+    """
+    Post-process cueIn timestamps on a chant's lines array.
+
+    Pass 1 — minimum gap: if two consecutive cueIn values are closer than
+    min_gap seconds, push the second forward (and cascade if needed).
+
+    Pass 2 — dense cluster redistribution: find runs of consecutive lines
+    where the interval is less than 20% of the average line duration and
+    redistribute those timestamps evenly between the cluster's first and
+    last cueIn.
+
+    Returns the number of lines whose cueIn was changed.
+    """
+    timed = [(i, line) for i, line in enumerate(lines) if line.get("cueIn") is not None]
+    if len(timed) < 2:
+        return 0
+
+    original = {i: line["cueIn"] for i, line in timed}
+
+    # Pass 1: enforce minimum gap (cascade forward)
+    for j in range(1, len(timed)):
+        prev_cue = timed[j - 1][1]["cueIn"]
+        _, line = timed[j]
+        if line["cueIn"] - prev_cue < min_gap:
+            line["cueIn"] = round(prev_cue + min_gap, 2)
+
+    # Pass 2: redistribute dense clusters
+    count = len(timed)
+    if clip_duration > 0:
+        avg_duration = clip_duration / count
+        threshold = 0.2 * avg_duration
+
+        i = 0
+        while i < count - 1:
+            if timed[i + 1][1]["cueIn"] - timed[i][1]["cueIn"] < threshold:
+                cluster_start = i
+                j = i + 1
+                while j < count - 1 and timed[j + 1][1]["cueIn"] - timed[j][1]["cueIn"] < threshold:
+                    j += 1
+                cluster_end = j
+
+                start_time = timed[cluster_start][1]["cueIn"]
+                end_time = timed[cluster_end][1]["cueIn"]
+                n = cluster_end - cluster_start
+                if n > 0:
+                    step = (end_time - start_time) / n
+                    for k in range(1, n):
+                        timed[cluster_start + k][1]["cueIn"] = round(start_time + k * step, 2)
+
+                i = cluster_end + 1
+            else:
+                i += 1
+
+    return sum(1 for i, line in timed if line["cueIn"] != original[i])
+
+
+def process_chant(chant: dict, model, dry_run: bool, audio_override=None, no_write_cuein: bool = False, language: str = "en", no_smooth: bool = False) -> int:
     """
     Align one chant.  Returns the number of lines that received a cueIn.
     If audio_override is given, use it for alignment but do not persist it.
     If no_write_cuein is True, run alignment and print results but do not
     write cueIn values back to the chant object.
+    If no_smooth is True, skip the timestamp smoothing pass.
     """
     audio_path = audio_override or chant.get("audio")
     lines = chant.get("lines", [])
@@ -60,8 +118,11 @@ def process_chant(chant: dict, model, dry_run: bool, audio_override=None, no_wri
         print(f"    [dry-run] would align transcript: {transcript[:80]}{'…' if len(transcript) > 80 else ''}")
         return 0
 
-    result = model.align(audio_path, transcript, language="en")
+    result = model.align(audio_path, transcript, language=language)
     words = flatten_words(result.segments)
+
+    # Get clip duration from last segment end time
+    clip_duration = result.segments[-1].end if result.segments else 0
 
     matched = 0
     pointer = 0  # advance forward after each match so repeated lines get distinct timestamps
@@ -83,6 +144,11 @@ def process_chant(chant: dict, model, dry_run: bool, audio_override=None, no_wri
                 break
         # else: leave cueIn unchanged if it exists, or skip
 
+    if not no_write_cuein and not no_smooth and matched > 0:
+        adjusted = smooth_timestamps(lines, clip_duration)
+        if adjusted:
+            print(f"    [smooth] adjusted {adjusted} line(s)")
+
     return matched
 
 
@@ -93,6 +159,8 @@ def main():
     parser.add_argument("--chant", metavar="ID", help="Only process the chant with this id")
     parser.add_argument("--audio", metavar="PATH", help="Override audio path for the selected chant (not written to JSON)")
     parser.add_argument("--no-write-cuein", action="store_true", help="Run alignment but do not write cueIn values back to the chant object")
+    parser.add_argument("--language", metavar="LANG", default="en", help="Language code for alignment (default: en)")
+    parser.add_argument("--no-smooth", action="store_true", help="Skip timestamp smoothing pass")
     args = parser.parse_args()
 
     if args.audio and not args.chant:
@@ -136,7 +204,7 @@ def main():
 
     for chant in chants_with_audio:
         audio_override = args.audio if (args.chant and chant["id"] == args.chant) else None
-        lines_matched = process_chant(chant, model, dry_run=args.dry_run, audio_override=audio_override, no_write_cuein=args.no_write_cuein)
+        lines_matched = process_chant(chant, model, dry_run=args.dry_run, audio_override=audio_override, no_write_cuein=args.no_write_cuein, language=args.language, no_smooth=args.no_smooth)
         total_chants += 1
         total_lines += lines_matched
 

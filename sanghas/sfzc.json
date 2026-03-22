@@ -493,183 +493,145 @@
       "audio": null,
       "lines": [
         {
-          "text": "Kan ji zai bo satsu",
-          "cueIn": 0.0
+          "text": "Kan ji zai bo satsu"
         },
         {
-          "text": "gyo jin han nya ha ra mit ta ji",
-          "cueIn": 3.6
+          "text": "gyo jin han nya ha ra mit ta ji"
         },
         {
-          "text": "sho ken go on kai ku",
-          "cueIn": 9.24
+          "text": "sho ken go on kai ku"
         },
         {
-          "text": "do is sai ku yaku",
-          "cueIn": 12.98
+          "text": "do is sai ku yaku"
         },
         {
           "text": null
         },
         {
-          "text": "sha ri shi shiki fu i ku",
-          "cueIn": 16.08
+          "text": "sha ri shi shiki fu i ku"
         },
         {
-          "text": "ku fu i shiki",
-          "cueIn": 19.58
+          "text": "ku fu i shiki"
         },
         {
-          "text": "shiki soku ze ku",
-          "cueIn": 21.84
+          "text": "shiki soku ze ku"
         },
         {
-          "text": "ku soku ze shiki",
-          "cueIn": 24.18
+          "text": "ku soku ze shiki"
         },
         {
-          "text": "ju so gyo shiki yaku bu nyo ze",
-          "cueIn": 27.16
+          "text": "ju so gyo shiki yaku bu nyo ze"
         },
         {
           "text": null
         },
         {
-          "text": "sha ri shi ze sho ho ku so",
-          "cueIn": 31.92
+          "text": "sha ri shi ze sho ho ku so"
         },
         {
-          "text": "fu sho fu metsu",
-          "cueIn": 36.56
+          "text": "fu sho fu metsu"
         },
         {
-          "text": "fu ku fu jo",
-          "cueIn": 37.82
+          "text": "fu ku fu jo"
         },
         {
-          "text": "fu zo fu gen",
-          "cueIn": 39.12
+          "text": "fu zo fu gen"
         },
         {
           "text": null
         },
         {
-          "text": "ze ko ku chu mu shiki",
-          "cueIn": 43.76
+          "text": "ze ko ku chu mu shiki"
         },
         {
-          "text": "mu ju so gyo shiki",
-          "cueIn": 46.08
+          "text": "mu ju so gyo shiki"
         },
         {
-          "text": "mu gen ni bi zes shin ni",
-          "cueIn": 47.48
+          "text": "mu gen ni bi zes shin ni"
         },
         {
-          "text": "mu shiki sho ko mi soku ho",
-          "cueIn": 50.4
+          "text": "mu shiki sho ko mi soku ho"
         },
         {
-          "text": "mu gen kai nai shi mu i shiki kai",
-          "cueIn": 54.32
+          "text": "mu gen kai nai shi mu i shiki kai"
         },
         {
           "text": null
         },
         {
-          "text": "mu mu myo yaku mu mu myo jin",
-          "cueIn": 58.8
+          "text": "mu mu myo yaku mu mu myo jin"
         },
         {
-          "text": "nai shi mu ro shi yaku mu ro shi jin",
-          "cueIn": 59.78
+          "text": "nai shi mu ro shi yaku mu ro shi jin"
         },
         {
-          "text": "mu ku shu metsu do",
-          "cueIn": 59.8
+          "text": "mu ku shu metsu do"
         },
         {
-          "text": "mu chi yaku mu toku",
-          "cueIn": 59.8
+          "text": "mu chi yaku mu toku"
         },
         {
           "text": null
         },
         {
-          "text": "i mu sho tok ko bo dai sat ta",
-          "cueIn": 80.56
+          "text": "i mu sho tok ko bo dai sat ta"
         },
         {
-          "text": "e han nya ha ra mit ta ko",
-          "cueIn": 85.96
+          "text": "e han nya ha ra mit ta ko"
         },
         {
-          "text": "shin mu ke ge mu ke ge ko",
-          "cueIn": 90.6
+          "text": "shin mu ke ge mu ke ge ko"
         },
         {
-          "text": "mu u ku fu on ri is sai ten do mu so",
-          "cueIn": 91.1
+          "text": "mu u ku fu on ri is sai ten do mu so"
         },
         {
-          "text": "ku gyo ne han",
-          "cueIn": 96.92
+          "text": "ku gyo ne han"
         },
         {
           "text": null
         },
         {
-          "text": "san ze sho butsu e han nya ha ra mit ta ko",
-          "cueIn": 104.58
+          "text": "san ze sho butsu e han nya ha ra mit ta ko"
         },
         {
-          "text": "toku a noku ta ra sam myaku sam bo dai",
-          "cueIn": 111.6
-        },
-        {
-          "text": null
-        },
-        {
-          "text": "ko chi han nya ha ra mi ta",
-          "cueIn": 117.72
-        },
-        {
-          "text": "ze dai jin shu ze dai myo shu",
-          "cueIn": 122.48
-        },
-        {
-          "text": "ze mu jo shu ze mu to do shu",
-          "cueIn": 124.98
-        },
-        {
-          "text": "no jo is sai ku shin jitsu fu ko",
-          "cueIn": 132.66
+          "text": "toku a noku ta ra sam myaku sam bo dai"
         },
         {
           "text": null
         },
         {
-          "text": "ko setsu han nya ha ra mit ta shu",
-          "cueIn": 137.28
+          "text": "ko chi han nya ha ra mi ta"
         },
         {
-          "text": "soku setsu shu watsu",
-          "cueIn": 143.26
+          "text": "ze dai jin shu ze dai myo shu"
+        },
+        {
+          "text": "ze mu jo shu ze mu to do shu"
+        },
+        {
+          "text": "no jo is sai ku shin jitsu fu ko"
         },
         {
           "text": null
         },
         {
-          "text": "gya te gya te ha ra gya te",
-          "cueIn": 145.6
+          "text": "ko setsu han nya ha ra mit ta shu"
         },
         {
-          "text": "hara so gya te bo ji sowa ka",
-          "cueIn": 150.34
+          "text": "soku setsu shu watsu"
         },
         {
-          "text": "han nya shin gyo",
-          "cueIn": 155.48
+          "text": null
+        },
+        {
+          "text": "gya te gya te ha ra gya te"
+        },
+        {
+          "text": "hara so gya te bo ji sowa ka"
+        },
+        {
+          "text": "han nya shin gyo"
         }
       ]
     },
@@ -3624,28 +3586,22 @@
       "audio": null,
       "lines": [
         {
-          "text": "Ji ho san shi",
-          "cueIn": 0.0
+          "text": "Ji ho san shi"
         },
         {
-          "text": "i shi fu",
-          "cueIn": 7.98
+          "text": "i shi fu"
         },
         {
-          "text": "shi son bu sa",
-          "cueIn": 9.08
+          "text": "shi son bu sa"
         },
         {
-          "text": "mo ko sa",
-          "cueIn": 20.74
+          "text": "mo ko sa"
         },
         {
-          "text": "mo ko ho ja",
-          "cueIn": 24.94
+          "text": "mo ko ho ja"
         },
         {
-          "text": "ho ro mi",
-          "cueIn": 24.94
+          "text": "ho ro mi"
         }
       ]
     },
@@ -5629,11 +5585,11 @@
             },
             {
               "lineIndex": 24,
-              "cueIn": 304.8
+              "cueIn": 305.58
             },
             {
               "lineIndex": 25,
-              "cueIn": 304.8
+              "cueIn": 306.38
             },
             {
               "lineIndex": 27,
@@ -5649,7 +5605,7 @@
             },
             {
               "lineIndex": 30,
-              "cueIn": 336.1
+              "cueIn": 336.4
             },
             {
               "lineIndex": 31,
@@ -5801,11 +5757,11 @@
             },
             {
               "lineIndex": 5,
-              "cueIn": 497.0
+              "cueIn": 497.2
             },
             {
               "lineIndex": 6,
-              "cueIn": 497.56
+              "cueIn": 498.0
             },
             {
               "lineIndex": 7,
@@ -5813,7 +5769,7 @@
             },
             {
               "lineIndex": 8,
-              "cueIn": 501.34
+              "cueIn": 501.36
             },
             {
               "lineIndex": 9,
@@ -5857,11 +5813,11 @@
             },
             {
               "lineIndex": 20,
-              "cueIn": 528.72
+              "cueIn": 528.9
             },
             {
               "lineIndex": 21,
-              "cueIn": 529.28
+              "cueIn": 529.7
             },
             {
               "lineIndex": 22,
@@ -5913,11 +5869,11 @@
             },
             {
               "lineIndex": 35,
-              "cueIn": 560.58
+              "cueIn": 560.78
             },
             {
               "lineIndex": 36,
-              "cueIn": 561.14
+              "cueIn": 561.58
             },
             {
               "lineIndex": 37,
@@ -5941,11 +5897,11 @@
             },
             {
               "lineIndex": 42,
-              "cueIn": 573.0
+              "cueIn": 573.8
             },
             {
               "lineIndex": 43,
-              "cueIn": 573.0
+              "cueIn": 574.6
             }
           ]
         },
@@ -6175,7 +6131,7 @@
             },
             {
               "lineIndex": 8,
-              "cueIn": 856.88
+              "cueIn": 857.16
             },
             {
               "lineIndex": 9,
@@ -6215,7 +6171,7 @@
             },
             {
               "lineIndex": 19,
-              "cueIn": 880.26
+              "cueIn": 880.54
             },
             {
               "lineIndex": 20,
@@ -6255,7 +6211,7 @@
             },
             {
               "lineIndex": 30,
-              "cueIn": 902.96
+              "cueIn": 903.28
             },
             {
               "lineIndex": 31,
@@ -6295,7 +6251,7 @@
             },
             {
               "lineIndex": 41,
-              "cueIn": 924.4
+              "cueIn": 924.7
             },
             {
               "lineIndex": 42,
@@ -6335,7 +6291,7 @@
             },
             {
               "lineIndex": 52,
-              "cueIn": 944.36
+              "cueIn": 944.62
             },
             {
               "lineIndex": 53,
@@ -6375,7 +6331,7 @@
             },
             {
               "lineIndex": 63,
-              "cueIn": 962.9
+              "cueIn": 963.24
             },
             {
               "lineIndex": 64,
@@ -6415,7 +6371,7 @@
             },
             {
               "lineIndex": 74,
-              "cueIn": 979.54
+              "cueIn": 979.92
             },
             {
               "lineIndex": 75,
@@ -6449,7 +6405,7 @@
             },
             {
               "lineIndex": 5,
-              "cueIn": 1134.94
+              "cueIn": 1135.74
             }
           ]
         },

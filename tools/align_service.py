@@ -78,6 +78,7 @@ def main():
         action="store_true",
         help="Print what would happen without running the model or writing files",
     )
+    parser.add_argument("--language", metavar="LANG", default="en", help="Language code for alignment (default: en)")
     args = parser.parse_args()
 
     json_path = Path(args.sangha_json)
@@ -148,7 +149,7 @@ def main():
     model = stable_whisper.load_model("base", device="cpu")
 
     print("Aligning…")
-    result = model.align(service["audio"], transcript, language="en")
+    result = model.align(service["audio"], transcript, language=args.language)
     words = flatten_words(result.segments)
 
     # Match each line's first word forward through the word list
