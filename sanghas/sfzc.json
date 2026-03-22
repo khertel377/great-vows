@@ -6431,7 +6431,39 @@
             }
           ]
         }
-      ]
+      ],
+      "timestampCorrections": {
+        "maka-hannya": [
+          {
+            "lineIndex": 19,
+            "cueIn": 295.0
+          },
+          {
+            "lineIndex": 20,
+            "cueIn": 300.0
+          },
+          {
+            "lineIndex": 21,
+            "cueIn": 304.0
+          },
+          {
+            "lineIndex": 22,
+            "cueIn": 309.0
+          },
+          {
+            "lineIndex": 23,
+            "cueIn": 314.0
+          },
+          {
+            "lineIndex": 24,
+            "cueIn": 319.0
+          },
+          {
+            "lineIndex": 25,
+            "cueIn": 323.0
+          }
+        ]
+      }
     },
     {
       "id": "morning-service-wednesday",
