@@ -143,7 +143,6 @@
   #chantStage {
     position: absolute; inset: 0; overflow: hidden;
     display: flex; align-items: flex-start; padding-left: 8vw;
-    transition: opacity 0.5s ease;
   }
   #chantTrack {
     display: flex; flex-direction: column;
@@ -154,26 +153,25 @@
     font-size: clamp(24px, 5vw, 50px); font-weight: 700;
     line-height: 1.3; letter-spacing: -0.01em;
     white-space: pre-line; padding: 8px 0;
-    transition: opacity 0.8s ease, color 0.8s ease;
-  }
-  .chant-line.active { color: var(--text); opacity: 1; }
-  .chant-line.next   { color: var(--text-next); opacity: 1; }
-  .chant-line.past   { color: var(--text-dim); opacity: 1; }
-  .chant-line.future { color: var(--text-dim); opacity: 1; }
-  #chantScreen.spotlight .chant-line.next   { opacity: 0.08; }
-  #chantScreen.spotlight .chant-line.future { opacity: 0; }
-  .section-gap { height: 28px; }
-  #ceremonyLine {
-    position: fixed; top: 28%;
-    left: 8vw;
-    font-family: 'DM Sans', sans-serif;
-    font-size: clamp(24px, 5vw, 50px); font-weight: 700;
-    line-height: 1.3; letter-spacing: -0.01em;
     color: var(--text);
-    opacity: 0; pointer-events: none;
-    z-index: 15;
-    transition: opacity 0.2s ease;
+    transition: opacity 0.8s ease;
   }
+  .chant-line.active    { opacity: 1; }
+  .chant-line.next      { opacity: 0.4; }
+  .chant-line.near-next { opacity: 0.15; }
+  .chant-line.past      { opacity: 0.2; }
+  .chant-line.near-past { opacity: 0.1; }
+  .chant-line.hidden, .chant-line.future { opacity: 0; }
+  #chantScreen.spotlight .chant-line.next      { opacity: 0.15; }
+  #chantScreen.spotlight .chant-line.near-next { opacity: 0; }
+  #chantScreen.spotlight .chant-line.past      { opacity: 0; }
+  #chantScreen.spotlight .chant-line.near-past { opacity: 0; }
+  .chant-line.is-cue.next      { opacity: 0.3; }
+  .chant-line.is-cue.past,
+  .chant-line.is-cue.near-past { opacity: 0; transition: opacity 0s; }
+  .section-gap { height: 56px; }
+  .large-section-gap { height: 64px; }
+  .title-gap { height: 80px; }
 
   /* top bar */
   .top-bar {
@@ -322,7 +320,6 @@
     </div>
     <div class="lineage-tag" id="lineageTag"></div>
   </div>
-  <div id="ceremonyLine"></div>
   <div id="chantStage">
     <div id="chantTrack"></div>
   </div>
@@ -361,9 +358,7 @@ var isPlaying = false;
 var tweenRaf = null;
 var isScrubbing = false;
 var scrubTimer = null;
-var _lastCeremonyIdx = -2;  // -2 = uninitialized, -1 = hidden
-var _ceremonyFadeTimer = null;
-var _cueIdxOnChantEnter = -1;  // highest cueIdx seen while inside a chant window; suppresses stale re-display
+var _trackWindowEnd = 0;
 var lineTranslates = {};
 var currentBoost = 1.0;
 var currentSpeedBoost = 1.0;
@@ -592,11 +587,18 @@ function loadService(svc) {
       if (svcItems[di].type !== 'doshi') continue;
       var nextChantId = null;
       var nextChantItem = null;
+      var nextChantPos = -1;
       for (var ci2 = di + 1; ci2 < svcItems.length; ci2++) {
-        if (svcItems[ci2].type === 'chant') { nextChantId = svcItems[ci2].id; nextChantItem = svcItems[ci2]; break; }
+        if (svcItems[ci2].type === 'chant') { nextChantId = svcItems[ci2].id; nextChantItem = svcItems[ci2]; nextChantPos = ci2; break; }
       }
       if (!nextChantId) continue;
       if (nextChantItem && nextChantItem.noAnnouncement) continue;
+      // Skip if another doshi item sits between this one and the target chant (it will handle the announcement)
+      var hasDoshiBetween = false;
+      for (var ci3 = di + 1; ci3 < nextChantPos; ci3++) {
+        if (svcItems[ci3].type === 'doshi') { hasDoshiBetween = true; break; }
+      }
+      if (hasDoshiBetween) continue;
       var chantStart = tmLookup[nextChantId];
       if (chantStart === undefined) continue;
       var announceChant = DATA.chants.find(function(c) { return c.id === nextChantId; });
@@ -654,11 +656,7 @@ function openChant(chant) {
   lineTranslates = {};
   window._scrollAccum = 0;
   if (tweenRaf) { cancelAnimationFrame(tweenRaf); tweenRaf = null; }
-  if (_ceremonyFadeTimer) { clearTimeout(_ceremonyFadeTimer); _ceremonyFadeTimer = null; }
-  _lastCeremonyIdx = -2;
-  _cueIdxOnChantEnter = -1;
-  var _clEl = document.getElementById('ceremonyLine');
-  if (_clEl) { _clEl.style.opacity = '0'; _clEl.textContent = ''; }
+  _trackWindowEnd = 180;
   audioEl.pause();
   audioEl.src = '';
 
@@ -666,7 +664,6 @@ function openChant(chant) {
   var _overlay = document.getElementById('listeningOverlay');
   _overlay.classList.remove('active');
   _overlay.innerHTML = '';
-  document.getElementById('chantStage').style.opacity = '';
   document.getElementById('chantStage').style.pointerEvents = '';
 
   document.getElementById('chantTitleDisplay').textContent = chant.title;
@@ -680,7 +677,7 @@ function openChant(chant) {
   document.getElementById('indexScreen').classList.add('hidden');
   document.getElementById('chantScreen').classList.remove('hidden');
 
-  buildTrack();
+  buildTrack(_trackWindowEnd);
 
   requestAnimationFrame(function() {
     requestAnimationFrame(function() {
@@ -688,27 +685,6 @@ function openChant(chant) {
       var firstIdx = firstTextIndex();
       setClasses(firstIdx);
       applyTranslate(lineTranslates[firstIdx] || 0);
-
-      updateStageVisibility(0);
-
-      if (currentChant.ceremonyCues && currentChant.ceremonyCues.length > 0) {
-        var initCues = currentChant.ceremonyCues;
-        var initCueIdx = -1;
-        for (var ci = 0; ci < initCues.length; ci++) {
-          if (0 >= initCues[ci].time) initCueIdx = ci;
-        }
-        var initInWindow = false;
-        if (currentChant.timestampMap && currentChant.chantEndTimes) {
-          for (var iti = 0; iti < currentChant.timestampMap.length; iti++) {
-            var iEntry = currentChant.timestampMap[iti];
-            var iEnd = currentChant.chantEndTimes[iEntry.chantId];
-            if (iEnd !== undefined && 0 >= iEntry.startTime && 0 <= iEnd) {
-              initInWindow = true; break;
-            }
-          }
-        }
-        updateCeremonyLine(initCueIdx, !initInWindow && initCueIdx >= 0);
-      }
 
       var hasTimestampMap = chant.timestampMap && chant.timestampMap.length > 0;
       var cueInCount = chant.lines.filter(function(l) { return l.cueIn !== undefined; }).length;
@@ -731,7 +707,6 @@ function goIndex() {
   audioEl.pause();
   isPlaying = false;
   listeningMode = false;
-  document.getElementById('chantStage').style.opacity = '';
   document.getElementById('chantStage').style.pointerEvents = '';
   var overlay = document.getElementById('listeningOverlay');
   overlay.classList.remove('active');
@@ -808,23 +783,63 @@ function enterListeningMode(chant) {
 // ══════════════════════════════
 // BUILD TRACK DOM
 // ══════════════════════════════
-function buildTrack() {
+function buildTrack(windowEnd) {
   var track = document.getElementById('chantTrack');
   track.innerHTML = '';
 
-  var lines = currentChant.lines;
-  for (var i = 0; i < lines.length; i++) {
-    if (lines[i].text === null) {
-      var gap = document.createElement('div');
-      gap.className = 'section-gap';
-      track.appendChild(gap);
-    } else {
-      var el = document.createElement('span');
-      el.className = 'chant-line future';
-      el.id = 'line-' + i;
-      el.textContent = lines[i].text;
-      track.appendChild(el);
+  if (!currentChant.ceremonyCues || !currentChant.ceremonyCues.length) {
+    // Original behavior for standalone chants: render all lines with null gaps
+    var lines = currentChant.lines;
+    for (var i = 0; i < lines.length; i++) {
+      if (lines[i].text === null) {
+        var gap = document.createElement('div');
+        gap.className = 'section-gap';
+        track.appendChild(gap);
+      } else {
+        var el = document.createElement('span');
+        el.className = 'chant-line future';
+        el.id = 'line-' + i;
+        el.textContent = lines[i].text;
+        track.appendChild(el);
+      }
     }
+    return;
+  }
+
+  // Unified mode: interleave ceremony cues and chant lines sorted by time
+  var allItems = getAllTimedItems();
+  var lastChantId = null;
+  for (var j = 0; j < allItems.length; j++) {
+    var item = allItems[j];
+    if (windowEnd !== undefined && item.time > windowEnd) break;
+    var span = document.createElement('span');
+    if (typeof item.idx === 'string') {
+      var ci = parseInt(item.idx.slice(2));
+      var cue = currentChant.ceremonyCues[ci];
+      var isTitle = cue.text && cue.text.length > 8;
+      var cls = 'chant-line future is-cue';
+      if (isTitle) {
+        cls += ' is-title';
+        var tgap = document.createElement('div');
+        tgap.className = 'title-gap';
+        track.appendChild(tgap);
+      }
+      span.className = cls;
+      span.id = 'line-' + item.idx;
+      span.textContent = cue.emoji + (cue.text ? ' ' + cue.text : '');
+    } else {
+      var lineChantId = currentChant.lines[item.idx] && currentChant.lines[item.idx].chantId;
+      if (lineChantId && lineChantId !== lastChantId) {
+        var gap = document.createElement('div');
+        gap.className = 'large-section-gap';
+        track.appendChild(gap);
+        lastChantId = lineChantId;
+      }
+      span.className = 'chant-line future';
+      span.id = 'line-' + item.idx;
+      span.textContent = currentChant.lines[item.idx].text;
+    }
+    track.appendChild(span);
   }
 }
 
@@ -846,6 +861,11 @@ function cacheTranslates() {
       lineTranslates[i] = getTranslateForLine(i);
     }
   }
+  if (currentChant.ceremonyCues) {
+    currentChant.ceremonyCues.forEach(function(cue, ci) {
+      lineTranslates['C-' + ci] = getTranslateForLine('C-' + ci);
+    });
+  }
 }
 
 function applyTranslate(y) {
@@ -856,7 +876,8 @@ function applyTranslate(y) {
 // LINE HELPERS
 // ══════════════════════════════
 function firstTextIndex() {
-  if (currentChant.ceremonyCues && currentChant.ceremonyCues.length > 0) return 'C-0';
+  var items = getAllTimedItems();
+  if (items.length > 0) return items[0].idx;
   var lines = currentChant.lines;
   for (var i = 0; i < lines.length; i++) {
     if (lines[i].text !== null) return i;
@@ -920,7 +941,22 @@ function setClasses(activeIdx) {
       if (orderedItems[ai].idx === activeIdx || orderedItems[ai].idx == activeIdx) { activePos = ai; break; }
     }
   }
-  var nextIdx = activePos >= 0 && orderedItems[activePos + 1] ? orderedItems[activePos + 1].idx : null;
+  function stateClassForDist(dist) {
+    if (dist === 0)  return 'active';
+    if (dist === 1)  return 'next';
+    if (dist === 2)  return 'near-next';
+    if (dist === -1) return 'past';
+    if (dist === -2) return 'near-past';
+    return 'hidden';
+  }
+
+  function applyLineClass(el, dist) {
+    var state = stateClassForDist(dist);
+    var extra = '';
+    if (el.classList.contains('is-cue'))   extra += ' is-cue';
+    if (el.classList.contains('is-title')) extra += ' is-title';
+    el.className = 'chant-line ' + state + extra;
+  }
 
   // chant line elements
   var lines2 = currentChant.lines;
@@ -932,10 +968,21 @@ function setClasses(activeIdx) {
     for (var ai3 = 0; ai3 < orderedItems.length; ai3++) {
       if (orderedItems[ai3].idx == i) { ipos = ai3; break; }
     }
-    if (ipos < activePos)    el.className = 'chant-line past';
-    else if (i == activeIdx) el.className = 'chant-line active';
-    else if (i === nextIdx)  el.className = 'chant-line next';
-    else                     el.className = 'chant-line future';
+    applyLineClass(el, ipos - activePos);
+  }
+
+  // ceremony cue elements
+  if (currentChant.ceremonyCues) {
+    currentChant.ceremonyCues.forEach(function(cue, ci) {
+      var cidx = 'C-' + ci;
+      var el = document.getElementById('line-' + cidx);
+      if (!el) return;
+      var ipos = -1;
+      for (var ai4 = 0; ai4 < orderedItems.length; ai4++) {
+        if (orderedItems[ai4].idx == cidx) { ipos = ai4; break; }
+      }
+      applyLineClass(el, ipos - activePos);
+    });
   }
 }
 
@@ -966,72 +1013,17 @@ function getAllTimedItems() {
   return out;
 }
 
-function updateStageVisibility(t) {
-  var stageEl = document.getElementById('chantStage');
-  if (!stageEl) return;
-  if (!currentChant.ceremonyCues) { stageEl.style.opacity = '1'; return; }
-  var minCueIn = Infinity;
-  currentChant.lines.forEach(function(l) {
-    if (l.cueIn !== undefined && l.cueIn < minCueIn) minCueIn = l.cueIn;
-  });
-  stageEl.style.opacity = (minCueIn !== Infinity && t < minCueIn) ? '0' : '1';
-}
-
-function updateCeremonyLine(cueIdx, visible) {
-  var el = document.getElementById('ceremonyLine');
-  if (!el) return;
-  if (!visible) {
-    if (_lastCeremonyIdx !== -1) {
-      el.style.transition = 'opacity 0.2s ease';
-      el.style.opacity = '0';
-      _lastCeremonyIdx = -1;
-      if (_ceremonyFadeTimer) { clearTimeout(_ceremonyFadeTimer); _ceremonyFadeTimer = null; }
-    }
-    return;
+function rebuildTrackIfNeeded() {
+  if (!currentChant.ceremonyCues) return;
+  var t = audioEl.currentTime;
+  if (_trackWindowEnd - t > 90) return;
+  _trackWindowEnd = t + 180;
+  buildTrack(_trackWindowEnd);
+  cacheTranslates();
+  setClasses(currentIndex);
+  if (currentIndex !== -1) {
+    applyTranslate(lineTranslates[currentIndex] || 0);
   }
-  if (cueIdx === _lastCeremonyIdx) return;
-  if (_ceremonyFadeTimer) { clearTimeout(_ceremonyFadeTimer); _ceremonyFadeTimer = null; }
-  var cues = currentChant.ceremonyCues;
-  var text = (cues && cueIdx >= 0) ? (cues[cueIdx].emoji + (cues[cueIdx].text ? ' ' + cues[cueIdx].text : '')) : '';
-  var prev = _lastCeremonyIdx;
-  _lastCeremonyIdx = cueIdx;
-  if (prev === -1 || prev === -2) {
-    el.style.transition = 'opacity 0.6s ease';
-    el.textContent = text;
-    el.style.opacity = '1';
-  } else {
-    el.style.transition = 'opacity 0.2s ease';
-    el.style.opacity = '0';
-    _ceremonyFadeTimer = setTimeout(function() {
-      _ceremonyFadeTimer = null;
-      el.style.transition = 'opacity 0.6s ease';
-      el.textContent = text;
-      el.style.opacity = '1';
-    }, 200);
-  }
-}
-
-function updateCeremonyAtTime(t) {
-  if (!currentChant.ceremonyCues || !currentChant.ceremonyCues.length) return;
-  var cues = currentChant.ceremonyCues;
-  var activeCueIdx = -1;
-  for (var ci = 0; ci < cues.length; ci++) {
-    if (t >= cues[ci].time) activeCueIdx = ci;
-  }
-  var inChantWindow = false;
-  if (currentChant.timestampMap && currentChant.chantEndTimes) {
-    for (var ti = 0; ti < currentChant.timestampMap.length; ti++) {
-      var tEntry = currentChant.timestampMap[ti];
-      var tEnd = currentChant.chantEndTimes[tEntry.chantId];
-      if (tEnd !== undefined && t >= tEntry.startTime && t <= tEnd) {
-        inChantWindow = true; break;
-      }
-    }
-  }
-  if (inChantWindow && activeCueIdx > _cueIdxOnChantEnter) {
-    _cueIdxOnChantEnter = activeCueIdx;
-  }
-  updateCeremonyLine(activeCueIdx, !inChantWindow && activeCueIdx > _cueIdxOnChantEnter);
 }
 
 function startTween() {
@@ -1041,9 +1033,7 @@ function startTween() {
     var t = audioEl.currentTime;
     var dur = audioEl.duration || 68;
     updateSeekBar(t / dur);
-
-    // ceremony line overlay
-    updateCeremonyAtTime(t);
+    rebuildTrackIfNeeded();
 
     if (!listeningMode) {
       var allItems = getAllTimedItems();
@@ -1072,7 +1062,7 @@ function startTween() {
 
         setClasses(curItem.idx);
 
-        if (curItem.idx !== -1 && typeof curItem.idx !== 'string') {
+        if (curItem.idx !== -1) {
           // find next real chant line (numeric idx) as scroll target, skipping any ceremony cues
           var nextReal = null;
           var passedCur = false;
@@ -1121,8 +1111,8 @@ function seekToPct(pct) {
   var newTime = pct * audioEl.duration;
   audioEl.currentTime = newTime;
   updateSeekBar(pct);
-  updateStageVisibility(newTime);
-  updateCeremonyAtTime(newTime);
+  // Cancel any in-flight tween so it cannot overwrite the seek position
+  if (tweenRaf) { cancelAnimationFrame(tweenRaf); tweenRaf = null; }
   if (!listeningMode) {
     var allItems = getAllTimedItems();
     var bestItem = allItems[0] || null;
@@ -1145,11 +1135,13 @@ function seekToPct(pct) {
         }
       }
       setClasses(bestItem.idx);
-      if (bestItem.idx !== -1 && typeof bestItem.idx !== 'string') {
+      if (bestItem.idx !== -1) {
         applyTranslate(lineTranslates[bestItem.idx] || 0);
       }
     }
   }
+  // Restart tween loop if audio is playing
+  if (hasAudio && !audioEl.paused) { startTween(); }
 }
 
 function pctFromMouse(e) {

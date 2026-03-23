@@ -757,7 +757,10 @@
           "text": "hara shifu ra hara shifu ra"
         },
         {
-          "text": "chisu sha chisu sha chishu ri chishu ri"
+          "text": "chisu sha chisu sha"
+        },
+        {
+          "text": "chishu ri chishu ri"
         },
         {
           "text": "soha ja soha ja"
@@ -3662,7 +3665,10 @@
           "text": "hara shifu ra hara shifu ra"
         },
         {
-          "text": "chisu sha chisu sha chishu ri chishu ri"
+          "text": "chisu sha chisu sha"
+        },
+        {
+          "text": "chishu ri chishu ri"
         },
         {
           "text": "soha ja soha ja"
@@ -3707,7 +3713,10 @@
           "text": "hara shifu ra hara shifu ra"
         },
         {
-          "text": "chisu sha chisu sha chishu ri chishu ri"
+          "text": "chisu sha chisu sha"
+        },
+        {
+          "text": "chishu ri chishu ri"
         },
         {
           "text": "soha ja soha ja"
@@ -3752,7 +3761,10 @@
           "text": "hara shifu ra hara shifu ra"
         },
         {
-          "text": "chisu sha chisu sha chishu ri chishu ri"
+          "text": "chisu sha chisu sha"
+        },
+        {
+          "text": "chishu ri chishu ri"
         },
         {
           "text": "soha ja soha ja"
@@ -4046,7 +4058,7 @@
             {
               "time": 39,
               "emoji": "⬇️",
-              "text": "Prostrate"
+              "text": "Bow"
             },
             {
               "time": 47,
@@ -4056,7 +4068,7 @@
             {
               "time": 52,
               "emoji": "⬇️",
-              "text": "Prostrate"
+              "text": "Bow"
             },
             {
               "time": 59,
@@ -4066,17 +4078,17 @@
             {
               "time": 65,
               "emoji": "⬇️",
-              "text": "Prostrate"
+              "text": "Bow"
             },
             {
-              "time": 72,
+              "time": 71,
               "emoji": "⬆️",
               "text": "Rise"
             },
             {
               "time": 78,
               "emoji": "⬇️",
-              "text": "Prostrate"
+              "text": "Bow"
             },
             {
               "time": 85,
@@ -4086,7 +4098,7 @@
             {
               "time": 91,
               "emoji": "⬇️",
-              "text": "Prostrate"
+              "text": "Bow"
             },
             {
               "time": 98,
@@ -4096,7 +4108,7 @@
             {
               "time": 104,
               "emoji": "⬇️",
-              "text": "Prostrate"
+              "text": "Bow"
             },
             {
               "time": 111,
@@ -4106,7 +4118,7 @@
             {
               "time": 117,
               "emoji": "⬇️",
-              "text": "Prostrate"
+              "text": "Bow"
             },
             {
               "time": 124,
@@ -4116,7 +4128,7 @@
             {
               "time": 130,
               "emoji": "⬇️",
-              "text": "Prostrate"
+              "text": "Bow"
             },
             {
               "time": 137,
@@ -4126,7 +4138,7 @@
             {
               "time": 145,
               "emoji": "⬇️",
-              "text": "Prostrate"
+              "text": "Bow"
             },
             {
               "time": 150,
@@ -4169,11 +4181,6 @@
               "text": "Move to seiza"
             },
             {
-              "time": 205,
-              "emoji": "📖",
-              "text": "Raise chantbook"
-            },
-            {
               "time": 210,
               "emoji": "🔔",
               "text": ""
@@ -4201,11 +4208,20 @@
         },
         {
           "type": "chant",
-          "id": "heart-sutra"
+          "id": "heart-sutra",
+          "noAnnouncement": true
+        },
+        {
+          "type": "doshi",
+          "label": "Hymn to the Perfection of Wisdom"
         },
         {
           "type": "chant",
           "id": "hymn-perfection-wisdom"
+        },
+        {
+          "type": "doshi",
+          "label": "Shōsaimyō Kichijō Darani"
         },
         {
           "type": "chant",
@@ -4216,8 +4232,16 @@
           "label": "Eko"
         },
         {
+          "type": "doshi",
+          "label": "Names of Buddhas and Ancestors"
+        },
+        {
           "type": "chant",
           "id": "names-buddhas-ancestors"
+        },
+        {
+          "type": "doshi",
+          "label": "Names of Women Ancestors"
         },
         {
           "type": "chant",
@@ -4229,7 +4253,8 @@
         },
         {
           "type": "chant",
-          "id": "after-dedication"
+          "id": "after-dedication-japanese",
+          "noAnnouncement": true
         },
         {
           "type": "ceremonial",
@@ -4242,7 +4267,7 @@
         "shosaimyo",
         "names-buddhas-ancestors-monday",
         "names-women-ancestors",
-        "after-dedication"
+        "after-dedication-japanese"
       ],
       "timestampMap": [
         {
@@ -5132,7 +5157,7 @@
           ]
         },
         {
-          "chantId": "after-dedication",
+          "chantId": "after-dedication-japanese",
           "startTime": 1007.22,
           "lines": [
             {
@@ -5174,6 +5199,192 @@
             {
               "lineIndex": 10,
               "cueIn": 1050.0
+            }
+          ]
+        },
+        {
+          "chantId": "shosaimyo-x3",
+          "startTime": 495.0,
+          "lines": [
+            {
+              "lineIndex": 0,
+              "cueIn": 495.0
+            },
+            {
+              "lineIndex": 1,
+              "cueIn": 498.62
+            },
+            {
+              "lineIndex": 2,
+              "cueIn": 499.96
+            },
+            {
+              "lineIndex": 3,
+              "cueIn": 502.86
+            },
+            {
+              "lineIndex": 4,
+              "cueIn": 505.86
+            },
+            {
+              "lineIndex": 5,
+              "cueIn": 506.66
+            },
+            {
+              "lineIndex": 6,
+              "cueIn": 507.46
+            },
+            {
+              "lineIndex": 7,
+              "cueIn": 509.92
+            },
+            {
+              "lineIndex": 8,
+              "cueIn": 510.82
+            },
+            {
+              "lineIndex": 9,
+              "cueIn": 513.44
+            },
+            {
+              "lineIndex": 10,
+              "cueIn": 516.8
+            },
+            {
+              "lineIndex": 11,
+              "cueIn": 519.04
+            },
+            {
+              "lineIndex": 12,
+              "cueIn": 521.38
+            },
+            {
+              "lineIndex": 13,
+              "cueIn": 523.76
+            },
+            {
+              "lineIndex": 14,
+              "cueIn": 525.34
+            },
+            {
+              "lineIndex": 16,
+              "cueIn": 527.84
+            },
+            {
+              "lineIndex": 17,
+              "cueIn": 530.74
+            },
+            {
+              "lineIndex": 18,
+              "cueIn": 531.96
+            },
+            {
+              "lineIndex": 19,
+              "cueIn": 534.86
+            },
+            {
+              "lineIndex": 20,
+              "cueIn": 537.98
+            },
+            {
+              "lineIndex": 21,
+              "cueIn": 538.78
+            },
+            {
+              "lineIndex": 22,
+              "cueIn": 539.58
+            },
+            {
+              "lineIndex": 23,
+              "cueIn": 542.14
+            },
+            {
+              "lineIndex": 24,
+              "cueIn": 543.12
+            },
+            {
+              "lineIndex": 25,
+              "cueIn": 545.6
+            },
+            {
+              "lineIndex": 26,
+              "cueIn": 549.0
+            },
+            {
+              "lineIndex": 27,
+              "cueIn": 551.46
+            },
+            {
+              "lineIndex": 28,
+              "cueIn": 553.8
+            },
+            {
+              "lineIndex": 29,
+              "cueIn": 556.14
+            },
+            {
+              "lineIndex": 30,
+              "cueIn": 558.02
+            },
+            {
+              "lineIndex": 32,
+              "cueIn": 560.32
+            },
+            {
+              "lineIndex": 33,
+              "cueIn": 563.22
+            },
+            {
+              "lineIndex": 34,
+              "cueIn": 564.46
+            },
+            {
+              "lineIndex": 35,
+              "cueIn": 567.34
+            },
+            {
+              "lineIndex": 36,
+              "cueIn": 570.5
+            },
+            {
+              "lineIndex": 37,
+              "cueIn": 571.3
+            },
+            {
+              "lineIndex": 38,
+              "cueIn": 572.1
+            },
+            {
+              "lineIndex": 39,
+              "cueIn": 574.64
+            },
+            {
+              "lineIndex": 40,
+              "cueIn": 575.66
+            },
+            {
+              "lineIndex": 41,
+              "cueIn": 578.18
+            },
+            {
+              "lineIndex": 42,
+              "cueIn": 581.64
+            },
+            {
+              "lineIndex": 43,
+              "cueIn": 583.98
+            },
+            {
+              "lineIndex": 44,
+              "cueIn": 586.06
+            },
+            {
+              "lineIndex": 45,
+              "cueIn": 588.6
+            },
+            {
+              "lineIndex": 46,
+              "cueIn": 590.56
             }
           ]
         }
@@ -5253,6 +5464,111 @@
               "time": 65,
               "emoji": "⬇️",
               "text": "Bow"
+            },
+            {
+              "time": 72,
+              "emoji": "⬆️",
+              "text": "Rise"
+            },
+            {
+              "time": 77.5,
+              "emoji": "⬇️",
+              "text": "Bow"
+            },
+            {
+              "time": 84,
+              "emoji": "⬆️",
+              "text": "Rise"
+            },
+            {
+              "time": 89,
+              "emoji": "⬇️",
+              "text": "Bow"
+            },
+            {
+              "time": 95.5,
+              "emoji": "⬆️",
+              "text": "Rise"
+            },
+            {
+              "time": 100.5,
+              "emoji": "⬇️",
+              "text": "Bow"
+            },
+            {
+              "time": 107,
+              "emoji": "⬆️",
+              "text": "Rise"
+            },
+            {
+              "time": 112,
+              "emoji": "⬇️",
+              "text": "Bow"
+            },
+            {
+              "time": 119,
+              "emoji": "⬆️",
+              "text": "Rise"
+            },
+            {
+              "time": 124,
+              "emoji": "⬇️",
+              "text": "Bow"
+            },
+            {
+              "time": 130,
+              "emoji": "⬆️",
+              "text": "Rise"
+            },
+            {
+              "time": 135,
+              "emoji": "⬇️",
+              "text": "Bow"
+            },
+            {
+              "time": 141.5,
+              "emoji": "⬆️",
+              "text": "Rise"
+            },
+            {
+              "time": 147,
+              "emoji": "⬇️",
+              "text": "Bow"
+            },
+            {
+              "time": 153,
+              "emoji": "⬆️",
+              "text": "Rise"
+            },
+            {
+              "time": 158,
+              "emoji": "⬇️",
+              "text": "Bow"
+            },
+            {
+              "time": 163,
+              "emoji": "⬆️",
+              "text": "Rise"
+            },
+            {
+              "time": 165,
+              "emoji": "🙇",
+              "text": "Standing bow"
+            },
+            {
+              "time": 172,
+              "emoji": "↩️",
+              "text": "Restore zendo, return to service position"
+            },
+            {
+              "time": 198,
+              "emoji": "🔔",
+              "text": "Prepare for chanting"
+            },
+            {
+              "time": 232,
+              "emoji": "📖",
+              "text": "Maka Hannya Haramitta Shin Gyō"
             }
           ]
         },
@@ -5262,7 +5578,8 @@
         },
         {
           "type": "chant",
-          "id": "maka-hannya"
+          "id": "maka-hannya",
+          "noAnnouncement": true
         },
         {
           "type": "doshi",
@@ -5297,13 +5614,13 @@
             {
               "time": 583,
               "emoji": "•",
-              "text": "End knock"
+              "text": ""
             }
           ]
         },
         {
           "type": "doshi",
-          "label": "Eko — Luminous Mirror Wisdom"
+          "label": "Dedication / Eko"
         },
         {
           "type": "ceremonial",
@@ -5322,8 +5639,17 @@
           ]
         },
         {
+          "type": "doshi",
+          "label": "Dedication / Eko"
+        },
+        {
           "type": "chant",
-          "id": "after-dedication-english-tuesday-1"
+          "id": "after-dedication-english-tuesday-1",
+          "noAnnouncement": true
+        },
+        {
+          "type": "doshi",
+          "label": "Loving Kindness Meditation"
         },
         {
           "type": "chant",
@@ -5354,13 +5680,13 @@
             {
               "time": 986,
               "emoji": "•",
-              "text": "End knock"
+              "text": ""
             }
           ]
         },
         {
           "type": "doshi",
-          "label": "Eko"
+          "label": "Dedication / Eko"
         },
         {
           "type": "ceremonial",
@@ -5434,11 +5760,6 @@
             },
             {
               "time": 1217.5,
-              "emoji": "🔔",
-              "text": ""
-            },
-            {
-              "time": 1217.5,
               "emoji": "🙇",
               "text": "Bow to altar 🪷"
             },
@@ -5448,22 +5769,12 @@
               "text": "Bow to each other"
             },
             {
-              "time": 1240.9,
-              "emoji": "🔔",
-              "text": ""
+              "time": 1226,
+              "emoji": "↩️",
+              "text": "Restore zendo, return to service position"
             },
             {
               "time": 1240.9,
-              "emoji": "🫸",
-              "text": "Shashu — procession begins"
-            },
-            {
-              "time": 1247,
-              "emoji": "🔔",
-              "text": ""
-            },
-            {
-              "time": 1247,
               "emoji": "🙇",
               "text": "Bow to each other — process out"
             }
@@ -5541,27 +5852,27 @@
             },
             {
               "lineIndex": 19,
-              "cueIn": 295.28
+              "cueIn": 295.0
             },
             {
               "lineIndex": 20,
-              "cueIn": 299.16
+              "cueIn": 300.0
             },
             {
               "lineIndex": 22,
-              "cueIn": 303.4
+              "cueIn": 309.0
             },
             {
               "lineIndex": 23,
-              "cueIn": 305.44
+              "cueIn": 314.0
             },
             {
               "lineIndex": 24,
-              "cueIn": 306.4
+              "cueIn": 319.0
             },
             {
               "lineIndex": 25,
-              "cueIn": 308.88
+              "cueIn": 323.0
             },
             {
               "lineIndex": 27,
@@ -5753,127 +6064,139 @@
             },
             {
               "lineIndex": 11,
-              "cueIn": 511.56
+              "cueIn": 509.32
             },
             {
               "lineIndex": 12,
-              "cueIn": 514.0
+              "cueIn": 511.56
             },
             {
               "lineIndex": 13,
+              "cueIn": 514.0
+            },
+            {
+              "lineIndex": 14,
               "cueIn": 515.98
             },
             {
-              "lineIndex": 15,
+              "lineIndex": 16,
               "cueIn": 518.04
             },
             {
-              "lineIndex": 16,
+              "lineIndex": 17,
               "cueIn": 520.82
             },
             {
-              "lineIndex": 17,
+              "lineIndex": 18,
               "cueIn": 522.08
             },
             {
-              "lineIndex": 18,
+              "lineIndex": 19,
               "cueIn": 524.92
             },
             {
-              "lineIndex": 19,
+              "lineIndex": 20,
               "cueIn": 527.9
             },
             {
-              "lineIndex": 20,
+              "lineIndex": 21,
               "cueIn": 528.7
             },
             {
-              "lineIndex": 21,
+              "lineIndex": 22,
               "cueIn": 529.5
             },
             {
-              "lineIndex": 22,
+              "lineIndex": 23,
               "cueIn": 532.1
             },
             {
-              "lineIndex": 23,
+              "lineIndex": 24,
               "cueIn": 532.94
             },
             {
-              "lineIndex": 24,
+              "lineIndex": 25,
               "cueIn": 535.6
             },
             {
-              "lineIndex": 25,
+              "lineIndex": 26,
               "cueIn": 538.94
             },
             {
-              "lineIndex": 26,
-              "cueIn": 543.56
-            },
-            {
               "lineIndex": 27,
-              "cueIn": 545.9
+              "cueIn": 541.34
             },
             {
               "lineIndex": 28,
-              "cueIn": 547.7
+              "cueIn": 543.56
+            },
+            {
+              "lineIndex": 29,
+              "cueIn": 545.9
             },
             {
               "lineIndex": 30,
-              "cueIn": 549.92
-            },
-            {
-              "lineIndex": 31,
-              "cueIn": 552.74
+              "cueIn": 547.7
             },
             {
               "lineIndex": 32,
-              "cueIn": 553.98
+              "cueIn": 549.92
             },
             {
               "lineIndex": 33,
-              "cueIn": 556.84
+              "cueIn": 552.74
             },
             {
               "lineIndex": 34,
-              "cueIn": 559.72
+              "cueIn": 553.98
             },
             {
               "lineIndex": 35,
-              "cueIn": 560.52
+              "cueIn": 556.84
             },
             {
               "lineIndex": 36,
-              "cueIn": 561.32
+              "cueIn": 559.72
             },
             {
               "lineIndex": 37,
-              "cueIn": 563.9
+              "cueIn": 560.52
             },
             {
               "lineIndex": 38,
-              "cueIn": 564.92
+              "cueIn": 561.32
             },
             {
               "lineIndex": 39,
-              "cueIn": 567.38
+              "cueIn": 563.9
             },
             {
               "lineIndex": 40,
-              "cueIn": 570.84
+              "cueIn": 564.92
             },
             {
               "lineIndex": 41,
-              "cueIn": 573.0
+              "cueIn": 567.38
             },
             {
               "lineIndex": 42,
-              "cueIn": 573.8
+              "cueIn": 570.84
             },
             {
               "lineIndex": 43,
-              "cueIn": 574.6
+              "cueIn": 572.9
+            },
+            {
+              "lineIndex": 44,
+              "cueIn": 573.7
+            },
+            {
+              "lineIndex": 45,
+              "cueIn": 574.5
+            },
+            {
+              "lineIndex": 46,
+              "cueIn": 575.3
             }
           ]
         },
