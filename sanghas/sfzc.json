@@ -4260,17 +4260,56 @@
           "type": "ceremonial",
           "label": "Closing bells and bows",
           "cues": [
-            { "time": 1033, "emoji": "〰️", "text": "Prepare to bow" },
-            { "time": 1052, "emoji": "⬇️", "text": "Bow" },
-            { "time": 1058, "emoji": "⬆️", "text": "Rise" },
-            { "time": 1064, "emoji": "⬇️", "text": "Bow" },
-            { "time": 1071, "emoji": "⬆️", "text": "Rise" },
-            { "time": 1078, "emoji": "⬇️", "text": "Bow" },
-            { "time": 1084, "emoji": "⬆️", "text": "Rise — final standing bow" },
-            { "time": 1090, "emoji": "↩️", "text": "Restore zendo, return to service position" },
-            { "time": 1138, "emoji": "🙇", "text": "Bow to altar 🪷" },
-            { "time": 1145, "emoji": "🙇", "text": "Bow to each other" },
-            { "time": 1166, "emoji": "🫸", "text": "Bow to each other — process out" }
+            {
+              "time": 1052,
+              "emoji": "⬇️",
+              "text": "Bow"
+            },
+            {
+              "time": 1058,
+              "emoji": "⬆️",
+              "text": "Rise"
+            },
+            {
+              "time": 1064,
+              "emoji": "⬇️",
+              "text": "Bow"
+            },
+            {
+              "time": 1071,
+              "emoji": "⬆️",
+              "text": "Rise"
+            },
+            {
+              "time": 1078,
+              "emoji": "⬇️",
+              "text": "Bow"
+            },
+            {
+              "time": 1084,
+              "emoji": "⬆️",
+              "text": "Rise — final standing bow"
+            },
+            {
+              "time": 1090,
+              "emoji": "↩️",
+              "text": "Restore zendo, return to service position"
+            },
+            {
+              "time": 1138,
+              "emoji": "🙇",
+              "text": "Bow to altar 🪷"
+            },
+            {
+              "time": 1145,
+              "emoji": "🙇",
+              "text": "Bow to each other"
+            },
+            {
+              "time": 1166,
+              "emoji": "🫸",
+              "text": "Bow to each other — process out"
+            }
           ]
         }
       ],
@@ -5271,47 +5310,31 @@
         },
         {
           "chantId": "after-dedication-japanese",
-          "startTime": 1007.22,
+          "startTime": 1007.0,
           "lines": [
             {
               "lineIndex": 0,
-              "cueIn": 1007.22
+              "cueIn": 1007.0
             },
             {
               "lineIndex": 1,
-              "cueIn": 1012.4
+              "cueIn": 1012.36
             },
             {
               "lineIndex": 2,
-              "cueIn": 1013.8
+              "cueIn": 1013.76
             },
             {
               "lineIndex": 3,
-              "cueIn": 1025.4
+              "cueIn": 1025.54
             },
             {
               "lineIndex": 4,
-              "cueIn": 1029.58
+              "cueIn": 1031.12
             },
             {
               "lineIndex": 5,
-              "cueIn": 1029.58
-            },
-            {
-              "lineIndex": 7,
-              "cueIn": 1029.94
-            },
-            {
-              "lineIndex": 8,
-              "cueIn": 1042.84
-            },
-            {
-              "lineIndex": 9,
-              "cueIn": 1047.52
-            },
-            {
-              "lineIndex": 10,
-              "cueIn": 1050.0
+              "cueIn": 1034.74
             }
           ]
         }
@@ -5353,6 +5376,32 @@
           {
             "lineIndex": 25,
             "cueIn": 326.5
+          }
+        ],
+        "after-dedication-japanese": [
+          {
+            "lineIndex": 0,
+            "cueIn": 1007.0
+          },
+          {
+            "lineIndex": 1,
+            "cueIn": 1013.0
+          },
+          {
+            "lineIndex": 2,
+            "cueIn": 1020.0
+          },
+          {
+            "lineIndex": 3,
+            "cueIn": 1027.0
+          },
+          {
+            "lineIndex": 4,
+            "cueIn": 1033.0
+          },
+          {
+            "lineIndex": 5,
+            "cueIn": 1041.0
           }
         ]
       }
@@ -5649,11 +5698,6 @@
               "time": 1137,
               "emoji": "🔔",
               "text": "Stand"
-            },
-            {
-              "time": 1139,
-              "emoji": "〰️",
-              "text": "Prepare to bow"
             },
             {
               "time": 1155,

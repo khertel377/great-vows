@@ -1049,6 +1049,20 @@ function startTween() {
         }
       }
 
+      // Prefer chant lines over ceremony cues: if the active item is a ceremony cue,
+      // scan back for a recent chant line (within 30s) and promote it to active
+      if (curItem && typeof curItem.idx === 'string') {
+        for (var bi = allItems.length - 1; bi >= 0; bi--) {
+          if (typeof allItems[bi].idx === 'number' && allItems[bi].time <= t) {
+            if (t - allItems[bi].time <= 30) {
+              nextItem = curItem;
+              curItem = allItems[bi];
+            }
+            break;
+          }
+        }
+      }
+
       if (curItem) {
         // check if we've passed the endTime of the chant this line belongs to
         if (curItem.idx >= 0 && currentChant.chantEndTimes) {
@@ -1122,6 +1136,17 @@ function seekToPct(pct) {
         if (!bestItem || candidate.time > bestItem.time ||
             (candidate.time === bestItem.time && typeof candidate.idx === 'number' && typeof bestItem.idx === 'string')) {
           bestItem = candidate;
+        }
+      }
+    }
+    // Prefer chant lines over ceremony cues
+    if (bestItem && typeof bestItem.idx === 'string') {
+      for (var bi = allItems.length - 1; bi >= 0; bi--) {
+        if (typeof allItems[bi].idx === 'number' && allItems[bi].time <= newTime) {
+          if (newTime - allItems[bi].time <= 30) {
+            bestItem = allItems[bi];
+          }
+          break;
         }
       }
     }
