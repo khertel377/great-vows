@@ -927,7 +927,10 @@ mobileStyles.textContent = `
     }
 
     .period-row { padding: 10px 0; }
-    .period-row.now .period-name { font-size: 32px !important; }
+    .period-row.now .period-name { font-size: 28px !important; }
+
+    /* Cross has no anchor on mobile — sidebar is hidden */
+    #now-overlay { display: none; }
 
     #mute-btn { bottom: 16px; right: 16px; }
   }
@@ -1201,10 +1204,9 @@ const AudioEngine = (() => {
     const mobileClock = document.getElementById('mobile-clock');
     if (!mobileClock) return;
     const now = new Date();
-    const h = String(now.getHours()).padStart(2, '0');
+    const h = now.getHours() % 12 || 12; // 12h, no padding
     const m = String(now.getMinutes()).padStart(2, '0');
-    const s = String(now.getSeconds()).padStart(2, '0');
-    mobileClock.textContent = `${h}:${m}:${s}`;
+    mobileClock.textContent = `${h}:${m}`;
 
     const mobileNext = document.getElementById('mobile-next');
     if (mobileNext) {
