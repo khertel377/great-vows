@@ -373,7 +373,6 @@ body.placed .period-row.now .period-name { font-size: 52px; }
 
 </div>
 
-<button id="test-audio-btn" onclick="(function(){var a=new Audio('audio/SFZC/temple_sounds-the_han.mp3');a.play().then(function(){document.getElementById('test-audio-btn').textContent='Playing ✓';}).catch(function(e){document.getElementById('test-audio-btn').textContent='Blocked: '+e.message;});})()" style="position:fixed;bottom:70px;right:24px;padding:8px 12px;font-size:13px;cursor:pointer;z-index:50;">Test Audio</button>
 
 <!-- Fixed viewport overlay — bar and mark share this coordinate space, same separatorX -->
 <div id="now-overlay">
@@ -630,7 +629,9 @@ function buildTrack(state) {
   _attachHoverHandlers();
 
   if (!_trackEverBuilt) {
-    setTimeout(() => scrollToNow('instant'), 40);
+    setTimeout(() => {
+      document.querySelector('.period-row.now')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 40);
   } else if (newPeriod) {
     setTimeout(() => scrollToNow('smooth'), 40);
   }
@@ -663,6 +664,7 @@ document.getElementById('track').addEventListener('mouseleave', () => {
 // ══════════════════════════════
 let _currentState = null; // kept for scroll/resize connector calls
 let _scrollTimer  = null;
+let _rafPending   = false;
 
 window.addEventListener('scroll', () => {
   document.getElementById('track').classList.add('scrolling');
@@ -671,9 +673,13 @@ window.addEventListener('scroll', () => {
     document.getElementById('track').classList.remove('scrolling');
   }, 1800);
 
-  if (_currentState) {
-    positionConnector(_currentState);
-    alignSidebar(_currentState);
+  if (_currentState && !_rafPending) {
+    _rafPending = true;
+    requestAnimationFrame(() => {
+      _rafPending = false;
+      positionConnector(_currentState);
+      alignSidebar(_currentState);
+    });
   }
 }, { passive: true });
 
@@ -898,43 +904,32 @@ setInterval(tick, 1000);
 const mobileStyles = document.createElement('style');
 mobileStyles.textContent = `
   @media (max-width: 600px) {
-    body { flex-direction: column; }
-    #sidebar { display: none; }
-    #track { width: 100%; padding: 0 16px; }
+    /* 50/50 portrait split — sidebar stays visible on left */
+    #sidebar {
+      display: block;
+      width: 50vw;
+      min-width: 0;
+      flex-shrink: 0;
+    }
+    #track { padding: 0 12px 80px 16px; }
 
-    .mobile-topbar {
-      display: flex !important;
-      align-items: baseline;
-      gap: 12px;
-      padding: 14px 16px 10px;
-      border-bottom: 0.5px solid rgba(26,24,20,0.12);
-      position: sticky;
-      top: 0;
-      background: #f4f0e8;
-      z-index: 20;
+    /* Clock 36px on mobile portrait */
+    .clock-hm, .clock-sep, .clock-sec { font-size: 36px; }
+
+    /* Now-row 36px on mobile */
+    .period-row.now .period-name { font-size: 36px !important; }
+
+    /* Match enter animation to new size */
+    @keyframes periodNameEnter {
+      from { font-size: 18px; opacity: 0.5; letter-spacing: 0em; }
+      to   { font-size: 36px; opacity: 1;   letter-spacing: -0.01em; }
     }
 
-    .mobile-topbar .mobile-clock-display {
-      font-family: 'Cormorant', serif;
-      font-size: 28px;
-      font-weight: 400;
-      color: var(--ink);
-      letter-spacing: -0.01em;
-    }
-
-    .mobile-topbar .mobile-next {
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 10px;
-      color: rgba(26,24,20,0.5);
-      letter-spacing: 0.05em;
-    }
+    /* Sidebar header too cramped at 50vw */
+    .sidebar-header { display: none; }
 
     .period-row { padding: 10px 0; }
-    .period-row.now .period-name { font-size: 28px !important; }
-
-    /* Cross has no anchor on mobile — sidebar is hidden */
-    #now-overlay { display: none; }
-
+    .mobile-topbar { display: none !important; }
     #mute-btn { bottom: 16px; right: 16px; }
   }
 
@@ -970,16 +965,6 @@ mobileStyles.textContent = `
 `;
 document.head.appendChild(mobileStyles);
 
-
-/* ── Mobile top bar (portrait only) ── */
-const mobileTopbar = document.createElement('div');
-mobileTopbar.className = 'mobile-topbar';
-mobileTopbar.style.display = 'none';
-mobileTopbar.innerHTML = `
-  <span class="mobile-clock-display" id="mobile-clock">--:--:--</span>
-  <span class="mobile-next" id="mobile-next"></span>
-`;
-document.body.prepend(mobileTopbar);
 
 
 /* ── Mute button ── */
@@ -1065,10 +1050,9 @@ const AudioEngine = (() => {
   }
 
   function applyMute() {
-    const vol = isMuted ? 0 : AMBIENT_VOLUME;
-    if (ambientAudio) ambientAudio.volume = vol;
-    if (hanAudio)     hanAudio.volume     = isMuted ? 0 : 1;
-    if (denshoAudio)  denshoAudio.volume  = isMuted ? 0 : 1;
+    if (ambientAudio) ambientAudio.muted = isMuted;
+    if (hanAudio)     hanAudio.muted     = isMuted;
+    if (denshoAudio)  denshoAudio.muted  = isMuted;
   }
 
   /* ── Han ── */
@@ -1095,7 +1079,7 @@ const AudioEngine = (() => {
 
     hanTriggeredFor = period.id;
     hanAudio = getAudio(AUDIO_FILES.han);
-    hanAudio.volume = isMuted ? 0 : 1;
+    hanAudio.muted = isMuted;
 
     hanAudio.addEventListener('loadedmetadata', () => {
       hanDuration = hanAudio.duration;
@@ -1136,17 +1120,18 @@ const AudioEngine = (() => {
     activeServiceId = period.serviceId;
     ambientAudio = getAudio(SERVICE_AUDIO[period.serviceId]);
     ambientAudio.volume = 0;
+    ambientAudio.muted = isMuted;
 
     const elapsedSeconds = nowSeconds() - periodStartSeconds(period);
     ambientAudio.addEventListener('loadedmetadata', () => {
       const seekTo = Math.min(Math.max(elapsedSeconds, 0), ambientAudio.duration - 1);
       ambientAudio.currentTime = seekTo;
       ambientAudio.play().then(() => {
-        if (!isMuted) fadeIn(ambientAudio, AMBIENT_VOLUME, FADE_DURATION_MS);
+        fadeIn(ambientAudio, AMBIENT_VOLUME, FADE_DURATION_MS);
       }).catch(() => {
         document.addEventListener('click', () => {
           if (ambientAudio) ambientAudio.play().then(() => {
-            if (!isMuted) fadeIn(ambientAudio, AMBIENT_VOLUME, FADE_DURATION_MS);
+            fadeIn(ambientAudio, AMBIENT_VOLUME, FADE_DURATION_MS);
           }).catch(() => {});
         }, { once: true });
       });
@@ -1182,10 +1167,10 @@ const AudioEngine = (() => {
   }
 
   function playDensho() {
-    if (isMuted) return;
     if (denshoAudio && !denshoAudio.ended) return;
     denshoAudio = getAudio(AUDIO_FILES.densho);
     denshoAudio.volume = 1;
+    denshoAudio.muted = isMuted;
     denshoAudio.play().catch(() => {});
   }
 
@@ -1295,13 +1280,13 @@ if (document.readyState === 'loading') {
   overlay.innerHTML = `
     <span style="
       font-family:'Cormorant',serif;
-      font-size:32px;
+      font-size:24px;
       font-weight:400;
       color:#1a1814;
       letter-spacing:-0.01em;
       opacity:0.82;
       pointer-events:none;
-    ">Tap to begin</span>
+    ">Tap to enter</span>
     <span style="
       font-family:'IBM Plex Mono',monospace;
       font-size:9px;
