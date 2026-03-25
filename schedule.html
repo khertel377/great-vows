@@ -1250,7 +1250,18 @@ const AudioEngine = (() => {
     tick();
   }
 
-  return { init, tick, applyMute };
+  /* ── iOS audio unlock ── */
+  /* Plays and immediately pauses a silent audio element to satisfy iOS's
+     "audio must be initiated by user gesture" requirement. Call once from
+     a tap handler, before any scheduled audio needs to play. */
+  function unlock() {
+    const silent = new Audio();
+    silent.src = 'data:audio/mp3;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4LjI5LjEwMAAAAAAAAAAAAAAA//OEAAAAAAAAAAAAAAAAAAAAAAAASW5mbwAAAA8AAAACAAACcQCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA//////////////////////////////////////////////////////////////////8AAAA5TGFMZTU4LjI5LjEwMAAAAAAAAAAUgAAAAAAAAAJxKr0QAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//OEZAAAAAAAAAAAAAAAAAAAAAAAWGluZwAAAA8AAAACAAACcQDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDA////////////////////////////////////////////////////////////////////////AAAAAExhdmY1OC4yOS4xMDAAAAAAAAAAAACQAAAAAAAAAnEqvRAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=';
+    silent.volume = 0;
+    silent.play().then(() => { silent.pause(); }).catch(() => {});
+  }
+
+  return { init, tick, applyMute, unlock };
 
 })();
 
@@ -1260,6 +1271,57 @@ if (document.readyState === 'loading') {
 } else {
   AudioEngine.init();
 }
+
+/* ── iOS first-visit audio activation overlay ──
+   Touch devices only. sessionStorage prevents repeat on refresh.
+   Tap unlocks the iOS audio context, then dismisses. ── */
+(function () {
+  const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+  if (!isTouchDevice) return;
+  if (sessionStorage.getItem('gv-audio-unlocked')) return;
+
+  const overlay = document.createElement('div');
+  overlay.id = 'audio-unlock-overlay';
+  overlay.style.cssText = [
+    'position:fixed', 'inset:0', 'z-index:500',
+    'background:#f4f0e8',   /* --paper */
+    'display:flex', 'flex-direction:column',
+    'align-items:center', 'justify-content:center',
+    'cursor:pointer',
+    'transition:opacity 0.4s ease',
+  ].join(';');
+
+  overlay.innerHTML = `
+    <span style="
+      font-family:'Cormorant',serif;
+      font-size:32px;
+      font-weight:400;
+      color:#1a1814;
+      letter-spacing:-0.01em;
+      opacity:0.82;
+      pointer-events:none;
+    ">Tap to begin</span>
+    <span style="
+      font-family:'IBM Plex Mono',monospace;
+      font-size:9px;
+      letter-spacing:0.12em;
+      text-transform:uppercase;
+      color:#1a1814;
+      opacity:0.3;
+      margin-top:14px;
+      pointer-events:none;
+    ">Great Vows · SFZC</span>
+  `;
+
+  overlay.addEventListener('click', function () {
+    AudioEngine.unlock();
+    sessionStorage.setItem('gv-audio-unlocked', '1');
+    overlay.style.opacity = '0';
+    setTimeout(function () { overlay.remove(); }, 420);
+  }, { once: true });
+
+  document.body.appendChild(overlay);
+}());
 </script>
 </body>
 </html>
