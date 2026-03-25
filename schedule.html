@@ -877,7 +877,384 @@ function tick() {
 tick();
 initSidebarAlignment(); // baseline clock natural top after initial render
 alignSidebar(_currentState);
+window._scheduleTick = tick; // AudioEngine hooks in via this
 setInterval(tick, 1000);
+</script>
+
+<script>
+/* ============================================================
+   GREAT VOWS — audio engine + mobile CSS
+   Adapted from schedule-audio-mobile.js for schedule.html API:
+     - getScheduleState(new Date()) — takes a Date argument
+     - state.state === 'during'    — not state.type === 'current'
+     - state.next                  — not state.nextPeriod
+     - #sidebar / #track           — id selectors, not class
+   ============================================================ */
+
+/* ── Mobile CSS ── */
+const mobileStyles = document.createElement('style');
+mobileStyles.textContent = `
+  @media (max-width: 600px) {
+    body { flex-direction: column; }
+    #sidebar { display: none; }
+    #track { width: 100%; padding: 0 16px; }
+
+    .mobile-topbar {
+      display: flex !important;
+      align-items: baseline;
+      gap: 12px;
+      padding: 14px 16px 10px;
+      border-bottom: 0.5px solid rgba(26,24,20,0.12);
+      position: sticky;
+      top: 0;
+      background: #f4f0e8;
+      z-index: 20;
+    }
+
+    .mobile-topbar .mobile-clock-display {
+      font-family: 'Cormorant', serif;
+      font-size: 28px;
+      font-weight: 400;
+      color: var(--ink);
+      letter-spacing: -0.01em;
+    }
+
+    .mobile-topbar .mobile-next {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      color: rgba(26,24,20,0.5);
+      letter-spacing: 0.05em;
+    }
+
+    .period-row { padding: 10px 0; }
+    .period-row.now .period-name { font-size: 32px !important; }
+
+    #mute-btn { bottom: 16px; right: 16px; }
+  }
+
+  @media (max-width: 900px) and (orientation: landscape) {
+    #sidebar { min-width: 160px; }
+    .clock-hm, .clock-sep, .clock-sec { font-size: 36px !important; }
+  }
+
+  #mute-btn {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 0.5px solid rgba(26,24,20,0.2);
+    background: rgba(244,240,232,0.92);
+    backdrop-filter: blur(4px);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 30;
+    transition: opacity 0.2s;
+    padding: 0;
+  }
+  #mute-btn:hover { opacity: 0.7; }
+  #mute-btn svg {
+    width: 16px; height: 16px;
+    stroke: var(--ink); fill: none;
+    stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round;
+  }
+`;
+document.head.appendChild(mobileStyles);
+
+
+/* ── Mobile top bar (portrait only) ── */
+const mobileTopbar = document.createElement('div');
+mobileTopbar.className = 'mobile-topbar';
+mobileTopbar.style.display = 'none';
+mobileTopbar.innerHTML = `
+  <span class="mobile-clock-display" id="mobile-clock">--:--:--</span>
+  <span class="mobile-next" id="mobile-next"></span>
+`;
+document.body.prepend(mobileTopbar);
+
+
+/* ── Mute button ── */
+const speakerOnSVG  = `<svg viewBox="0 0 24 24"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>`;
+const speakerOffSVG = `<svg viewBox="0 0 24 24"><path d="M11 5L6 9H2v6h4l5 4V5z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>`;
+
+let isMuted = localStorage.getItem('gv-muted') === '1';
+const muteBtn = document.createElement('button');
+muteBtn.id = 'mute-btn';
+muteBtn.title = 'Toggle audio';
+muteBtn.setAttribute('aria-label', 'Toggle audio');
+muteBtn.innerHTML = isMuted ? speakerOffSVG : speakerOnSVG;
+document.body.appendChild(muteBtn);
+
+muteBtn.addEventListener('click', () => {
+  isMuted = !isMuted;
+  localStorage.setItem('gv-muted', isMuted ? '1' : '0');
+  muteBtn.innerHTML = isMuted ? speakerOffSVG : speakerOnSVG;
+  AudioEngine.applyMute();
+});
+
+
+/* ══════════════════════════════════════════════════════════
+   AUDIO ENGINE
+   ══════════════════════════════════════════════════════════ */
+const AudioEngine = (() => {
+
+  const BASE = 'audio/sfzc/';
+
+  const AUDIO_FILES = {
+    han:    BASE + 'temple_sounds-the_han.mp3',
+    densho: BASE + 'temple_sounds-the_densho_bell.mp3',
+  };
+
+  const SERVICE_AUDIO = {
+    'morning-service-monday':  BASE + 'MorningService_Monday.mp4',
+    'morning-service-tuesday': BASE + 'MorningService_Tuesday.mp4',
+  };
+
+  const HAN_LEAD_MINUTES = 15;
+  const AMBIENT_VOLUME   = 0.33;
+  const FADE_DURATION_MS = 3000;
+
+  let hanAudio        = null;
+  let ambientAudio    = null;
+  let denshoAudio     = null;
+  let hanDuration     = null;
+  let hanTriggeredFor = null;
+  let activeServiceId = null;
+  let lastPeriodId    = null;
+
+  function nowSeconds() {
+    const d = new Date();
+    return d.getHours() * 3600 + d.getMinutes() * 60 + d.getSeconds();
+  }
+
+  function periodStartSeconds(period) { return period.time[0] * 3600 + period.time[1] * 60; }
+  function periodEndSeconds(period)   { return period.end[0]  * 3600 + period.end[1]  * 60; }
+
+  function getAudio(src) {
+    const a = new Audio(src);
+    a.preload = 'metadata';
+    return a;
+  }
+
+  function fadeIn(audioEl, targetVolume, durationMs) {
+    if (!audioEl) return;
+    audioEl.volume = 0;
+    const steps = 30, stepMs = durationMs / steps, stepVol = targetVolume / steps;
+    let step = 0;
+    const id = setInterval(() => {
+      step++;
+      audioEl.volume = Math.min(targetVolume, stepVol * step);
+      if (step >= steps) clearInterval(id);
+    }, stepMs);
+  }
+
+  function stopAndClear(audioEl) {
+    if (!audioEl) return null;
+    audioEl.pause();
+    audioEl.src = '';
+    return null;
+  }
+
+  function applyMute() {
+    const vol = isMuted ? 0 : AMBIENT_VOLUME;
+    if (ambientAudio) ambientAudio.volume = vol;
+    if (hanAudio)     hanAudio.volume     = isMuted ? 0 : 1;
+    if (denshoAudio)  denshoAudio.volume  = isMuted ? 0 : 1;
+  }
+
+  /* ── Han ── */
+  function getHanTarget() {
+    const now = nowSeconds();
+    for (const period of SCHEDULE) {
+      if (period.type !== 'zazen') continue;
+      const start = periodStartSeconds(period);
+      const windowStart = start - HAN_LEAD_MINUTES * 60;
+      if (now >= windowStart && now < start) return { period, elapsed: now - windowStart };
+    }
+    return null;
+  }
+
+  function tickHan() {
+    const target = getHanTarget();
+    if (!target) {
+      if (hanAudio) { hanAudio = stopAndClear(hanAudio); hanTriggeredFor = null; }
+      return;
+    }
+    const { period, elapsed } = target;
+    if (hanTriggeredFor === period.id && hanAudio && !hanAudio.paused) return;
+
+    hanTriggeredFor = period.id;
+    hanAudio = getAudio(AUDIO_FILES.han);
+    hanAudio.volume = isMuted ? 0 : 1;
+
+    hanAudio.addEventListener('loadedmetadata', () => {
+      hanDuration = hanAudio.duration;
+      const windowDuration = HAN_LEAD_MINUTES * 60;
+      if (hanDuration >= windowDuration - 5) {
+        hanAudio.currentTime = Math.min(elapsed, hanDuration - 1);
+        hanAudio.loop = false;
+      } else {
+        hanAudio.loop = true;
+        hanAudio.currentTime = elapsed % hanDuration;
+      }
+      hanAudio.play().catch(() => {
+        document.addEventListener('click', () => {
+          if (hanAudio) hanAudio.play().catch(() => {});
+        }, { once: true });
+      });
+    }, { once: true });
+    hanAudio.load();
+  }
+
+  /* ── Ambient service ── */
+  function tickAmbient(currentState) {
+    // state.state === 'during' is the active-period signal in this codebase
+    if (!currentState || currentState.state !== 'during') {
+      if (ambientAudio) { ambientAudio = stopAndClear(ambientAudio); activeServiceId = null; }
+      return;
+    }
+
+    const period = currentState.period;
+    if (!period.hasService || !SERVICE_AUDIO[period.serviceId]) {
+      if (ambientAudio) { ambientAudio = stopAndClear(ambientAudio); activeServiceId = null; }
+      return;
+    }
+
+    if (activeServiceId === period.serviceId && ambientAudio && !ambientAudio.paused) return;
+
+    if (ambientAudio) stopAndClear(ambientAudio);
+    activeServiceId = period.serviceId;
+    ambientAudio = getAudio(SERVICE_AUDIO[period.serviceId]);
+    ambientAudio.volume = 0;
+
+    const elapsedSeconds = nowSeconds() - periodStartSeconds(period);
+    ambientAudio.addEventListener('loadedmetadata', () => {
+      const seekTo = Math.min(Math.max(elapsedSeconds, 0), ambientAudio.duration - 1);
+      ambientAudio.currentTime = seekTo;
+      ambientAudio.play().then(() => {
+        if (!isMuted) fadeIn(ambientAudio, AMBIENT_VOLUME, FADE_DURATION_MS);
+      }).catch(() => {
+        document.addEventListener('click', () => {
+          if (ambientAudio) ambientAudio.play().then(() => {
+            if (!isMuted) fadeIn(ambientAudio, AMBIENT_VOLUME, FADE_DURATION_MS);
+          }).catch(() => {});
+        }, { once: true });
+      });
+    }, { once: true });
+    ambientAudio.load();
+  }
+
+  document.addEventListener('visibilitychange', () => {
+    if (!ambientAudio) return;
+    if (document.hidden) {
+      ambientAudio.pause();
+    } else {
+      if (activeServiceId) {
+        const period = SCHEDULE.find(p => p.serviceId === activeServiceId);
+        if (period) {
+          const elapsed = nowSeconds() - periodStartSeconds(period);
+          if (elapsed >= 0 && elapsed < ambientAudio.duration) ambientAudio.currentTime = elapsed;
+        }
+      }
+      ambientAudio.play().catch(() => {});
+    }
+  });
+
+  /* ── Period transition bell ── */
+  let firstTick = true;
+
+  function tickBell(currentPeriodId) {
+    if (firstTick) { firstTick = false; lastPeriodId = currentPeriodId; return; }
+    if (currentPeriodId && currentPeriodId !== lastPeriodId) {
+      lastPeriodId = currentPeriodId;
+      playDensho();
+    }
+  }
+
+  function playDensho() {
+    if (isMuted) return;
+    if (denshoAudio && !denshoAudio.ended) return;
+    denshoAudio = getAudio(AUDIO_FILES.densho);
+    denshoAudio.volume = 1;
+    denshoAudio.play().catch(() => {});
+  }
+
+  /* ── Enter Service ?t= handoff ── */
+  function updateEnterServiceLink() {
+    const btn = document.querySelector('[data-enter-service]')
+             || document.querySelector('a[href*="service="]');
+    if (!btn) return;
+    const href  = btn.getAttribute('href') || '';
+    const match = href.match(/service=([^&]+)/);
+    if (!match) return;
+    const period = SCHEDULE.find(p => p.serviceId === match[1]);
+    if (!period) return;
+    const elapsed = Math.max(0, nowSeconds() - periodStartSeconds(period));
+    btn.href = `${href.split('?')[0]}?service=${match[1]}&t=${Math.floor(elapsed)}`;
+  }
+
+  /* ── Mobile clock ── */
+  function updateMobileClock() {
+    const mobileClock = document.getElementById('mobile-clock');
+    if (!mobileClock) return;
+    const now = new Date();
+    const h = String(now.getHours()).padStart(2, '0');
+    const m = String(now.getMinutes()).padStart(2, '0');
+    const s = String(now.getSeconds()).padStart(2, '0');
+    mobileClock.textContent = `${h}:${m}:${s}`;
+
+    const mobileNext = document.getElementById('mobile-next');
+    if (mobileNext) {
+      // state.next is the next period in this codebase (not state.nextPeriod)
+      const state = getScheduleState(new Date());
+      if (state && state.next) {
+        const nextMin = state.next.time[0] * 60 + state.next.time[1];
+        const nowMin  = now.getHours() * 60 + now.getMinutes();
+        const diff    = nextMin - nowMin;
+        if (diff > 0) {
+          const hh = Math.floor(diff / 60), mm = diff % 60;
+          mobileNext.textContent = `${hh > 0 ? hh + 'h ' : ''}${mm}m · ${state.next.name}`;
+        }
+      }
+    }
+  }
+
+  /* ── Main tick ── */
+  function tick() {
+    // state.state === 'during' is active-period in this codebase
+    const state = typeof getScheduleState === 'function' ? getScheduleState(new Date()) : null;
+    const currentPeriodId = state && state.state === 'during' ? state.period.id : null;
+
+    tickHan();
+    tickAmbient(state);
+    tickBell(currentPeriodId);
+    updateEnterServiceLink();
+    updateMobileClock();
+  }
+
+  function init() {
+    const originalTick = window._scheduleTick;
+    if (typeof originalTick === 'function') {
+      window._scheduleTick = () => { originalTick(); tick(); };
+    } else {
+      setInterval(tick, 1000);
+    }
+    tick();
+  }
+
+  return { init, tick, applyMute };
+
+})();
+
+/* ── Boot ── */
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', AudioEngine.init);
+} else {
+  AudioEngine.init();
+}
 </script>
 </body>
 </html>
