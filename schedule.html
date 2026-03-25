@@ -27,6 +27,7 @@
   --op-future: 0.65;
   --mono: 'IBM Plex Mono', monospace;
   --serif: 'Cormorant', serif;
+  --sab: env(safe-area-inset-bottom, 0px);
 }
 
 html {
@@ -793,7 +794,8 @@ function positionConnector(state) {
 
     // Bar: anchored to row edge, extending to viewport boundary
     if (period.id === 'quiet-night') {
-      setBar(rowRect.top, window.innerHeight - rowRect.top, null);
+      const sab = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--sab')) || 0;
+      setBar(rowRect.top, window.innerHeight - sab - rowRect.top, null);
     } else {
       // quiet-morning: row is at top of track, bar from viewport top to row bottom
       setBar(0, rowRect.bottom, null);
@@ -900,6 +902,9 @@ function initSidebarAlignment() {
 }
 
 function alignSidebar(state) {
+  // Skip during rubber-band overscroll — let it settle naturally
+  if (window.scrollY < 0 || document.body.scrollTop < 0) return;
+
   const contentEl     = document.getElementById('sidebar-content');
   const clockMetaEl   = document.getElementById('clock-ampm');
   const sidebarNextEl = document.getElementById('sidebar-next');
