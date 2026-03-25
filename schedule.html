@@ -355,6 +355,16 @@ body.quiet-mode #vline {
 body.quiet-mode .sidebar-header {
   color: rgba(244,240,232,0.9);
 }
+/* clock children have explicit color:var(--ink) — must override directly */
+body.quiet-mode .clock-hm,
+body.quiet-mode .clock-sec {
+  color: rgba(244,240,232,0.9);
+}
+body.quiet-mode .clock-sep {
+  color: rgba(244,240,232,0.9);
+  opacity: 0.45;
+}
+body.quiet-mode .clock-sep.pulse { opacity: 0.85; }
 
 /* ══════════════════════════════
    PLACED MODE (landscape ≥ 1.4:1)
@@ -770,21 +780,33 @@ function positionConnector(state) {
   }
 
   if (state.state === 'during' && state.period.type === 'quiet') {
-    // ── QUIET TREADMILL ──────────────────────────────────
-    const period   = state.period;
+    // ── QUIET MODE — row-relative geometry ───────────────
+    const period    = state.period;
+    const quietRow  = document.querySelector('.period-row.now');
+    if (!quietRow) { barEl.style.display = 'none'; markEl.style.display = 'none'; return; }
+    const rowRect   = quietRow.getBoundingClientRect();
+
     const elapsed  = nowSecs() - periodStartSecs(period);
     const duration = periodEndSecs(period) - periodStartSecs(period);
     const progress = Math.min(elapsed / duration, 1);
-    const markY    = progress * window.innerHeight;
+    const markY    = rowRect.top + progress * rowRect.height;
 
-    setBar(0, window.innerHeight, 0.06);
+    // Bar: anchored to row edge, extending to viewport boundary
+    if (period.id === 'quiet-night') {
+      setBar(rowRect.top, window.innerHeight - rowRect.top, null);
+    } else {
+      // quiet-morning: row is at top of track, bar from viewport top to row bottom
+      setBar(0, rowRect.bottom, null);
+    }
     setMark(markEl, markY);
 
-    // Midnight handoff: second mark descends so it arrives at Y=0 at midnight
+    // Midnight handoff: second mark tracks where quiet-morning's mark will be
     if (period.id === 'quiet-night' && progress > 0.85) {
-      const MORNING_DUR = 5 * 3600 + 10 * 60; // quiet-morning = 18600s
-      const secondProgress = (progress - 1.0) * (duration / MORNING_DUR);
-      const secondMarkY    = secondProgress * window.innerHeight;
+      const MORNING_DUR   = 5 * 3600 + 10 * 60; // 18600s
+      const morningRow    = document.querySelector('[data-period-id="quiet-morning"]');
+      const mRect         = morningRow ? morningRow.getBoundingClientRect() : { top: 0, height: rowRect.height };
+      const secondElapsed = (progress - 1.0) * duration; // negative seconds from midnight
+      const secondMarkY   = mRect.top + (secondElapsed / MORNING_DUR) * mRect.height;
 
       let mark2 = document.getElementById('now-mark-2');
       if (!mark2) {
