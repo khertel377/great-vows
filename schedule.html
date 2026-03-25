@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Schedule — Great Vows</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500&family=Cormorant:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ══════════════════════════════
+   TYPE SYSTEM — Great Vows Schedule
+   Five roles. Two families. No other combinations permitted.
+
+   Headline  — Cormorant, 400, 48px (now-row + clock) / 16px (other rows)
+   Meta      — IBM Plex Mono, 400, 10px, opacity 0.45, letter-spacing 0.05em, uppercase for AM/PM
+   Label     — Cormorant italic, 400, 13px, opacity 0.38
+   Value     — IBM Plex Mono, 400, 11px, opacity 0.5
+   Inst.     — IBM Plex Mono, 400, 8px, letter-spacing 0.15em, uppercase, opacity 0.3
+══════════════════════════════ */
+
+:root {
+  --ink: #1a1814;
+  --paper: #f4f0e8;
+  --seal: #B03A2E;
+  --op-past: 0.32;
+  --op-future: 0.65;
+  --mono: 'IBM Plex Mono', monospace;
+  --serif: 'Cormorant', serif;
+}
+
+html {
+  background: var(--paper);
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--mono);
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(26,24,20,0.14) transparent;
+  transition: background 1.2s ease;
+}
+
+body.after-schedule {
+  background: #f0ebe0; /* slightly warmer at end of day */
+}
+
+body::-webkit-scrollbar { width: 3px; }
+body::-webkit-scrollbar-track { background: transparent; }
+body::-webkit-scrollbar-thumb { background: rgba(26,24,20,0.14); }
+
+/* ── GRAIN OVERLAY ── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 999;
+  opacity: 0.3;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.88' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.07'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
+}
+
+/* ── APP SHELL ── */
+#layout {
+  display: flex;
+  min-height: 100vh;
+  position: relative;
+  z-index: 1;
+}
+
+/* ══════════════════════════════
+   SIDEBAR — sticky panel, always visible in viewport
+══════════════════════════════ */
+#sidebar {
+  width: 280px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  align-self: flex-start;
+  overflow: visible;
+}
+
+.sidebar-header {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  font-family: var(--mono);
+  font-size: 8px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--ink);
+  opacity: 0.3;
+  line-height: 1.6;
+}
+
+/* Wrapper for clock + meta + next — translateY drives scroll-sync alignment */
+#sidebar-content {
+  position: absolute;
+  left: 20px;
+  right: 20px;
+  top: 35%;
+  will-change: transform;
+}
+
+.sidebar-now {
+  padding-bottom: 12px; /* descender clearance — Cormorant 7 drops below baseline */
+}
+
+.clock-display {
+  display: flex;
+  align-items: baseline;
+  letter-spacing: -0.01em;
+  overflow: visible;
+}
+
+.sidebar-next {
+  position: absolute;
+  left: 20px;
+  right: 20px;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  white-space: nowrap;
+}
+
+.next-label {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--ink);
+  opacity: 0.38;
+  line-height: 1;
+}
+
+.next-value {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.03em;
+  color: var(--ink);
+  opacity: 0.5;
+  line-height: 1;
+}
+
+.clock-hm,
+.clock-sep,
+.clock-sec {
+  font-family: var(--serif);
+  font-size: 48px;
+  font-weight: 400;
+  line-height: 1;
+  color: var(--ink);
+  opacity: 1;
+}
+
+.clock-sep {
+  opacity: 0.25;
+  transition: opacity 0.45s ease-in-out;
+}
+
+.clock-sep.pulse { opacity: 0.85; }
+
+.enter-btn {
+  position: absolute;
+  bottom: 24px;
+  left: 20px;
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--ink);
+  text-decoration: none;
+  border: 1px solid rgba(26,24,20,0.28);
+  padding: 7px 11px;
+  opacity: 0.65;
+  transition: opacity 0.2s;
+}
+
+.enter-btn:hover { opacity: 1; }
+.enter-btn.hidden { display: none; }
+
+/* ── SEPARATOR ── */
+#vline {
+  width: 1px;
+  background: rgba(26,24,20,0.12);
+  flex-shrink: 0;
+}
+
+/* ══════════════════════════════
+   SCHEDULE TRACK
+══════════════════════════════ */
+#track {
+  flex: 1;
+  padding: 20px 32px 80px 0;
+}
+
+/* ── PERIOD ROWS ── */
+.period-row {
+  padding: 10px 16px 10px 24px;
+  border-left: 3px solid transparent;
+  transition: opacity 0.3s ease;
+  cursor: default;
+  user-select: none;
+  position: relative;
+}
+
+.period-row.past   { opacity: var(--op-past); }
+.period-row.future { opacity: var(--op-future); }
+.period-row.now    { opacity: 1; }
+
+/* Imminent: next period when we're in a gap — slightly brighter */
+.period-row.imminent { opacity: 0.82; }
+
+/* After-schedule: very dim — day is done */
+body.after-schedule .period-row.past { opacity: 0.18; }
+
+/* Closing rule — end of day */
+#closing-rule {
+  height: 0.5px;
+  background: var(--ink);
+  opacity: 0.2;
+  margin: 0 0 0 24px;
+}
+
+/* Hover surfacing */
+.period-row[data-hover="active"]   { opacity: 0.88; }
+.period-row[data-hover="neighbor"] { opacity: 0.55; }
+
+/* Scroll surfacing */
+#track.scrolling .period-row.past   { opacity: 0.68; }
+#track.scrolling .period-row.future { opacity: 0.68; }
+
+/* ── ROW CONTENT ── */
+.period-name {
+  font-family: var(--serif);
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--ink);
+  line-height: 1.2;
+  padding-bottom: 8px;
+  overflow: visible;
+}
+
+/* Now row: period name matches clock — with transition so it grows in smoothly */
+.period-row.now .period-name {
+  font-size: 48px;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  transition: font-size 0.6s ease, opacity 0.6s ease;
+}
+
+/* Period entering: start small, grow into the now size */
+.period-row.now.period-enter .period-name {
+  animation: periodNameEnter 0.6s ease forwards;
+}
+@keyframes periodNameEnter {
+  from { font-size: 18px; opacity: 0.5; letter-spacing: 0em; }
+  to   { font-size: 48px; opacity: 1;   letter-spacing: -0.01em; }
+}
+
+.period-row-meta {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 400;
+  color: var(--ink);
+  opacity: 0.45;
+  letter-spacing: 0.05em;
+  line-height: 1;
+  transition: opacity 0.3s ease;
+}
+
+.period-row:not(.now) .period-row-meta { opacity: 0; }
+
+.period-row:not(.now):hover .period-row-meta,
+.period-row:not(.now)[data-hover="active"] .period-row-meta { opacity: 0.45; }
+
+.period-row.now .period-row-meta {
+  font-size: 11px;
+  opacity: 0.55;
+}
+
+/* ══════════════════════════════
+   CONNECTOR OVERLAY
+   Cross slides smoothly between positions on period transitions
+══════════════════════════════ */
+#now-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 10;
+}
+
+#now-bar {
+  position: absolute;
+  width: 3px;
+  background: var(--seal);
+  display: none;
+}
+
+#now-mark {
+  position: absolute;
+  background: var(--seal);
+  display: none;
+}
+
+/* Clock meta — AM/PM: position:absolute child of #sidebar, JS sets top */
+.clock-meta {
+  position: absolute;
+  left: 20px;
+  right: 20px;
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink);
+  opacity: 0.45;
+  line-height: 1;
+}
+
+/* ══════════════════════════════
+   PLACED MODE (landscape ≥ 1.4:1)
+══════════════════════════════ */
+body.placed {
+  --op-past: 0.22;
+  --op-future: 0.55;
+}
+
+body.placed .clock-hm,
+body.placed .clock-sep,
+body.placed .clock-sec  { font-size: 52px; }
+body.placed .period-row.now .period-name { font-size: 52px; }
+</style>
+</head>
+<body>
+
+<div id="layout">
+
+  <aside id="sidebar">
+    <div class="sidebar-header">San Francisco<br>Zen Center</div>
+
+    <div id="sidebar-content">
+      <div class="sidebar-now" id="sidebarNow">
+        <div class="clock-display">
+          <span class="clock-hm" id="clock-hm">--:--</span><span class="clock-sep colon">:</span><span class="clock-sec" id="clock-sec">--</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="clock-meta" id="clock-ampm"></div>
+
+    <div class="sidebar-next" id="sidebar-next">
+      <span class="next-label" id="next-label">Next</span><span class="next-value baseline-probe" id="next-value"></span>
+    </div>
+
+    <a class="enter-btn hidden" id="enterBtn" href="#">Enter service →</a>
+  </aside>
+
+  <div id="vline"></div>
+
+  <main id="track"></main>
+
+</div>
+
+<!-- Fixed viewport overlay — bar and mark share this coordinate space, same separatorX -->
+<div id="now-overlay">
+  <div id="now-bar"></div>
+  <div id="now-mark"></div>
+</div>
+
+<script>
+// ══════════════════════════════
+// DATA
+// ══════════════════════════════
+const SCHEDULE = [
+  { id: 'han',                     time: [5,10],  end: [5,20],  name: 'Han',                      type: 'bell',  hasService: false },
+  { id: 'zazen-morning',           time: [5,20],  end: [6,35],  name: 'Zazen',                    type: 'zazen', hasService: false },
+  { id: 'morning-service-monday',  time: [6,40],  end: [7,5],   name: 'Monday Morning Service',   type: 'chant', hasService: true, serviceId: 'morning-service-monday' },
+  { id: 'breakfast',               time: [7,10],  end: [7,45],  name: 'Breakfast',                type: 'meal',  hasService: false },
+  { id: 'work-morning',            time: [8,0],   end: [12,0],  name: 'Work Period',              type: 'work',  hasService: false },
+  { id: 'noon-meal',               time: [12,0],  end: [12,40], name: 'Noon Meal',                type: 'meal',  hasService: false },
+  { id: 'work-afternoon',          time: [13,0],  end: [17,0],  name: 'Afternoon Work',           type: 'work',  hasService: false },
+  { id: 'zazen-evening',           time: [17,15], end: [18,15], name: 'Evening Zazen',            type: 'zazen', hasService: false },
+  { id: 'evening-service',         time: [18,15], end: [18,45], name: 'Evening Service',          type: 'chant', hasService: true, serviceId: 'evening-service' },
+  { id: 'dinner',                  time: [18,45], end: [19,30], name: 'Dinner',                   type: 'meal',  hasService: false },
+  { id: 'rest',                    time: [19,30], end: [21,30], name: 'Rest',                     type: 'rest',  hasService: false },
+  { id: 'lights-out',              time: [21,30], end: [22,0],  name: 'Lights Out',               type: 'bell',  hasService: false },
+];
+
+// ══════════════════════════════
+// STATE LOGIC
+// Returns one of: 'before', 'during', 'between', 'after'
+// 'between' includes prev period so connector can span the gap
+// ══════════════════════════════
+function getScheduleState(now) {
+  const totalMins = now.getHours() * 60 + now.getMinutes();
+  const firstStart = SCHEDULE[0].time[0] * 60 + SCHEDULE[0].time[1];
+
+  // Before first period of the day
+  if (totalMins < firstStart) {
+    return { state: 'before', next: SCHEDULE[0], minsUntil: firstStart - totalMins };
+  }
+
+  for (let i = 0; i < SCHEDULE.length; i++) {
+    const p     = SCHEDULE[i];
+    const start = p.time[0] * 60 + p.time[1];
+    const end   = p.end[0]  * 60 + p.end[1];
+
+    // During this period
+    if (totalMins >= start && totalMins < end) {
+      const duration = (end - start) * 60;
+      const elapsed  = (totalMins - start) * 60 + now.getSeconds();
+      return { state: 'during', period: p, elapsed, duration };
+    }
+
+    // Gap after this period and before the next
+    if (i < SCHEDULE.length - 1) {
+      const nextStart = SCHEDULE[i + 1].time[0] * 60 + SCHEDULE[i + 1].time[1];
+      if (totalMins >= end && totalMins < nextStart) {
+        return { state: 'between', prev: p, next: SCHEDULE[i + 1], minsUntil: nextStart - totalMins };
+      }
+    }
+  }
+
+  // After last period
+  return { state: 'after', next: SCHEDULE[0] };
+}
+
+// ══════════════════════════════
+// HELPERS
+// ══════════════════════════════
+function pad2(n) { return n < 10 ? '0' + n : '' + n; }
+
+function fmtTime12(hm) {
+  const h = hm[0] % 12 || 12;
+  const ampm = hm[0] >= 12 ? 'PM' : 'AM';
+  return h + ':' + pad2(hm[1]) + '\u202f' + ampm;
+}
+
+function formatDuration(mins) {
+  if (mins < 60) return mins + ' min';
+  const h = Math.floor(mins / 60);
+  const m = mins % 60;
+  return m > 0 ? h + 'h ' + m + 'm' : h + 'h';
+}
+
+function periodDurMins(p) {
+  return (p.end[0] * 60 + p.end[1]) - (p.time[0] * 60 + p.time[1]);
+}
+
+function rowHeight(mins) {
+  return Math.round(28 + 6 * Math.sqrt(mins));
+}
+
+// Next value for 'during' state — time until next period starts
+function formatNextValue(currentPeriod, now) {
+  const currentIdx    = SCHEDULE.indexOf(currentPeriod);
+  const next          = SCHEDULE[currentIdx + 1];
+  if (!next) return 'last';
+  const nextStartMins = next.time[0] * 60 + next.time[1];
+  const nowMins       = now.getHours() * 60 + now.getMinutes();
+  const minsUntil     = nextStartMins - nowMins;
+  if (minsUntil <= 0) return 'soon';
+  return formatDuration(minsUntil);
+}
+
+// Duration from now until Han tomorrow
+function formatUntilTomorrow(now) {
+  const hanMins  = SCHEDULE[0].time[0] * 60 + SCHEDULE[0].time[1];
+  const nowMins  = now.getHours() * 60 + now.getMinutes();
+  const minsUntil = (24 * 60 - nowMins) + hanMins;
+  return 'in ' + formatDuration(minsUntil);
+}
+
+// ══════════════════════════════
+// CLOCK
+// ══════════════════════════════
+function updateClock(now) {
+  const h = now.getHours() % 12 || 12;
+  document.getElementById('clock-hm').textContent   = h + ':' + pad2(now.getMinutes());
+  document.getElementById('clock-sec').textContent  = pad2(now.getSeconds());
+  document.getElementById('clock-ampm').textContent = now.getHours() >= 12 ? 'PM' : 'AM';
+
+  document.querySelectorAll('.colon').forEach(c => {
+    c.classList.add('pulse');
+    setTimeout(() => c.classList.remove('pulse'), 900);
+  });
+}
+
+// ══════════════════════════════
+// SIDEBAR TEXT
+// ══════════════════════════════
+function updateSidebar(state, now) {
+  const nextLabelEl = document.getElementById('next-label');
+  const nextValueEl = document.getElementById('next-value');
+  const enterBtn    = document.getElementById('enterBtn');
+
+  if (state.state === 'during') {
+    nextLabelEl.textContent = 'Next';
+    nextValueEl.textContent = formatNextValue(state.period, now);
+    if (state.period.hasService) {
+      enterBtn.classList.remove('hidden');
+      enterBtn.href = 'index.html?service=' + state.period.serviceId;
+    } else {
+      enterBtn.classList.add('hidden');
+    }
+  } else if (state.state === 'between') {
+    nextLabelEl.textContent = 'Next';
+    nextValueEl.textContent = 'in ' + formatDuration(state.minsUntil);
+    enterBtn.classList.add('hidden');
+  } else if (state.state === 'before') {
+    nextLabelEl.textContent = 'Next';
+    nextValueEl.textContent = formatDuration(state.minsUntil);
+    enterBtn.classList.add('hidden');
+  } else {
+    // after
+    nextLabelEl.textContent = 'Tomorrow';
+    nextValueEl.textContent = formatUntilTomorrow(now);
+    enterBtn.classList.add('hidden');
+  }
+}
+
+// ══════════════════════════════
+// SCROLL TO NOW
+// ══════════════════════════════
+function scrollToNow(behavior) {
+  const target = document.querySelector('.period-row.now') || document.querySelector('.period-row.future');
+  if (!target) return;
+  const rowTop       = target.getBoundingClientRect().top + window.scrollY;
+  const scrollTarget = rowTop - window.innerHeight / 2 + target.offsetHeight / 2;
+  window.scrollTo({ top: Math.max(0, scrollTarget), behavior: behavior || 'instant' });
+}
+
+// ══════════════════════════════
+// TRACK BUILD
+// ══════════════════════════════
+let _lastNowId      = undefined;
+let _trackEverBuilt = false;
+
+function buildTrack(state) {
+  const track     = document.getElementById('track');
+  const nowId     = state.state === 'during' ? state.period.id : null;
+  const newPeriod = nowId !== _lastNowId;
+  const now       = new Date();
+  const totalMins = now.getHours() * 60 + now.getMinutes();
+  const nowIdx    = nowId ? SCHEDULE.findIndex(p => p.id === nowId) : -1;
+
+  // Body state class for after-schedule styling
+  document.body.classList.toggle('after-schedule', state.state === 'after');
+
+  track.innerHTML = '';
+
+  SCHEDULE.forEach((p, i) => {
+    const endM    = p.end[0] * 60 + p.end[1];
+    const durMins = periodDurMins(p);
+
+    // Row classification
+    let rowClass;
+    if (state.state === 'before') {
+      rowClass = 'future';
+    } else if (state.state === 'after') {
+      rowClass = 'past';
+    } else if (nowId === p.id) {
+      rowClass = 'now';
+    } else if (totalMins >= endM) {
+      rowClass = 'past';
+    } else {
+      rowClass = 'future';
+    }
+
+    const isNextPeriod = nowIdx !== -1 && i === nowIdx + 1;
+    const isImminent   = state.state === 'between' && p.id === state.next.id;
+
+    const row = document.createElement('div');
+    row.dataset.periodId = p.id; // enables [data-period-id] selector
+    row.dataset.idx      = i;
+    row.style.minHeight  = rowHeight(durMins) + 'px';
+
+    let classes = 'period-row ' + rowClass;
+    if (isNextPeriod) classes += ' next-period';
+    if (isImminent)   classes += ' imminent';
+    row.className = classes;
+
+    // Period name grows in on live period change
+    if (rowClass === 'now' && newPeriod && _trackEverBuilt) {
+      row.classList.add('period-enter');
+      setTimeout(() => row.classList.remove('period-enter'), 700);
+    }
+
+    const nameEl = document.createElement('div');
+    nameEl.className = 'period-name';
+    if (isNextPeriod) {
+      const probe = document.createElement('span');
+      probe.className = 'baseline-probe';
+      probe.textContent = p.name;
+      nameEl.appendChild(probe);
+    } else {
+      nameEl.textContent = p.name;
+    }
+
+    const metaEl = document.createElement('div');
+    metaEl.className   = 'period-row-meta';
+    metaEl.textContent = fmtTime12(p.time) + ' · ' + formatDuration(durMins);
+
+    row.appendChild(nameEl);
+    row.appendChild(metaEl);
+    track.appendChild(row);
+  });
+
+  // Closing rule at end of day
+  if (state.state === 'after') {
+    const rule = document.createElement('div');
+    rule.id = 'closing-rule';
+    track.appendChild(rule);
+  }
+
+  _attachHoverHandlers();
+
+  if (!_trackEverBuilt) {
+    setTimeout(() => scrollToNow('instant'), 40);
+  } else if (newPeriod) {
+    setTimeout(() => scrollToNow('smooth'), 40);
+  }
+
+  _lastNowId      = nowId;
+  _trackEverBuilt = true;
+}
+
+// ══════════════════════════════
+// HOVER SURFACING
+// ══════════════════════════════
+function _attachHoverHandlers() {
+  const rows = Array.from(document.querySelectorAll('.period-row'));
+  rows.forEach((row, i) => {
+    row.addEventListener('mouseenter', () => {
+      rows.forEach(r => r.removeAttribute('data-hover'));
+      row.dataset.hover = 'active';
+      if (rows[i - 1]) rows[i - 1].dataset.hover = 'neighbor';
+      if (rows[i + 1]) rows[i + 1].dataset.hover = 'neighbor';
+    });
+  });
+}
+
+document.getElementById('track').addEventListener('mouseleave', () => {
+  document.querySelectorAll('.period-row').forEach(r => r.removeAttribute('data-hover'));
+});
+
+// ══════════════════════════════
+// SCROLL SURFACING + CONNECTOR
+// ══════════════════════════════
+let _currentState = null; // kept for scroll/resize connector calls
+let _scrollTimer  = null;
+
+window.addEventListener('scroll', () => {
+  document.getElementById('track').classList.add('scrolling');
+  if (_scrollTimer) clearTimeout(_scrollTimer);
+  _scrollTimer = setTimeout(() => {
+    document.getElementById('track').classList.remove('scrolling');
+  }, 1800);
+
+  if (_currentState) {
+    positionConnector(_currentState);
+    alignSidebar(_currentState);
+  }
+}, { passive: true });
+
+// ══════════════════════════════
+// CONNECTOR — viewport-coords fixed overlay
+// Behavior by state:
+//   during:  full-height bar + crossbar mark at headline center
+//   between: bar spans gap between rows, mark at gap midpoint
+//   before:  no bar, circular approach dot above first row
+//   after:   both hidden
+// CSS transition on top/height gives smooth cross slide on period change
+// ══════════════════════════════
+function positionConnector(state) {
+  const barEl   = document.getElementById('now-bar');
+  const markEl  = document.getElementById('now-mark');
+  const sidebar = document.getElementById('sidebar');
+  const sepX    = sidebar.getBoundingClientRect().right; // shared center X
+
+  if (state.state === 'during') {
+    // Y from track elements only — independent of sidebar translateY
+    const nowRow  = document.querySelector('.period-row.now');
+    const nowName = nowRow && nowRow.querySelector('.period-name');
+    if (!nowRow || !nowName) { barEl.style.display = 'none'; markEl.style.display = 'none'; return; }
+
+    const rowRect  = nowRow.getBoundingClientRect();   // bar extents
+    const nameRect = nowName.getBoundingClientRect();  // crossbar Y
+    const crossY   = nameRect.top + nameRect.height / 2;
+
+    const BAR_W = 3;
+    barEl.style.left         = (sepX - BAR_W / 2) + 'px';
+    barEl.style.top          = rowRect.top + 'px';
+    barEl.style.height       = rowRect.height + 'px';
+    barEl.style.borderRadius = '0';
+    barEl.style.display      = 'block';
+
+    const MARK_W = 18, MARK_H = 3;
+    markEl.style.left         = (sepX - MARK_W / 2) + 'px';
+    markEl.style.top          = (crossY - MARK_H / 2) + 'px';
+    markEl.style.width        = MARK_W + 'px';
+    markEl.style.height       = MARK_H + 'px';
+    markEl.style.borderRadius = '0';
+    markEl.style.display      = 'block';
+
+  } else if (state.state === 'between') {
+    const prevRow = document.querySelector(`[data-period-id="${state.prev.id}"]`);
+    const nextRow = document.querySelector(`[data-period-id="${state.next.id}"]`);
+    if (!prevRow || !nextRow) { barEl.style.display = 'none'; markEl.style.display = 'none'; return; }
+
+    const prevBottom = prevRow.getBoundingClientRect().bottom;
+    const nextTop    = nextRow.getBoundingClientRect().top;
+    if (nextTop <= prevBottom) { barEl.style.display = 'none'; markEl.style.display = 'none'; return; }
+    const gapMidY = (prevBottom + nextTop) / 2;
+
+    const BAR_W = 3;
+    barEl.style.left         = (sepX - BAR_W / 2) + 'px';
+    barEl.style.top          = prevBottom + 'px';
+    barEl.style.height       = (nextTop - prevBottom) + 'px';
+    barEl.style.borderRadius = '0';
+    barEl.style.display      = 'block';
+
+    const MARK_W = 18, MARK_H = 3;
+    markEl.style.left         = (sepX - MARK_W / 2) + 'px';
+    markEl.style.top          = (gapMidY - MARK_H / 2) + 'px';
+    markEl.style.width        = MARK_W + 'px';
+    markEl.style.height       = MARK_H + 'px';
+    markEl.style.borderRadius = '0';
+    markEl.style.display      = 'block';
+
+  } else if (state.state === 'before') {
+    // Approach dot: small circle above first row — train approaching
+    const firstRow = document.querySelector('.period-row');
+    if (!firstRow) { barEl.style.display = 'none'; markEl.style.display = 'none'; return; }
+    const firstRect = firstRow.getBoundingClientRect();
+
+    barEl.style.display = 'none';
+
+    markEl.style.width        = '6px';
+    markEl.style.height       = '6px';
+    markEl.style.borderRadius = '50%';
+    markEl.style.top          = (firstRect.top - 10) + 'px';
+    markEl.style.left         = (sepX - 3) + 'px';
+    markEl.style.display      = 'block';
+
+  } else {
+    // after — day is done
+    barEl.style.display  = 'none';
+    markEl.style.display = 'none';
+  }
+}
+
+// ══════════════════════════════
+// SIDEBAR ALIGNMENT
+// clockNaturalTop: the clock's viewport-top with transform zeroed — measured
+// once on load (and re-baselined on resize). Delta is always computed against
+// this fixed reference, so repeated calls don't compound on each other.
+// ══════════════════════════════
+// clockNaturalTop:    clock-display's viewport top with transform zeroed
+// clockNaturalBottom: sidebarNow block's viewport bottom (clock + descender padding)
+// Both measured once on load; re-baselined on resize.
+// clock-meta and sidebar-next are position:absolute children of #sidebar (sidebarTop=0 always),
+// so their style.top = viewport Y directly. They're outside #sidebar-content and not
+// affected by its translateY.
+let clockNaturalTop    = null;
+let clockNaturalBottom = null;
+
+function initSidebarAlignment() {
+  const contentEl      = document.getElementById('sidebar-content');
+  const clockDisplayEl = document.querySelector('.clock-display');
+  const sidebarNowEl   = document.getElementById('sidebarNow');
+  if (!contentEl || !clockDisplayEl || !sidebarNowEl) return;
+  contentEl.style.transform = 'translateY(0)';
+  clockNaturalTop    = clockDisplayEl.getBoundingClientRect().top;
+  clockNaturalBottom = sidebarNowEl.getBoundingClientRect().bottom;
+}
+
+function alignSidebar(state) {
+  const contentEl     = document.getElementById('sidebar-content');
+  const clockMetaEl   = document.getElementById('clock-ampm');
+  const sidebarNextEl = document.getElementById('sidebar-next');
+  if (!contentEl || clockNaturalTop === null) return;
+
+  if (state.state === 'during') {
+    // Clock: translateY so clock-display top aligns with now period-name top
+    const nowNameEl = document.querySelector('.period-row.now .period-name');
+    if (nowNameEl) {
+      const delta = nowNameEl.getBoundingClientRect().top - clockNaturalTop;
+      contentEl.style.transform = `translateY(${delta}px)`;
+    }
+
+    // PM meta: bottom aligns with track meta row's bottom (baseline proxy for single-line)
+    const nowMetaEl = document.querySelector('.period-row.now .period-row-meta');
+    if (nowMetaEl && clockMetaEl) {
+      const trackMetaBottom = nowMetaEl.getBoundingClientRect().bottom;
+      clockMetaEl.style.top = (trackMetaBottom - clockMetaEl.offsetHeight) + 'px';
+    }
+
+    // Next: probe-span baseline — inline elements report actual text-bottom,
+    // not padded block box. Delta converges in one step on every call.
+    const nextNameEl = document.querySelector('.period-row.next-period .period-name');
+    if (nextNameEl && sidebarNextEl) {
+      const probe        = nextNameEl.querySelector('.baseline-probe');
+      const sidebarProbe = sidebarNextEl.querySelector('.baseline-probe');
+      if (probe && sidebarProbe) {
+        const delta = probe.getBoundingClientRect().bottom - sidebarProbe.getBoundingClientRect().bottom;
+        // -4px optical offset: Cormorant has less descender space below baseline than
+        // IBM Plex Mono, so box.bottom sits closer to baseline. Named constant is more
+        // honest than pretending font metrics resolve perfectly.
+        const FONT_DESCENDER_OFFSET = 3;
+        sidebarNextEl.style.top = ((parseFloat(sidebarNextEl.style.top) || 0) + delta - FONT_DESCENDER_OFFSET) + 'px';
+      }
+    }
+
+  } else {
+    // Default: clock at natural position, meta and next stacked below it
+    contentEl.style.transform = 'translateY(0)';
+    if (clockMetaEl && clockNaturalBottom !== null) {
+      clockMetaEl.style.top = clockNaturalBottom + 'px';
+    }
+    if (sidebarNextEl && clockMetaEl && clockNaturalBottom !== null) {
+      sidebarNextEl.style.top = (clockNaturalBottom + clockMetaEl.offsetHeight + 8) + 'px';
+    }
+  }
+}
+
+// ══════════════════════════════
+// PLACED MODE
+// ══════════════════════════════
+function updatePlacedMode() {
+  document.body.classList.toggle('placed', window.innerWidth > window.innerHeight * 1.4);
+}
+window.addEventListener('resize', updatePlacedMode);
+window.addEventListener('resize', () => {
+  if (_currentState) positionConnector(_currentState);
+  initSidebarAlignment(); // re-baseline clock natural top after resize
+  if (_currentState) alignSidebar(_currentState);
+});
+updatePlacedMode();
+
+// ══════════════════════════════
+// MAIN TICK
+// ══════════════════════════════
+let _lastMinute = -1;
+
+function tick() {
+  const now   = new Date();
+  const state = getScheduleState(now);
+  const min   = now.getHours() * 60 + now.getMinutes();
+
+  _currentState = state; // stored for scroll/resize listeners
+
+  updateClock(now);
+  updateSidebar(state, now);
+
+  if (min !== _lastMinute || !_trackEverBuilt) {
+    buildTrack(state);
+    _lastMinute = min;
+    // Re-align after track rebuild — now-row position shifts after scrollToNow settles
+    setTimeout(() => { if (_currentState) alignSidebar(_currentState); }, 60);
+  }
+
+  positionConnector(state);
+}
+
+tick();
+initSidebarAlignment(); // baseline clock natural top after initial render
+alignSidebar(_currentState);
+setInterval(tick, 1000);
+</script>
+</body>
+</html>
