@@ -280,7 +280,8 @@ body.after-schedule .period-row.past { opacity: 0.18; }
 .period-row:not(.now) .period-row-meta { opacity: 0; }
 
 .period-row:not(.now):hover .period-row-meta,
-.period-row:not(.now)[data-hover="active"] .period-row-meta { opacity: 0.45; }
+.period-row:not(.now)[data-hover="active"] .period-row-meta,
+.period-row:not(.now).meta-visible .period-row-meta { opacity: 0.45; }
 
 .period-row.now .period-row-meta {
   font-size: 11px;
@@ -682,10 +683,33 @@ function buildTrack(state) {
 }
 
 // ══════════════════════════════
-// HOVER SURFACING
+// HOVER SURFACING + MOBILE META REVEAL
 // ══════════════════════════════
+
+// Track the one non-now row currently showing its meta on mobile
+let _metaVisibleRow  = null;
+let _metaDismissTimer = null;
+let _metaObserver    = null;
+
+function _clearMeta(row) {
+  if (row) row.classList.remove('meta-visible');
+  if (_metaDismissTimer) { clearTimeout(_metaDismissTimer); _metaDismissTimer = null; }
+  if (_metaVisibleRow === row) _metaVisibleRow = null;
+}
+
+function _showMeta(row) {
+  if (row.classList.contains('now')) return; // now-row always handled by CSS
+  if (_metaVisibleRow && _metaVisibleRow !== row) _clearMeta(_metaVisibleRow);
+  row.classList.add('meta-visible');
+  _metaVisibleRow = row;
+  if (_metaDismissTimer) clearTimeout(_metaDismissTimer);
+  _metaDismissTimer = setTimeout(() => _clearMeta(row), 2000);
+}
+
 function _attachHoverHandlers() {
   const rows = Array.from(document.querySelectorAll('.period-row'));
+
+  // ── Desktop hover surfacing ──
   rows.forEach((row, i) => {
     row.addEventListener('mouseenter', () => {
       rows.forEach(r => r.removeAttribute('data-hover'));
@@ -693,6 +717,42 @@ function _attachHoverHandlers() {
       if (rows[i - 1]) rows[i - 1].dataset.hover = 'neighbor';
       if (rows[i + 1]) rows[i + 1].dataset.hover = 'neighbor';
     });
+  });
+
+  // ── Mobile only: tap + scroll-center meta reveal ──
+  const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+  if (!isTouchDevice) return;
+
+  // Tap: toggle meta on the tapped row; clear others
+  rows.forEach(row => {
+    row.addEventListener('click', (e) => {
+      if (row.classList.contains('now')) return;
+      if (row.classList.contains('meta-visible')) {
+        _clearMeta(row);
+      } else {
+        _showMeta(row);
+      }
+      e.stopPropagation();
+    });
+  });
+
+  // Scroll-center observer: fires when a row crosses the center ±20% band
+  if (_metaObserver) _metaObserver.disconnect();
+  const centerBand = Math.round(window.innerHeight * 0.2);
+  _metaObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      const row = entry.target;
+      if (row.classList.contains('now')) return;
+      _showMeta(row);
+    });
+  }, {
+    rootMargin: `-${Math.round(window.innerHeight * 0.5 - centerBand)}px 0px -${Math.round(window.innerHeight * 0.5 - centerBand)}px 0px`,
+    threshold: 0,
+  });
+
+  rows.forEach(row => {
+    if (!row.classList.contains('now')) _metaObserver.observe(row);
   });
 }
 
