@@ -364,6 +364,8 @@ body.placed .period-row.now .period-name { font-size: 52px; }
     </div>
 
     <a class="enter-btn hidden" id="enterBtn" href="#">Enter service →</a>
+
+    <button id="test-audio-btn" onclick="(function(){var a=new Audio('audio/sfzc/temple_sounds-the_han.mp3');a.play().then(function(){document.getElementById('test-audio-btn').textContent='Playing ✓';}).catch(function(e){document.getElementById('test-audio-btn').textContent='Blocked: '+e.message;});})()" style="position:absolute;bottom:60px;left:20px;padding:8px 12px;font-size:13px;cursor:pointer;">Test Audio</button>
   </aside>
 
   <div id="vline"></div>
