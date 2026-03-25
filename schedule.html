@@ -365,7 +365,6 @@ body.placed .period-row.now .period-name { font-size: 52px; }
 
     <a class="enter-btn hidden" id="enterBtn" href="#">Enter service →</a>
 
-    <button id="test-audio-btn" onclick="(function(){var a=new Audio('audio/SFZC/temple_sounds-the_han.mp3');a.play().then(function(){document.getElementById('test-audio-btn').textContent='Playing ✓';}).catch(function(e){document.getElementById('test-audio-btn').textContent='Blocked: '+e.message;});})()" style="position:absolute;bottom:60px;left:20px;padding:8px 12px;font-size:13px;cursor:pointer;">Test Audio</button>
   </aside>
 
   <div id="vline"></div>
@@ -373,6 +372,8 @@ body.placed .period-row.now .period-name { font-size: 52px; }
   <main id="track"></main>
 
 </div>
+
+<button id="test-audio-btn" onclick="(function(){var a=new Audio('audio/SFZC/temple_sounds-the_han.mp3');a.play().then(function(){document.getElementById('test-audio-btn').textContent='Playing ✓';}).catch(function(e){document.getElementById('test-audio-btn').textContent='Blocked: '+e.message;});})()" style="position:fixed;bottom:70px;right:24px;padding:8px 12px;font-size:13px;cursor:pointer;z-index:50;">Test Audio</button>
 
 <!-- Fixed viewport overlay — bar and mark share this coordinate space, same separatorX -->
 <div id="now-overlay">
