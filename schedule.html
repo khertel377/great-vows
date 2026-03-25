@@ -394,7 +394,7 @@ const SCHEDULE = [
   { id: 'evening-service',         time: [18,15], end: [18,45], name: 'Evening Service',          type: 'chant', hasService: true, serviceId: 'evening-service' },
   { id: 'dinner',                  time: [18,45], end: [19,30], name: 'Dinner',                   type: 'meal',  hasService: false },
   { id: 'rest',                    time: [19,30], end: [21,30], name: 'Rest',                     type: 'rest',  hasService: false },
-  { id: 'lights-out',              time: [21,30], end: [22,0],  name: 'Lights Out',               type: 'bell',  hasService: false },
+  { id: 'lights-out',              time: [21,30], end: [22,0],  name: 'Lights Out',               type: 'bell',  hasService: false, hanBefore: true },
 ];
 
 // ══════════════════════════════
@@ -1072,7 +1072,8 @@ const AudioEngine = (() => {
   function getHanTarget() {
     const now = nowSeconds();
     for (const period of SCHEDULE) {
-      if (period.type !== 'zazen') continue;
+      // Trigger han before zazen periods and before any period flagged hanBefore: true
+      if (period.type !== 'zazen' && !period.hanBefore) continue;
       const start = periodStartSeconds(period);
       const windowStart = start - HAN_LEAD_MINUTES * 60;
       if (now >= windowStart && now < start) return { period, elapsed: now - windowStart };
