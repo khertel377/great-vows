@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Schedule — Great Vows</title>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500&family=Cormorant:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
@@ -901,17 +901,14 @@ function positionConnector(state) {
     setMark(markEl, markY);
 
   } else if (state.state === 'between') {
+    // Gap between periods: clamp cross to bottom of the period that just ended
+    // (progress = 1.0), bar spans its full row. Cross stays put until next period begins.
     removeSecondMark();
     const prevRow = document.querySelector(`[data-period-id="${state.prev.id}"]`);
-    const nextRow = document.querySelector(`[data-period-id="${state.next.id}"]`);
-    if (!prevRow || !nextRow) { barEl.style.display = 'none'; markEl.style.display = 'none'; return; }
-
-    const prevBottom = prevRow.getBoundingClientRect().bottom;
-    const nextTop    = nextRow.getBoundingClientRect().top;
-    if (nextTop <= prevBottom) { barEl.style.display = 'none'; markEl.style.display = 'none'; return; }
-
-    setBar(prevBottom, nextTop - prevBottom, null);
-    setMark(markEl, (prevBottom + nextTop) / 2);
+    if (!prevRow) { barEl.style.display = 'none'; markEl.style.display = 'none'; return; }
+    const rowRect = prevRow.getBoundingClientRect();
+    setBar(rowRect.top, rowRect.height, null);
+    setMark(markEl, rowRect.bottom);
 
   } else if (state.state === 'before') {
     removeSecondMark();
@@ -1430,6 +1427,30 @@ if (document.readyState === 'loading') {
   AudioEngine.init();
 }
 
+/* ── Screen Wake Lock ──
+   Prevents the screen from sleeping while the tab is active.
+   Re-acquired on visibility restore (e.g. after phone wake).
+   Fails silently on unsupported browsers. ── */
+const WakeLock = (() => {
+  let lock = null;
+
+  async function request() {
+    if (!('wakeLock' in navigator)) return;
+    try {
+      lock = await navigator.wakeLock.request('screen');
+      lock.addEventListener('release', () => { lock = null; });
+    } catch (e) { /* denied or interrupted — non-fatal */ }
+  }
+
+  function onVisibilityChange() {
+    if (document.visibilityState === 'visible') request();
+  }
+
+  return { request, onVisibilityChange };
+})();
+
+document.addEventListener('visibilitychange', WakeLock.onVisibilityChange);
+
 /* ── iOS first-visit audio activation overlay ──
    Touch devices only. sessionStorage prevents repeat on refresh.
    Tap unlocks the iOS audio context, then dismisses. ── */
@@ -1473,6 +1494,7 @@ if (document.readyState === 'loading') {
 
   overlay.addEventListener('click', function () {
     AudioEngine.unlock();
+    WakeLock.request(); // user gesture — same tap acquires wake lock
     sessionStorage.setItem('gv-audio-unlocked', '1');
     overlay.style.opacity = '0';
     setTimeout(function () { overlay.remove(); }, 420);
