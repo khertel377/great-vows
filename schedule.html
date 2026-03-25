@@ -40,7 +40,7 @@ body {
   overflow-x: hidden;
   scrollbar-width: thin;
   scrollbar-color: rgba(26,24,20,0.14) transparent;
-  transition: background 1.2s ease;
+  transition: background 4s ease;
 }
 
 body.after-schedule {
@@ -329,6 +329,34 @@ body.after-schedule .period-row.past { opacity: 0.18; }
 }
 
 /* ══════════════════════════════
+   QUIET MODE — dark inversion during 10pm–5:10am
+══════════════════════════════ */
+body.quiet-mode {
+  background: #1a1814;
+}
+body.quiet-mode .period-name,
+body.quiet-mode .clock-display,
+body.quiet-mode #mobile-clock {
+  color: rgba(244,240,232,0.9);
+}
+body.quiet-mode .period-row-meta,
+body.quiet-mode .clock-meta,
+body.quiet-mode #sidebar-next {
+  color: rgba(244,240,232,0.35);
+}
+body.quiet-mode #now-bar,
+body.quiet-mode #now-mark,
+body.quiet-mode #now-mark-2 {
+  background: rgba(244,240,232,0.7);
+}
+body.quiet-mode #vline {
+  background: rgba(244,240,232,0.12);
+}
+body.quiet-mode .sidebar-header {
+  color: rgba(244,240,232,0.9);
+}
+
+/* ══════════════════════════════
    PLACED MODE (landscape ≥ 1.4:1)
 ══════════════════════════════ */
 body.placed {
@@ -385,6 +413,7 @@ body.placed .period-row.now .period-name { font-size: 52px; }
 // DATA
 // ══════════════════════════════
 const SCHEDULE = [
+  { id: 'quiet-morning', time: [0,0],   end: [5,10],  name: 'Quiet', type: 'quiet', hasService: false },
   { id: 'han',                     time: [5,10],  end: [5,20],  name: 'Han',                      type: 'bell',  hasService: false },
   { id: 'zazen-morning',           time: [5,20],  end: [6,35],  name: 'Zazen',                    type: 'zazen', hasService: false },
   { id: 'morning-service-monday',  time: [6,40],  end: [7,5],   name: 'Monday Morning Service',   type: 'chant', hasService: true, serviceId: 'morning-service-monday' },
@@ -397,6 +426,7 @@ const SCHEDULE = [
   { id: 'dinner',                  time: [18,45], end: [19,30], name: 'Dinner',                   type: 'meal',  hasService: false },
   { id: 'rest',                    time: [19,30], end: [21,30], name: 'Rest',                     type: 'rest',  hasService: false },
   { id: 'lights-out',              time: [21,30], end: [22,0],  name: 'Lights Out',               type: 'bell',  hasService: false, hanBefore: true },
+  { id: 'quiet-night',   time: [22,0],  end: [24,0],  name: 'Quiet', type: 'quiet', hasService: false },
 ];
 
 // ══════════════════════════════
@@ -478,10 +508,10 @@ function formatNextValue(currentPeriod, now) {
 
 // Duration from now until Han tomorrow
 function formatUntilTomorrow(now) {
-  const hanMins  = SCHEDULE[0].time[0] * 60 + SCHEDULE[0].time[1];
-  const nowMins  = now.getHours() * 60 + now.getMinutes();
-  const minsUntil = (24 * 60 - nowMins) + hanMins;
-  return 'in ' + formatDuration(minsUntil);
+  const han     = SCHEDULE.find(p => p.id === 'han');
+  const hanMins = han ? han.time[0] * 60 + han.time[1] : 310;
+  const nowMins = now.getHours() * 60 + now.getMinutes();
+  return 'in ' + formatDuration((24 * 60 - nowMins) + hanMins);
 }
 
 // ══════════════════════════════
@@ -684,46 +714,110 @@ window.addEventListener('scroll', () => {
 }, { passive: true });
 
 // ══════════════════════════════
+// CONNECTOR HELPERS
+// ══════════════════════════════
+function periodStartSecs(p) { return p.time[0] * 3600 + p.time[1] * 60; }
+function periodEndSecs(p)   { return p.end[0]  * 3600 + p.end[1]  * 60; } // [24,0] → 86400
+function nowSecs() {
+  const d = new Date();
+  return d.getHours() * 3600 + d.getMinutes() * 60 + d.getSeconds();
+}
+
+// ══════════════════════════════
 // CONNECTOR — viewport-coords fixed overlay
-// Behavior by state:
-//   during:  full-height bar + crossbar mark at headline center
-//   between: bar spans gap between rows, mark at gap midpoint
-//   before:  no bar, circular approach dot above first row
-//   after:   both hidden
-// CSS transition on top/height gives smooth cross slide on period change
+//
+// Normal periods: mark drifts continuously from row top → row bottom
+//   proportional to elapsed / duration. Bar spans full row height.
+//
+// Quiet periods (treadmill): bar is full viewport at 0.06 opacity.
+//   Mark drifts from viewport top → bottom over the full period duration.
+//   At quiet-night progress > 0.85, a second mark (#now-mark-2) descends
+//   from above the viewport so it reaches Y=0 exactly at midnight —
+//   seamless handoff to quiet-morning's treadmill.
+//
+// Between / before / after: unchanged from prior behavior.
 // ══════════════════════════════
 function positionConnector(state) {
   const barEl   = document.getElementById('now-bar');
   const markEl  = document.getElementById('now-mark');
   const sidebar = document.getElementById('sidebar');
-  const sepX    = sidebar.getBoundingClientRect().right; // shared center X
+  const sepX    = sidebar.getBoundingClientRect().right;
 
-  if (state.state === 'during') {
-    // Y from track elements only — independent of sidebar translateY
-    const nowRow  = document.querySelector('.period-row.now');
-    const nowName = nowRow && nowRow.querySelector('.period-name');
-    if (!nowRow || !nowName) { barEl.style.display = 'none'; markEl.style.display = 'none'; return; }
+  const BAR_W  = 3;
+  const MARK_W = 18, MARK_H = 3;
 
-    const rowRect  = nowRow.getBoundingClientRect();   // bar extents
-    const nameRect = nowName.getBoundingClientRect();  // crossbar Y
-    const crossY   = nameRect.top + nameRect.height / 2;
-
-    const BAR_W = 3;
+  function setBar(top, height, opacity) {
     barEl.style.left         = (sepX - BAR_W / 2) + 'px';
-    barEl.style.top          = rowRect.top + 'px';
-    barEl.style.height       = rowRect.height + 'px';
+    barEl.style.top          = top + 'px';
+    barEl.style.height       = height + 'px';
+    barEl.style.opacity      = opacity != null ? String(opacity) : '';
     barEl.style.borderRadius = '0';
     barEl.style.display      = 'block';
+  }
 
-    const MARK_W = 18, MARK_H = 3;
-    markEl.style.left         = (sepX - MARK_W / 2) + 'px';
-    markEl.style.top          = (crossY - MARK_H / 2) + 'px';
-    markEl.style.width        = MARK_W + 'px';
-    markEl.style.height       = MARK_H + 'px';
-    markEl.style.borderRadius = '0';
-    markEl.style.display      = 'block';
+  function setMark(el, y) {
+    el.style.left         = (sepX - MARK_W / 2) + 'px';
+    el.style.top          = (y - MARK_H / 2) + 'px';
+    el.style.width        = MARK_W + 'px';
+    el.style.height       = MARK_H + 'px';
+    el.style.borderRadius = '0';
+    el.style.display      = 'block';
+  }
+
+  function removeSecondMark() {
+    const m2 = document.getElementById('now-mark-2');
+    if (m2) m2.remove();
+  }
+
+  if (state.state === 'during' && state.period.type === 'quiet') {
+    // ── QUIET TREADMILL ──────────────────────────────────
+    const period   = state.period;
+    const elapsed  = nowSecs() - periodStartSecs(period);
+    const duration = periodEndSecs(period) - periodStartSecs(period);
+    const progress = Math.min(elapsed / duration, 1);
+    const markY    = progress * window.innerHeight;
+
+    setBar(0, window.innerHeight, 0.06);
+    setMark(markEl, markY);
+
+    // Midnight handoff: second mark descends so it arrives at Y=0 at midnight
+    if (period.id === 'quiet-night' && progress > 0.85) {
+      const MORNING_DUR = 5 * 3600 + 10 * 60; // quiet-morning = 18600s
+      const secondProgress = (progress - 1.0) * (duration / MORNING_DUR);
+      const secondMarkY    = secondProgress * window.innerHeight;
+
+      let mark2 = document.getElementById('now-mark-2');
+      if (!mark2) {
+        mark2 = document.createElement('div');
+        mark2.id               = 'now-mark-2';
+        mark2.style.position   = 'absolute';
+        mark2.style.background = 'var(--seal)';
+        mark2.style.pointerEvents = 'none';
+        document.getElementById('now-overlay').appendChild(mark2);
+      }
+      setMark(mark2, secondMarkY);
+    } else {
+      removeSecondMark();
+    }
+
+  } else if (state.state === 'during') {
+    // ── NORMAL CONTINUOUS MARK ───────────────────────────
+    removeSecondMark();
+    const nowRow = document.querySelector('.period-row.now');
+    if (!nowRow) { barEl.style.display = 'none'; markEl.style.display = 'none'; return; }
+
+    const rowRect  = nowRow.getBoundingClientRect();
+    const period   = state.period;
+    const elapsed  = nowSecs() - periodStartSecs(period);
+    const duration = periodEndSecs(period) - periodStartSecs(period);
+    const progress = Math.min(elapsed / duration, 1);
+    const markY    = rowRect.top + progress * rowRect.height;
+
+    setBar(rowRect.top, rowRect.height, null);
+    setMark(markEl, markY);
 
   } else if (state.state === 'between') {
+    removeSecondMark();
     const prevRow = document.querySelector(`[data-period-id="${state.prev.id}"]`);
     const nextRow = document.querySelector(`[data-period-id="${state.next.id}"]`);
     if (!prevRow || !nextRow) { barEl.style.display = 'none'; markEl.style.display = 'none'; return; }
@@ -731,31 +825,18 @@ function positionConnector(state) {
     const prevBottom = prevRow.getBoundingClientRect().bottom;
     const nextTop    = nextRow.getBoundingClientRect().top;
     if (nextTop <= prevBottom) { barEl.style.display = 'none'; markEl.style.display = 'none'; return; }
-    const gapMidY = (prevBottom + nextTop) / 2;
 
-    const BAR_W = 3;
-    barEl.style.left         = (sepX - BAR_W / 2) + 'px';
-    barEl.style.top          = prevBottom + 'px';
-    barEl.style.height       = (nextTop - prevBottom) + 'px';
-    barEl.style.borderRadius = '0';
-    barEl.style.display      = 'block';
-
-    const MARK_W = 18, MARK_H = 3;
-    markEl.style.left         = (sepX - MARK_W / 2) + 'px';
-    markEl.style.top          = (gapMidY - MARK_H / 2) + 'px';
-    markEl.style.width        = MARK_W + 'px';
-    markEl.style.height       = MARK_H + 'px';
-    markEl.style.borderRadius = '0';
-    markEl.style.display      = 'block';
+    setBar(prevBottom, nextTop - prevBottom, null);
+    setMark(markEl, (prevBottom + nextTop) / 2);
 
   } else if (state.state === 'before') {
-    // Approach dot: small circle above first row — train approaching
+    removeSecondMark();
     const firstRow = document.querySelector('.period-row');
     if (!firstRow) { barEl.style.display = 'none'; markEl.style.display = 'none'; return; }
     const firstRect = firstRow.getBoundingClientRect();
 
-    barEl.style.display = 'none';
-
+    barEl.style.display  = 'none';
+    barEl.style.opacity  = '';
     markEl.style.width        = '6px';
     markEl.style.height       = '6px';
     markEl.style.borderRadius = '50%';
@@ -764,9 +845,10 @@ function positionConnector(state) {
     markEl.style.display      = 'block';
 
   } else {
-    // after — day is done
+    removeSecondMark();
     barEl.style.display  = 'none';
     markEl.style.display = 'none';
+    barEl.style.opacity  = '';
   }
 }
 
@@ -869,6 +951,9 @@ function tick() {
   const min   = now.getHours() * 60 + now.getMinutes();
 
   _currentState = state; // stored for scroll/resize listeners
+
+  // Quiet mode: dark inversion during 10pm–5:10am
+  document.body.classList.toggle('quiet-mode', state.state === 'during' && state.period.type === 'quiet');
 
   updateClock(now);
   updateSidebar(state, now);
