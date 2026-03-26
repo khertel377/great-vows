@@ -809,7 +809,8 @@ window.addEventListener('scroll', () => {
     _rafPending = true;
     requestAnimationFrame(() => {
       _rafPending = false;
-      positionConnector(_currentState);
+      _refreshConnGeo();
+      positionConnector(_currentState, _connGeo);
       alignSidebar(_currentState);
     });
   }
@@ -839,11 +840,45 @@ function nowSecs() {
 //
 // Between / before / after: unchanged from prior behavior.
 // ══════════════════════════════
-function positionConnector(state) {
+
+// ── CONNECTOR GEOMETRY CACHE ──
+// All getBoundingClientRect() reads happen here — never inside the rAF draw loop.
+// Updated on: track rebuild (minute change), scroll, resize. NOT on the 1s tick.
+// Prevents Safari 18+ layout thrash: DOM writes in tick() then layout reads in
+// positionConnector() forced synchronous reflows that caused jitter on new devices.
+let _connGeo = null;
+
+function _refreshConnGeo() {
+  const state   = _currentState;
+  const sidebar = document.getElementById('sidebar');
+  if (!state || !sidebar) { _connGeo = null; return; }
+
+  const sepX = sidebar.getBoundingClientRect().right;
+  let rowEl = null, morningEl = null;
+
+  if (state.state === 'during') {
+    rowEl = document.querySelector('.period-row.now');
+    if (state.period && state.period.id === 'quiet-night') {
+      morningEl = document.querySelector('[data-period-id="quiet-morning"]');
+    }
+  } else if (state.state === 'between') {
+    rowEl = document.querySelector(`[data-period-id="${state.prev.id}"]`);
+  } else if (state.state === 'before') {
+    rowEl = document.querySelector('.period-row');
+  }
+
+  _connGeo = {
+    sepX,
+    rowRect:     rowEl     ? rowEl.getBoundingClientRect()     : null,
+    morningRect: morningEl ? morningEl.getBoundingClientRect() : null,
+  };
+}
+
+function positionConnector(state, geo) {
   const barEl   = document.getElementById('now-bar');
   const markEl  = document.getElementById('now-mark');
   const sidebar = document.getElementById('sidebar');
-  const sepX    = sidebar.getBoundingClientRect().right;
+  const sepX    = geo ? geo.sepX : sidebar.getBoundingClientRect().right;
 
   const BAR_W  = 3;
   const MARK_W = 18, MARK_H = 3;
@@ -874,9 +909,8 @@ function positionConnector(state) {
   if (state.state === 'during' && state.period.type === 'quiet') {
     // ── QUIET MODE — row-relative geometry ───────────────
     const period    = state.period;
-    const quietRow  = document.querySelector('.period-row.now');
-    if (!quietRow) { barEl.style.display = 'none'; markEl.style.display = 'none'; return; }
-    const rowRect   = quietRow.getBoundingClientRect();
+    const rowRect = geo ? geo.rowRect : (() => { const r = document.querySelector('.period-row.now'); return r ? r.getBoundingClientRect() : null; })();
+    if (!rowRect) { barEl.style.display = 'none'; markEl.style.display = 'none'; return; }
 
     const elapsed  = nowSecs() - periodStartSecs(period);
     const duration = periodEndSecs(period) - periodStartSecs(period);
@@ -896,8 +930,7 @@ function positionConnector(state) {
     // Midnight handoff: second mark tracks where quiet-morning's mark will be
     if (period.id === 'quiet-night' && progress > 0.85) {
       const MORNING_DUR   = 5 * 3600 + 10 * 60; // 18600s
-      const morningRow    = document.querySelector('[data-period-id="quiet-morning"]');
-      const mRect         = morningRow ? morningRow.getBoundingClientRect() : { top: 0, height: rowRect.height };
+      const mRect = (geo && geo.morningRect) ? geo.morningRect : (() => { const r = document.querySelector('[data-period-id="quiet-morning"]'); return r ? r.getBoundingClientRect() : { top: 0, height: rowRect.height }; })();
       const secondElapsed = (progress - 1.0) * duration; // negative seconds from midnight
       const secondMarkY   = mRect.top + (secondElapsed / MORNING_DUR) * mRect.height;
 
@@ -918,10 +951,8 @@ function positionConnector(state) {
   } else if (state.state === 'during') {
     // ── NORMAL CONTINUOUS MARK ───────────────────────────
     removeSecondMark();
-    const nowRow = document.querySelector('.period-row.now');
-    if (!nowRow) { barEl.style.display = 'none'; markEl.style.display = 'none'; return; }
-
-    const rowRect  = nowRow.getBoundingClientRect();
+    const rowRect = geo ? geo.rowRect : (() => { const r = document.querySelector('.period-row.now'); return r ? r.getBoundingClientRect() : null; })();
+    if (!rowRect) { barEl.style.display = 'none'; markEl.style.display = 'none'; return; }
     const period   = state.period;
     const elapsed  = nowSecs() - periodStartSecs(period);
     const duration = periodEndSecs(period) - periodStartSecs(period);
@@ -935,17 +966,15 @@ function positionConnector(state) {
     // Gap between periods: clamp cross to bottom of the period that just ended
     // (progress = 1.0), bar spans its full row. Cross stays put until next period begins.
     removeSecondMark();
-    const prevRow = document.querySelector(`[data-period-id="${state.prev.id}"]`);
-    if (!prevRow) { barEl.style.display = 'none'; markEl.style.display = 'none'; return; }
-    const rowRect = prevRow.getBoundingClientRect();
+    const rowRect = geo ? geo.rowRect : (() => { const r = document.querySelector(`[data-period-id="${state.prev.id}"]`); return r ? r.getBoundingClientRect() : null; })();
+    if (!rowRect) { barEl.style.display = 'none'; markEl.style.display = 'none'; return; }
     setBar(rowRect.top, rowRect.height, null);
     setMark(markEl, rowRect.bottom);
 
   } else if (state.state === 'before') {
     removeSecondMark();
-    const firstRow = document.querySelector('.period-row');
-    if (!firstRow) { barEl.style.display = 'none'; markEl.style.display = 'none'; return; }
-    const firstRect = firstRow.getBoundingClientRect();
+    const firstRect = geo ? geo.rowRect : (() => { const r = document.querySelector('.period-row'); return r ? r.getBoundingClientRect() : null; })();
+    if (!firstRect) { barEl.style.display = 'none'; markEl.style.display = 'none'; return; }
 
     barEl.style.display  = 'none';
     barEl.style.opacity  = '';
@@ -1049,7 +1078,8 @@ function updatePlacedMode() {
 }
 window.addEventListener('resize', updatePlacedMode);
 window.addEventListener('resize', () => {
-  if (_currentState) positionConnector(_currentState);
+  _refreshConnGeo();
+  if (_currentState) positionConnector(_currentState, _connGeo);
   initSidebarAlignment(); // re-baseline clock natural top after resize
   if (_currentState) alignSidebar(_currentState);
 });
@@ -1084,18 +1114,25 @@ function tick() {
   if (min !== _lastMinute || !_trackEverBuilt) {
     buildTrack(state);
     _lastMinute = min;
-    // Re-align after track rebuild — now-row position shifts after scrollToNow settles
-    setTimeout(() => { if (_currentState) alignSidebar(_currentState); }, 60);
+    // Re-align and re-cache geometry after track rebuild — row positions shift after scrollToNow settles
+    setTimeout(() => { if (_currentState) { _refreshConnGeo(); alignSidebar(_currentState); } }, 60);
   }
-
-  positionConnector(state);
 }
 
 tick();
 initSidebarAlignment(); // baseline clock natural top after initial render
+_refreshConnGeo();
 alignSidebar(_currentState);
 window._scheduleTick = tick; // AudioEngine hooks in via this
 setInterval(tick, 1000);
+
+// ── CROSS ANIMATION LOOP ──
+// Runs at 60fps using cached geometry — no getBoundingClientRect() calls per frame.
+// Cache is refreshed on scroll, resize, and minute change (not every second).
+(function _animateCross() {
+  if (_currentState && _connGeo) positionConnector(_currentState, _connGeo);
+  requestAnimationFrame(_animateCross);
+})();
 </script>
 
 <script>
