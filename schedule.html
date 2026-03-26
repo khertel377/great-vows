@@ -960,12 +960,11 @@ function positionConnector(state) {
 // once on load (and re-baselined on resize). Delta is always computed against
 // this fixed reference, so repeated calls don't compound on each other.
 // ══════════════════════════════
-// clockNaturalTop:    clock-display's viewport top with transform zeroed
-// clockNaturalBottom: sidebarNow block's viewport bottom (clock + descender padding)
+// clockNaturalTop:    clock-display's document-Y top with transform zeroed (viewport + scrollY at measurement)
+// clockNaturalBottom: sidebarNow block's document-Y bottom (viewport + scrollY at measurement)
 // Both measured once on load; re-baselined on resize.
-// clock-meta and sidebar-next are position:absolute children of #sidebar (sidebarTop=0 always),
-// so their style.top = viewport Y directly. They're outside #sidebar-content and not
-// affected by its translateY.
+// In alignSidebar(), live getBoundingClientRect() reads have + window.scrollY added before comparing,
+// so all arithmetic is in document space and the delta is scroll-stable.
 let clockNaturalTop    = null;
 let clockNaturalBottom = null;
 
@@ -976,7 +975,7 @@ function initSidebarAlignment() {
   if (!contentEl || !clockDisplayEl || !sidebarNowEl) return;
   contentEl.style.transform = 'translateY(0)';
   // Store as document-space coords (+ scrollY) so the baseline survives scrolling.
-  // alignSidebar() subtracts window.scrollY at use time to get current viewport position.
+  // alignSidebar() adds + window.scrollY to live reads before comparing — all arithmetic in doc space.
   clockNaturalTop    = clockDisplayEl.getBoundingClientRect().top    + window.scrollY;
   clockNaturalBottom = sidebarNowEl.getBoundingClientRect().bottom   + window.scrollY;
 }
@@ -994,7 +993,8 @@ function alignSidebar(state) {
     // Clock: translateY so clock-display top aligns with now period-name top
     const nowNameEl = document.querySelector('.period-row.now .period-name');
     if (nowNameEl) {
-      const delta = nowNameEl.getBoundingClientRect().top - (clockNaturalTop - window.scrollY);
+      const nowNameDocTop = nowNameEl.getBoundingClientRect().top + window.scrollY;
+      const delta = nowNameDocTop - clockNaturalTop;
       contentEl.style.transform = `translateY(${delta}px)`;
     }
 
@@ -1025,10 +1025,10 @@ function alignSidebar(state) {
     // Default: clock at natural position, meta and next stacked below it
     contentEl.style.transform = 'translateY(0)';
     if (clockMetaEl && clockNaturalBottom !== null) {
-      clockMetaEl.style.top = (clockNaturalBottom - window.scrollY) + 'px';
+      clockMetaEl.style.top = clockNaturalBottom + 'px';
     }
     if (sidebarNextEl && clockMetaEl && clockNaturalBottom !== null) {
-      sidebarNextEl.style.top = (clockNaturalBottom - window.scrollY + clockMetaEl.offsetHeight + 8) + 'px';
+      sidebarNextEl.style.top = (clockNaturalBottom + clockMetaEl.offsetHeight + 8) + 'px';
     }
   }
 }
