@@ -72,21 +72,8 @@ body::before {
   z-index: 1;
 }
 
-/* ══════════════════════════════
-   SIDEBAR — sticky panel, always visible in viewport
-══════════════════════════════ */
-#sidebar {
-  width: 280px;
-  flex-shrink: 0;
-  position: sticky;
-  top: 0;
-  height: 100vh;
-  align-self: flex-start;
-  overflow: visible;
-}
-
 .sidebar-header {
-  position: absolute;
+  position: fixed;
   top: 20px;
   left: 20px;
   font-family: var(--mono);
@@ -96,15 +83,8 @@ body::before {
   color: var(--ink);
   opacity: 0.3;
   line-height: 1.6;
-}
-
-/* Wrapper for clock + meta + next — translateY drives scroll-sync alignment */
-#sidebar-content {
-  position: absolute;
-  left: 20px;
-  right: 20px;
-  top: 35%;
-  will-change: transform;
+  z-index: 5;
+  pointer-events: none;
 }
 
 .sidebar-now {
@@ -119,13 +99,11 @@ body::before {
 }
 
 .sidebar-next {
-  position: absolute;
-  left: 20px;
-  right: 20px;
   display: flex;
   align-items: baseline;
   gap: 10px;
   white-space: nowrap;
+  margin-top: 6px;
 }
 
 .next-label {
@@ -167,10 +145,8 @@ body::before {
 .clock-sep.pulse { opacity: 0.85; }
 
 .enter-btn {
-  position: absolute;
-  bottom: 24px;
-  left: 20px;
   display: inline-block;
+  margin-top: 12px;
   font-family: var(--mono);
   font-size: 10px;
   font-weight: 500;
@@ -186,11 +162,18 @@ body::before {
 .enter-btn:hover { opacity: 1; }
 .enter-btn.hidden { display: none; }
 
-/* ── SEPARATOR ── */
-#vline {
-  width: 1px;
-  background: rgba(26,24,20,0.12);
+/* ── PERIOD ROW CELLS ── */
+.period-left {
+  width: 280px;
   flex-shrink: 0;
+  padding: 10px 20px;
+}
+
+.period-right {
+  flex: 1;
+  padding: 10px 16px 10px 24px;
+  border-left: 1px solid rgba(26,24,20,0.12);
+  position: relative;
 }
 
 /* ══════════════════════════════
@@ -198,22 +181,31 @@ body::before {
 ══════════════════════════════ */
 #track {
   flex: 1;
-  padding: 20px 32px 80px 0;
+  padding: 20px 0 80px 0;
 }
 
 /* ── PERIOD ROWS ── */
 .period-row {
-  padding: 10px 16px 10px 24px;
-  border-left: 3px solid transparent;
+  display: flex;
   transition: opacity 0.3s ease;
   cursor: default;
   user-select: none;
-  position: relative;
 }
 
 .period-row.past   { opacity: var(--op-past); }
 .period-row.future { opacity: var(--op-future); }
-.period-row.now    { opacity: 1; }
+.period-row.now    { opacity: 1; position: sticky; top: 38vh; background: var(--paper); z-index: 2; }
+
+/* Tick mark — replaces the JS-positioned cross */
+.period-row.now .period-right::before {
+  content: '';
+  position: absolute;
+  left: -9px;
+  top: 13px;
+  width: 18px;
+  height: 3px;
+  background: var(--seal);
+}
 
 /* Imminent: next period when we're in a gap — slightly brighter */
 .period-row.imminent { opacity: 0.82; }
@@ -303,38 +295,9 @@ body.after-schedule .period-row.past { opacity: 0.18; }
 }
 .period-row.now .audio-dot { opacity: 0.5; }
 
-/* ══════════════════════════════
-   CONNECTOR OVERLAY
-   Cross slides smoothly between positions on period transitions
-══════════════════════════════ */
-#now-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 10;
-}
 
-#now-bar {
-  position: absolute;
-  width: 3px;
-  background: var(--seal);
-  display: none;
-}
-
-#now-mark {
-  position: absolute;
-  background: var(--seal);
-  display: none;
-}
-
-/* Clock meta — AM/PM: position:absolute child of #sidebar, JS sets top */
+/* Clock meta — AM/PM */
 .clock-meta {
-  position: absolute;
-  left: 20px;
-  right: 20px;
   font-family: var(--mono);
   font-size: 12px;
   font-weight: 400;
@@ -344,6 +307,7 @@ body.after-schedule .period-row.past { opacity: 0.18; }
   color: var(--ink);
   opacity: 0.45;
   line-height: 1;
+  margin-top: 4px;
 }
 
 /* ══════════════════════════════
@@ -359,16 +323,14 @@ body.quiet-mode #mobile-clock {
 }
 body.quiet-mode .period-row-meta,
 body.quiet-mode .clock-meta,
-body.quiet-mode #sidebar-next {
+body.quiet-mode .sidebar-next {
   color: rgba(244,240,232,0.35);
 }
-body.quiet-mode #now-bar,
-body.quiet-mode #now-mark,
-body.quiet-mode #now-mark-2 {
-  background: rgba(244,240,232,0.7);
+body.quiet-mode .period-right {
+  border-left-color: rgba(244,240,232,0.12);
 }
-body.quiet-mode #vline {
-  background: rgba(244,240,232,0.12);
+body.quiet-mode .period-row.now .period-right::before {
+  background: rgba(244,240,232,0.7);
 }
 body.quiet-mode .audio-dot { background: rgba(244,240,232,0.9); }
 body.quiet-mode .sidebar-header {
@@ -401,40 +363,10 @@ body.placed .period-row.now .period-name { font-size: 52px; }
 </head>
 <body>
 
+<div class="sidebar-header">San Francisco<br>Zen Center</div>
+
 <div id="layout">
-
-  <aside id="sidebar">
-    <div class="sidebar-header">San Francisco<br>Zen Center</div>
-
-    <div id="sidebar-content">
-      <div class="sidebar-now" id="sidebarNow">
-        <div class="clock-display">
-          <span class="clock-hm" id="clock-hm">--:--</span><span class="clock-sep colon">:</span><span class="clock-sec" id="clock-sec">--</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="clock-meta" id="clock-ampm"></div>
-
-    <div class="sidebar-next" id="sidebar-next">
-      <span class="next-label" id="next-label">Next</span><span class="next-value baseline-probe" id="next-value"></span>
-    </div>
-
-    <a class="enter-btn hidden" id="enterBtn" href="#">Enter service →</a>
-
-  </aside>
-
-  <div id="vline"></div>
-
   <main id="track"></main>
-
-</div>
-
-
-<!-- Fixed viewport overlay — bar and mark share this coordinate space, same separatorX -->
-<div id="now-overlay">
-  <div id="now-bar"></div>
-  <div id="now-mark"></div>
 </div>
 
 <script>
@@ -553,10 +485,15 @@ function formatUntilTomorrow(now) {
 // CLOCK
 // ══════════════════════════════
 function updateClock(now) {
+  const hmEl   = document.getElementById('clock-hm');
+  const secEl  = document.getElementById('clock-sec');
+  const ampmEl = document.getElementById('clock-ampm');
+  if (!hmEl) return; // clock lives in now-row; not yet injected on first tick
+
   const h = now.getHours() % 12 || 12;
-  document.getElementById('clock-hm').textContent   = h + ':' + pad2(now.getMinutes());
-  document.getElementById('clock-sec').textContent  = pad2(now.getSeconds());
-  document.getElementById('clock-ampm').textContent = now.getHours() >= 12 ? 'PM' : 'AM';
+  hmEl.textContent   = h + ':' + pad2(now.getMinutes());
+  secEl.textContent  = pad2(now.getSeconds());
+  ampmEl.textContent = now.getHours() >= 12 ? 'PM' : 'AM';
 
   document.querySelectorAll('.colon').forEach(c => {
     c.classList.add('pulse');
@@ -571,6 +508,7 @@ function updateSidebar(state, now) {
   const nextLabelEl = document.getElementById('next-label');
   const nextValueEl = document.getElementById('next-value');
   const enterBtn    = document.getElementById('enterBtn');
+  if (!nextLabelEl) return; // injected into now-row; absent before first buildTrack
 
   if (state.state === 'during') {
     nextLabelEl.textContent = 'Next';
@@ -664,6 +602,30 @@ function buildTrack(state) {
       setTimeout(() => row.classList.remove('period-enter'), 700);
     }
 
+    const leftEl = document.createElement('div');
+    leftEl.className = 'period-left';
+
+    // Inject clock/info into the now-row's left cell
+    if (rowClass === 'now') {
+      leftEl.innerHTML =
+        '<div class="sidebar-now" id="sidebarNow">' +
+          '<div class="clock-display">' +
+            '<span class="clock-hm" id="clock-hm">--:--</span>' +
+            '<span class="clock-sep colon">:</span>' +
+            '<span class="clock-sec" id="clock-sec">--</span>' +
+          '</div>' +
+        '</div>' +
+        '<div class="clock-meta" id="clock-ampm"></div>' +
+        '<div class="sidebar-next" id="sidebar-next">' +
+          '<span class="next-label" id="next-label">Next</span>' +
+          '<span class="next-value baseline-probe" id="next-value"></span>' +
+        '</div>' +
+        '<a class="enter-btn hidden" id="enterBtn" href="#">Enter service \u2192</a>';
+    }
+
+    const rightEl = document.createElement('div');
+    rightEl.className = 'period-right';
+
     const nameEl = document.createElement('div');
     nameEl.className = 'period-name';
 
@@ -687,8 +649,11 @@ function buildTrack(state) {
     metaEl.className   = 'period-row-meta';
     metaEl.textContent = fmtTime12(p.time) + ' · ' + formatDuration(durMins);
 
-    row.appendChild(nameEl);
-    row.appendChild(metaEl);
+    rightEl.appendChild(nameEl);
+    rightEl.appendChild(metaEl);
+
+    row.appendChild(leftEl);
+    row.appendChild(rightEl);
     track.appendChild(row);
   });
 
@@ -792,10 +757,9 @@ document.getElementById('track').addEventListener('mouseleave', () => {
 });
 
 // ══════════════════════════════
-// SCROLL SURFACING + CONNECTOR
+// SCROLL SURFACING
 // ══════════════════════════════
-let _currentState = null; // kept for scroll/resize connector calls
-let _scrollTimer  = null;
+let _scrollTimer = null;
 window.addEventListener('scroll', () => {
   document.getElementById('track').classList.add('scrolling');
   if (_scrollTimer) clearTimeout(_scrollTimer);
@@ -804,234 +768,6 @@ window.addEventListener('scroll', () => {
   }, 1800);
 }, { passive: true });
 
-// ══════════════════════════════
-// CONNECTOR HELPERS
-// ══════════════════════════════
-function periodStartSecs(p) { return p.time[0] * 3600 + p.time[1] * 60; }
-function periodEndSecs(p)   { return p.end[0]  * 3600 + p.end[1]  * 60; } // [24,0] → 86400
-function nowSecs() {
-  const d = new Date();
-  return d.getHours() * 3600 + d.getMinutes() * 60 + d.getSeconds();
-}
-
-// ══════════════════════════════
-// CONNECTOR — viewport-coords fixed overlay
-//
-// Normal periods: mark drifts continuously from row top → row bottom
-//   proportional to elapsed / duration. Bar spans full row height.
-//
-// Quiet periods (treadmill): bar is full viewport at 0.06 opacity.
-//   Mark drifts from viewport top → bottom over the full period duration.
-//   At quiet-night progress > 0.85, a second mark (#now-mark-2) descends
-//   from above the viewport so it reaches Y=0 exactly at midnight —
-//   seamless handoff to quiet-morning's treadmill.
-//
-// Between / before / after: unchanged from prior behavior.
-// ══════════════════════════════
-
-function positionConnector(state) {
-  const barEl = document.getElementById('now-bar');
-  const markEl = document.getElementById('now-mark');
-  // sidebar CSS: 280px desktop, 50vw mobile portrait (≤600px) — no DOM read needed
-  const sepX = window.innerWidth <= 600 ? window.innerWidth * 0.5 : 280;
-
-  const BAR_W  = 3;
-  const MARK_W = 18, MARK_H = 3;
-
-  function setBar(top, height, opacity) {
-    barEl.style.left         = (sepX - BAR_W / 2) + 'px';
-    barEl.style.top          = top + 'px';
-    barEl.style.height       = height + 'px';
-    barEl.style.opacity      = opacity != null ? String(opacity) : '';
-    barEl.style.borderRadius = '0';
-    barEl.style.display      = 'block';
-  }
-
-  function setMark(el, y) {
-    el.style.left         = (sepX - MARK_W / 2) + 'px';
-    el.style.top          = (y - MARK_H / 2) + 'px';
-    el.style.width        = MARK_W + 'px';
-    el.style.height       = MARK_H + 'px';
-    el.style.borderRadius = '0';
-    el.style.display      = 'block';
-  }
-
-  function removeSecondMark() {
-    const m2 = document.getElementById('now-mark-2');
-    if (m2) m2.remove();
-  }
-
-  if (state.state === 'during' && state.period.type === 'quiet') {
-    // ── QUIET MODE — row-relative geometry ───────────────
-    const period    = state.period;
-    const quietRow  = document.querySelector('.period-row.now');
-    if (!quietRow) { barEl.style.display = 'none'; markEl.style.display = 'none'; return; }
-    const rowRect   = quietRow.getBoundingClientRect();
-
-    const elapsed  = nowSecs() - periodStartSecs(period);
-    const duration = periodEndSecs(period) - periodStartSecs(period);
-    const progress = Math.min(elapsed / duration, 1);
-    const markY    = rowRect.top + progress * rowRect.height;
-
-    // Bar: anchored to row edge, extending to viewport boundary
-    if (period.id === 'quiet-night') {
-      const sab = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--sab')) || 0;
-      setBar(rowRect.top, window.innerHeight - sab - rowRect.top, null);
-    } else {
-      // quiet-morning: row is at top of track, bar from viewport top to row bottom
-      setBar(0, rowRect.bottom, null);
-    }
-    setMark(markEl, markY);
-
-    // Midnight handoff: second mark tracks where quiet-morning's mark will be
-    if (period.id === 'quiet-night' && progress > 0.85) {
-      const MORNING_DUR   = 5 * 3600 + 10 * 60; // 18600s
-      const morningRow    = document.querySelector('[data-period-id="quiet-morning"]');
-      const mRect         = morningRow ? morningRow.getBoundingClientRect() : { top: 0, height: rowRect.height };
-      const secondElapsed = (progress - 1.0) * duration; // negative seconds from midnight
-      const secondMarkY   = mRect.top + (secondElapsed / MORNING_DUR) * mRect.height;
-
-      let mark2 = document.getElementById('now-mark-2');
-      if (!mark2) {
-        mark2 = document.createElement('div');
-        mark2.id               = 'now-mark-2';
-        mark2.style.position   = 'absolute';
-        mark2.style.background = 'var(--seal)';
-        mark2.style.pointerEvents = 'none';
-        document.getElementById('now-overlay').appendChild(mark2);
-      }
-      setMark(mark2, secondMarkY);
-    } else {
-      removeSecondMark();
-    }
-
-  } else if (state.state === 'during') {
-    // ── NORMAL CONTINUOUS MARK ───────────────────────────
-    removeSecondMark();
-    const nowRow = document.querySelector('.period-row.now');
-    if (!nowRow) { barEl.style.display = 'none'; markEl.style.display = 'none'; return; }
-
-    const rowRect  = nowRow.getBoundingClientRect();
-    const period   = state.period;
-    const elapsed  = nowSecs() - periodStartSecs(period);
-    const duration = periodEndSecs(period) - periodStartSecs(period);
-    const progress = Math.min(elapsed / duration, 1);
-    const markY    = rowRect.top + progress * rowRect.height;
-
-    setBar(rowRect.top, rowRect.height, null);
-    setMark(markEl, markY);
-
-  } else if (state.state === 'between') {
-    // Gap between periods: clamp cross to bottom of the period that just ended
-    // (progress = 1.0), bar spans its full row. Cross stays put until next period begins.
-    removeSecondMark();
-    const prevRow = document.querySelector(`[data-period-id="${state.prev.id}"]`);
-    if (!prevRow) { barEl.style.display = 'none'; markEl.style.display = 'none'; return; }
-    const rowRect = prevRow.getBoundingClientRect();
-    setBar(rowRect.top, rowRect.height, null);
-    setMark(markEl, rowRect.bottom);
-
-  } else if (state.state === 'before') {
-    removeSecondMark();
-    const firstRow = document.querySelector('.period-row');
-    if (!firstRow) { barEl.style.display = 'none'; markEl.style.display = 'none'; return; }
-    const firstRect = firstRow.getBoundingClientRect();
-
-    barEl.style.display  = 'none';
-    barEl.style.opacity  = '';
-    markEl.style.width        = '6px';
-    markEl.style.height       = '6px';
-    markEl.style.borderRadius = '50%';
-    markEl.style.top          = (firstRect.top - 10) + 'px';
-    markEl.style.left         = (sepX - 3) + 'px';
-    markEl.style.display      = 'block';
-
-  } else {
-    removeSecondMark();
-    barEl.style.display  = 'none';
-    markEl.style.display = 'none';
-    barEl.style.opacity  = '';
-  }
-}
-
-// ══════════════════════════════
-// SIDEBAR ALIGNMENT
-// clockNaturalTop: the clock's viewport-top with transform zeroed — measured
-// once on load (and re-baselined on resize). Delta is always computed against
-// this fixed reference, so repeated calls don't compound on each other.
-// ══════════════════════════════
-// clockNaturalTop:    clock-display's document-Y top with transform zeroed (viewport + scrollY at measurement)
-// clockNaturalBottom: sidebarNow block's document-Y bottom (viewport + scrollY at measurement)
-// Both measured once on load; re-baselined on resize.
-// In alignSidebar(), live getBoundingClientRect() reads have + window.scrollY added before comparing,
-// so all arithmetic is in document space and the delta is scroll-stable.
-let clockNaturalTop    = null;
-let clockNaturalBottom = null;
-
-function initSidebarAlignment() {
-  const contentEl      = document.getElementById('sidebar-content');
-  const clockDisplayEl = document.querySelector('.clock-display');
-  const sidebarNowEl   = document.getElementById('sidebarNow');
-  if (!contentEl || !clockDisplayEl || !sidebarNowEl) return;
-  contentEl.style.transform = 'translateY(0)';
-  // Store as document-space coords (+ scrollY) so the baseline survives scrolling.
-  // alignSidebar() adds + window.scrollY to live reads before comparing — all arithmetic in doc space.
-  clockNaturalTop    = clockDisplayEl.getBoundingClientRect().top    + window.scrollY;
-  clockNaturalBottom = sidebarNowEl.getBoundingClientRect().bottom   + window.scrollY;
-}
-
-function alignSidebar(state) {
-  // Skip during rubber-band overscroll — let it settle naturally
-  if (window.scrollY < 0 || document.body.scrollTop < 0) return;
-
-  const contentEl     = document.getElementById('sidebar-content');
-  const clockMetaEl   = document.getElementById('clock-ampm');
-  const sidebarNextEl = document.getElementById('sidebar-next');
-  if (!contentEl || clockNaturalTop === null) return;
-
-  if (state.state === 'during') {
-    // Clock: translateY so clock-display top aligns with now period-name top
-    const nowNameEl = document.querySelector('.period-row.now .period-name');
-    if (nowNameEl) {
-      const nowNameDocTop = nowNameEl.getBoundingClientRect().top + window.scrollY;
-      const delta = nowNameDocTop - clockNaturalTop;
-      contentEl.style.transform = `translateY(${delta}px)`;
-    }
-
-    // PM meta: bottom aligns with track meta row's bottom (baseline proxy for single-line)
-    const nowMetaEl = document.querySelector('.period-row.now .period-row-meta');
-    if (nowMetaEl && clockMetaEl) {
-      const trackMetaBottom = nowMetaEl.getBoundingClientRect().bottom;
-      clockMetaEl.style.top = (trackMetaBottom - clockMetaEl.offsetHeight) + 'px';
-    }
-
-    // Next: probe-span baseline — inline elements report actual text-bottom,
-    // not padded block box. Delta converges in one step on every call.
-    const nextNameEl = document.querySelector('.period-row.next-period .period-name');
-    if (nextNameEl && sidebarNextEl) {
-      const probe        = nextNameEl.querySelector('.baseline-probe');
-      const sidebarProbe = sidebarNextEl.querySelector('.baseline-probe');
-      if (probe && sidebarProbe) {
-        const delta = probe.getBoundingClientRect().bottom - sidebarProbe.getBoundingClientRect().bottom;
-        // -4px optical offset: Cormorant has less descender space below baseline than
-        // IBM Plex Mono, so box.bottom sits closer to baseline. Named constant is more
-        // honest than pretending font metrics resolve perfectly.
-        const FONT_DESCENDER_OFFSET = 3;
-        sidebarNextEl.style.top = ((parseFloat(sidebarNextEl.style.top) || 0) + delta - FONT_DESCENDER_OFFSET) + 'px';
-      }
-    }
-
-  } else {
-    // Default: clock at natural position, meta and next stacked below it
-    contentEl.style.transform = 'translateY(0)';
-    if (clockMetaEl && clockNaturalBottom !== null) {
-      clockMetaEl.style.top = clockNaturalBottom + 'px';
-    }
-    if (sidebarNextEl && clockMetaEl && clockNaturalBottom !== null) {
-      sidebarNextEl.style.top = (clockNaturalBottom + clockMetaEl.offsetHeight + 8) + 'px';
-    }
-  }
-}
 
 // ══════════════════════════════
 // PLACED MODE
@@ -1040,10 +776,6 @@ function updatePlacedMode() {
   document.body.classList.toggle('placed', window.innerWidth > window.innerHeight * 1.4);
 }
 window.addEventListener('resize', updatePlacedMode);
-window.addEventListener('resize', () => {
-  initSidebarAlignment(); // re-baseline clock natural top after resize
-  if (_currentState) alignSidebar(_currentState);
-});
 updatePlacedMode();
 
 // ══════════════════════════════
@@ -1055,8 +787,6 @@ function tick() {
   const now   = new Date();
   const state = getScheduleState(now);
   const min   = now.getHours() * 60 + now.getMinutes();
-
-  _currentState = state; // stored for scroll/resize listeners
 
   // Day-specific service routing — update serviceId on each tick so
   // Enter Service link and ambient audio always match today's recording
@@ -1075,24 +805,12 @@ function tick() {
   if (min !== _lastMinute || !_trackEverBuilt) {
     buildTrack(state);
     _lastMinute = min;
-    // Re-align after track rebuild — now-row position shifts after scrollToNow settles
-    setTimeout(() => { if (_currentState) alignSidebar(_currentState); }, 60);
   }
 }
 
 tick();
-initSidebarAlignment(); // baseline clock natural top after initial render
-alignSidebar(_currentState);
 window._scheduleTick = tick; // AudioEngine hooks in via this
 setInterval(tick, 1000);
-
-// ── CROSS ANIMATION LOOP ──
-// Runs at 60fps. getBoundingClientRect() is safe here: rAF fires before
-// setInterval, so no DOM writes have happened in this frame yet.
-(function _animateCross() {
-  if (_currentState) positionConnector(_currentState);
-  requestAnimationFrame(_animateCross);
-})();
 </script>
 
 <script>
@@ -1109,14 +827,8 @@ setInterval(tick, 1000);
 const mobileStyles = document.createElement('style');
 mobileStyles.textContent = `
   @media (max-width: 600px) {
-    /* 50/50 portrait split — sidebar stays visible on left */
-    #sidebar {
-      display: block;
-      width: 50vw;
-      min-width: 0;
-      flex-shrink: 0;
-    }
-    #track { padding: 0 12px 80px 16px; }
+    /* 50/50 portrait split */
+    .period-left { width: 50vw; }
 
     /* Clock 36px on mobile portrait */
     .clock-hm, .clock-sep, .clock-sec { font-size: 36px; }
@@ -1130,16 +842,14 @@ mobileStyles.textContent = `
       to   { font-size: 36px; opacity: 1;   letter-spacing: -0.01em; }
     }
 
-    /* Sidebar header too cramped at 50vw */
+    /* Sidebar header too cramped at mobile */
     .sidebar-header { display: none; }
 
-    .period-row { padding: 10px 0; }
-    .mobile-topbar { display: none !important; }
     #mute-btn { bottom: 16px; right: 16px; }
   }
 
   @media (max-width: 900px) and (orientation: landscape) {
-    #sidebar { min-width: 160px; }
+    .period-left { width: 160px; }
     .clock-hm, .clock-sep, .clock-sec { font-size: 36px !important; }
   }
 
