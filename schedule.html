@@ -1231,6 +1231,7 @@ const AudioEngine = (() => {
     if (ambientAudio) ambientAudio.muted = isMuted;
     if (hanAudio)     hanAudio.muted     = isMuted;
     if (denshoAudio)  denshoAudio.muted  = isMuted;
+    if (wakeupAudio)  wakeupAudio.muted  = isMuted;
   }
 
   /* ── Han ── */
@@ -1352,6 +1353,25 @@ const AudioEngine = (() => {
     denshoAudio.play().catch(() => {});
   }
 
+  /* ── Wake-up bell — plays once at period start, no loop ── */
+  let wakeupPlaying = false;
+  let wakeupAudio   = null;
+
+  function tickWakeup(state) {
+    if (state && state.state === 'during' && state.period.id === 'wake-up-bell') {
+      if (!wakeupPlaying) {
+        wakeupAudio = new Audio('audio/SFZC/koten-and-shinrei-wakeup.mp3');
+        wakeupAudio.volume = isMuted ? 0 : 0.8;
+        wakeupAudio.muted  = isMuted;
+        wakeupAudio.play().catch(() => {});
+        wakeupPlaying = true;
+      }
+    } else {
+      wakeupPlaying = false;
+      if (wakeupAudio && !wakeupAudio.ended) { wakeupAudio.pause(); wakeupAudio = null; }
+    }
+  }
+
   /* ── Enter Service ?t= handoff ── */
   function updateEnterServiceLink() {
     const btn = document.querySelector('[data-enter-service]')
@@ -1397,6 +1417,7 @@ const AudioEngine = (() => {
     const state = typeof getScheduleState === 'function' ? getScheduleState(new Date()) : null;
     const currentPeriodId = state && state.state === 'during' ? state.period.id : null;
 
+    tickWakeup(state);
     tickHan();
     tickAmbient(state);
     tickBell(currentPeriodId);
