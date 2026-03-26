@@ -425,10 +425,11 @@ body.placed .period-row.now .period-name { font-size: 52px; }
 // DATA
 // ══════════════════════════════
 const SCHEDULE = [
-  { id: 'quiet-morning', time: [0,0],   end: [5,10],  name: 'Quiet', type: 'quiet', hasService: false },
-  { id: 'han',                     time: [5,10],  end: [5,20],  name: 'Han',                      type: 'bell',  hasService: false },
-  { id: 'zazen-morning',           time: [5,20],  end: [6,40],  name: 'Zazen',                    type: 'zazen', hasService: false },
-  { id: 'morning-service-monday',  time: [6,40],  end: [7,10],  name: 'Monday Morning Service',   type: 'chant', hasService: true, serviceId: 'morning-service-monday' },
+  { id: 'quiet-morning',  time: [0,0],   end: [4,30],  name: 'Quiet',          type: 'quiet', hasService: false },
+  { id: 'wake-up-bell',   time: [4,30],  end: [4,45],  name: 'Wake-Up Bell',   type: 'bell',  hasService: false },
+  { id: 'han',            time: [4,45],  end: [5,0],   name: 'Han',            type: 'bell',  hasService: false },
+  { id: 'zazen-morning',  time: [5,0],   end: [6,40],  name: 'Zazen',          type: 'zazen', hasService: false },
+  { id: 'morning-service', time: [6,40], end: [7,10],  name: 'Morning Service', type: 'chant', hasService: true, serviceId: 'morning-service-monday' },
   { id: 'breakfast',               time: [7,10],  end: [8,0],   name: 'Breakfast',                type: 'meal',  hasService: false },
   { id: 'work-morning',            time: [8,0],   end: [12,0],  name: 'Work Period',              type: 'work',  hasService: false },
   { id: 'noon-meal',               time: [12,0],  end: [13,0],  name: 'Noon Meal',                type: 'meal',  hasService: false },
@@ -1036,7 +1037,15 @@ function tick() {
 
   _currentState = state; // stored for scroll/resize listeners
 
-  // Quiet mode: dark inversion during 10pm–5:10am
+  // Day-specific service routing — update serviceId on each tick so
+  // Enter Service link and ambient audio always match today's recording
+  const _dayName = ['sunday','monday','tuesday','wednesday','thursday','friday','saturday'][now.getDay()];
+  const _mornSvc = SCHEDULE.find(p => p.id === 'morning-service');
+  if (_mornSvc) _mornSvc.serviceId = `morning-service-${_dayName}`;
+  const _evenSvc = SCHEDULE.find(p => p.id === 'evening-service');
+  if (_evenSvc) _evenSvc.serviceId = `evening-service-${_dayName}`;
+
+  // Quiet mode: dark inversion during 10pm–4:30am
   document.body.classList.toggle('quiet-mode', state.state === 'during' && state.period.type === 'quiet');
 
   updateClock(now);

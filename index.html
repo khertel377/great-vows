@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Great Vows</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
 <style>
@@ -357,6 +357,24 @@ var listeningMode = false;
 var isPlaying = false;
 var tweenRaf = null;
 var isScrubbing = false;
+var _pendingSeekTime = null; // set by ?t= handoff, consumed by tryAutoLoad
+
+// ── Screen Wake Lock ──
+var WakeLock = (function() {
+  var lock = null;
+  function request() {
+    if (!('wakeLock' in navigator)) return;
+    navigator.wakeLock.request('screen').then(function(l) {
+      lock = l;
+      l.addEventListener('release', function() { lock = null; });
+    }).catch(function() {});
+  }
+  function onVisibilityChange() {
+    if (document.visibilityState === 'visible') request();
+  }
+  return { request: request, onVisibilityChange: onVisibilityChange };
+}());
+document.addEventListener('visibilitychange', WakeLock.onVisibilityChange);
 var scrubTimer = null;
 var _trackWindowEnd = 0;
 var lineTranslates = {};
@@ -396,8 +414,59 @@ fetch('chantbook.json')
   })
   .then(function() {
     buildSwitcher();
-    // default to first sangha
     switchSangha(MANIFEST.sanghas[0].id);
+
+    // ── ?service=X&t=Y handoff from schedule.html ──
+    var params = new URLSearchParams(window.location.search);
+    var serviceParam = params.get('service');
+    var tParam = parseFloat(params.get('t') || '0') || 0;
+
+    if (serviceParam) {
+      // Find the service across all loaded sanghas
+      var targetSanghaId = null, targetSvc = null;
+      Object.keys(SANGHAS).forEach(function(id) {
+        if (targetSvc) return;
+        var svc = (SANGHAS[id].services || []).find(function(s) { return s.id === serviceParam; });
+        if (svc) { targetSanghaId = id; targetSvc = svc; }
+      });
+
+      if (targetSvc) {
+        if (targetSanghaId !== MANIFEST.sanghas[0].id) switchSangha(targetSanghaId);
+
+        var isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+        var alreadyUnlocked = sessionStorage.getItem('gv-audio-unlocked');
+
+        if (isTouchDevice && !alreadyUnlocked) {
+          // Show gesture gate — iOS needs a tap before audio can play
+          var overlay = document.createElement('div');
+          overlay.style.cssText = 'position:fixed;inset:0;z-index:500;background:#05060f;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:opacity 0.4s ease;';
+          overlay.innerHTML = '<span style="font-family:\'DM Serif Display\',serif;font-style:italic;font-size:24px;font-weight:400;color:rgba(255,255,255,0.85);letter-spacing:-0.01em;pointer-events:none;">Tap to enter</span>'
+            + '<span style="font-family:\'DM Sans\',sans-serif;font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.28);margin-top:14px;pointer-events:none;">'
+            + (targetSvc.title || serviceParam) + '</span>';
+
+          overlay.addEventListener('click', function() {
+            // Unlock audio context with silent play
+            var silent = new Audio();
+            silent.src = 'data:audio/mp3;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4LjI5LjEwMAAAAAAAAAAAAAAA//OEAAAAAAAAAAAAAAAAAAAAAAAASW5mbwAAAA8AAAACAAACcQCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA//////////////////////////////////////////////////////////////////8AAAA5TGFNZTU4LjI5LjEwMAAAAAAAAAAUgAAAAAAAAAJxKr0QAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//OEZAAAAAAAAAAAAAAAAAAAAAAAWGluZwAAAA8AAAACAAACcQDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDA////////////////////////////////////////////////////////////////////////AAAAAExhdmY1OC4yOS4xMDAAAAAAAAAAAACQAAAAAAAAAnEqvRAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=';
+            silent.volume = 0;
+            silent.play().then(function() { silent.pause(); }).catch(function() {});
+            WakeLock.request();
+            sessionStorage.setItem('gv-audio-unlocked', '1');
+            overlay.style.opacity = '0';
+            setTimeout(function() { overlay.remove(); }, 420);
+            // Load service and seek INSIDE the gesture handler
+            if (tParam > 0) _pendingSeekTime = tParam;
+            loadService(targetSvc);
+          }, { once: true });
+
+          document.body.appendChild(overlay);
+        } else {
+          // Desktop or already-unlocked: load directly
+          if (tParam > 0) _pendingSeekTime = tParam;
+          loadService(targetSvc);
+        }
+      }
+    }
   })
   .catch(function(err) {
     console.error('Could not load chantbook.json:', err);
@@ -729,6 +798,10 @@ function tryAutoLoad(filename) {
     document.getElementById('seekDuration').textContent = formatTime(audioEl.duration);
 
     document.getElementById('tapHint').style.display = 'none';
+    if (_pendingSeekTime !== null) {
+      audioEl.currentTime = Math.max(0, Math.min(_pendingSeekTime, audioEl.duration - 1));
+      _pendingSeekTime = null;
+    }
     audioEl.play();
     isPlaying = true;
     document.getElementById('playPauseBtn').innerHTML = '&#9646;&#9646;';
