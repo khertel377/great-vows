@@ -1,5 +1,5 @@
 # Great Vows — Project State Document
-*Updated after schedule canonization, three-mode system, bell taxonomy, iOS fixes, file hygiene, and all three mode arrays formalized.*
+*Updated after schedule canonization, three-mode system, bell taxonomy, iOS fixes, file hygiene, all three mode arrays formalized, Safari 18+ cross jitter fix, and document-space connector cache.*
 
 ---
 
@@ -170,7 +170,7 @@ const SCHEDULE_STANDARD = [
   { id: 'midday-service',  time: [12,15], end: [12,30], name: 'Mid-day Service',        type: 'chant', hasService: false },
   { id: 'lunch',           time: [12,30], end: [13,15], name: 'Lunch',                  type: 'meal',  hasService: false },
   { id: 'work-afternoon',  time: [13,15], end: [15,0],  name: 'Afternoon Work',         type: 'work',  hasService: false },
-  { id: 'personal',        time: [15,0],  end: [17,15], name: 'Bath / Rest / Personal', type: 'rest',  hasService: false },
+  { id: 'personal',        time: [15,0],  end: [17,15], name: 'Personal Time',          type: 'rest',  hasService: false },
   { id: 'zazen-evening',   time: [17,15], end: [17,50], name: 'Zazen',                  type: 'zazen', hasService: false },
   { id: 'evening-service', time: [17,50], end: [18,0],  name: 'Evening Service',        type: 'chant', hasService: true  },
   { id: 'dinner',          time: [18,0],  end: [19,30], name: 'Dinner',                 type: 'meal',  hasService: false },
@@ -357,6 +357,8 @@ great-vows/
 - try/catch with console logging on every `.play()` call ✅
 - AudioContext health check on every tick — resumes if suspended ✅
 - Thursday Enter button hidden (service audio not yet available) ✅
+- Cross on rAF loop, geometry cached in `_connGeo` — no `getBoundingClientRect()` per frame ✅
+- Row rects stored as document-space coords (+ scrollY); `_docToVp()` converts back each frame ✅
 
 ### Quiet mode
 ```js
@@ -424,13 +426,23 @@ Two families only. Five roles only. No exceptions.
 
 ## Cross Implementation
 
+Cross runs in a `requestAnimationFrame` loop — never in the 1s `setInterval` tick. This prevents Safari 18+ layout thrash (read-after-write in the same task forced synchronous reflow, causing jitter on new devices; older Safari coalesced them).
+
+**Geometry cache (`_connGeo`)** — refreshed on: minute change (post-`buildTrack` setTimeout), resize. NOT on scroll, NOT every second.
+- `_toDocRect(el)` — captures `getBoundingClientRect()` + `window.scrollY` → document-space coords
+- `_docToVp(d)` — subtracts current `window.scrollY` each rAF frame → current viewport coords
+- `sepX` (sidebar right edge) stored as-is — sidebar is `position: sticky`, never drifts with scroll
+
+**Mark position math:**
 ```js
-const elapsed = nowSecs() - periodStartSeconds(period);
+const elapsed  = nowSecs() - periodStartSeconds(period);
 const duration = periodEndSeconds(period) - periodStartSeconds(period);
 const progress = elapsed / duration;
-const markY = rowRect.top + (progress * rowRect.height);
+const markY    = rowRect.top + (progress * rowRect.height); // rowRect is viewport-converted
 ```
 `transition: none` always except temporarily during period boundary crossings (450ms, then removed).
+
+**Scroll handler** — calls `alignSidebar()` only. No `_refreshConnGeo()`, no `positionConnector()`. Cross is time-driven, not scroll-driven.
 
 ---
 
@@ -489,7 +501,7 @@ const markY = rowRect.top + (progress * rowRect.height);
 3. Nothing at the far right of any row
 4. Five type roles, two families, no exceptions
 5. `--seal` red appears exactly twice — bar and mark. Nowhere else.
-6. `alignSidebar()` not on every second tick — scroll and minute change only
+6. `alignSidebar()` not on every second tick — scroll and minute change only. Cross is on rAF, not in tick or scroll handler.
 7. Audio path is `audio/SFZC/` — capital letters, Linux case-sensitive
 8. `audio.muted` not `audio.volume` for iOS compatibility
 9. `getScheduleState(new Date())` — requires Date argument
