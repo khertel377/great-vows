@@ -846,6 +846,19 @@ function nowSecs() {
 // positionConnector() forced synchronous reflows that caused jitter on new devices.
 let _connGeo = null;
 
+// Capture a row's rect in document-space coords (viewport + scrollY).
+// Cache stays valid as the user scrolls; positionConnector converts back each frame.
+function _toDocRect(el) {
+  const r = el.getBoundingClientRect(), sy = window.scrollY;
+  return { top: r.top + sy, bottom: r.bottom + sy, height: r.height };
+}
+// Convert document-space back to current viewport coords. Null-safe.
+function _docToVp(d) {
+  if (!d) return null;
+  const sy = window.scrollY;
+  return { top: d.top - sy, bottom: d.bottom - sy, height: d.height };
+}
+
 function _refreshConnGeo() {
   const state   = _currentState;
   const sidebar = document.getElementById('sidebar');
@@ -867,8 +880,8 @@ function _refreshConnGeo() {
 
   _connGeo = {
     sepX,
-    rowRect:     rowEl     ? rowEl.getBoundingClientRect()     : null,
-    morningRect: morningEl ? morningEl.getBoundingClientRect() : null,
+    rowRect:     rowEl     ? _toDocRect(rowEl)     : null,
+    morningRect: morningEl ? _toDocRect(morningEl) : null,
   };
 }
 
@@ -907,7 +920,7 @@ function positionConnector(state, geo) {
   if (state.state === 'during' && state.period.type === 'quiet') {
     // ── QUIET MODE — row-relative geometry ───────────────
     const period    = state.period;
-    const rowRect = geo ? geo.rowRect : (() => { const r = document.querySelector('.period-row.now'); return r ? r.getBoundingClientRect() : null; })();
+    const rowRect = geo ? _docToVp(geo.rowRect) : (() => { const r = document.querySelector('.period-row.now'); return r ? r.getBoundingClientRect() : null; })();
     if (!rowRect) { barEl.style.display = 'none'; markEl.style.display = 'none'; return; }
 
     const elapsed  = nowSecs() - periodStartSecs(period);
@@ -928,7 +941,7 @@ function positionConnector(state, geo) {
     // Midnight handoff: second mark tracks where quiet-morning's mark will be
     if (period.id === 'quiet-night' && progress > 0.85) {
       const MORNING_DUR   = 5 * 3600 + 10 * 60; // 18600s
-      const mRect = (geo && geo.morningRect) ? geo.morningRect : (() => { const r = document.querySelector('[data-period-id="quiet-morning"]'); return r ? r.getBoundingClientRect() : { top: 0, height: rowRect.height }; })();
+      const mRect = (geo && geo.morningRect) ? _docToVp(geo.morningRect) : (() => { const r = document.querySelector('[data-period-id="quiet-morning"]'); return r ? r.getBoundingClientRect() : { top: 0, height: rowRect.height }; })();
       const secondElapsed = (progress - 1.0) * duration; // negative seconds from midnight
       const secondMarkY   = mRect.top + (secondElapsed / MORNING_DUR) * mRect.height;
 
@@ -949,7 +962,7 @@ function positionConnector(state, geo) {
   } else if (state.state === 'during') {
     // ── NORMAL CONTINUOUS MARK ───────────────────────────
     removeSecondMark();
-    const rowRect = geo ? geo.rowRect : (() => { const r = document.querySelector('.period-row.now'); return r ? r.getBoundingClientRect() : null; })();
+    const rowRect = geo ? _docToVp(geo.rowRect) : (() => { const r = document.querySelector('.period-row.now'); return r ? r.getBoundingClientRect() : null; })();
     if (!rowRect) { barEl.style.display = 'none'; markEl.style.display = 'none'; return; }
     const period   = state.period;
     const elapsed  = nowSecs() - periodStartSecs(period);
@@ -964,14 +977,14 @@ function positionConnector(state, geo) {
     // Gap between periods: clamp cross to bottom of the period that just ended
     // (progress = 1.0), bar spans its full row. Cross stays put until next period begins.
     removeSecondMark();
-    const rowRect = geo ? geo.rowRect : (() => { const r = document.querySelector(`[data-period-id="${state.prev.id}"]`); return r ? r.getBoundingClientRect() : null; })();
+    const rowRect = geo ? _docToVp(geo.rowRect) : (() => { const r = document.querySelector(`[data-period-id="${state.prev.id}"]`); return r ? r.getBoundingClientRect() : null; })();
     if (!rowRect) { barEl.style.display = 'none'; markEl.style.display = 'none'; return; }
     setBar(rowRect.top, rowRect.height, null);
     setMark(markEl, rowRect.bottom);
 
   } else if (state.state === 'before') {
     removeSecondMark();
-    const firstRect = geo ? geo.rowRect : (() => { const r = document.querySelector('.period-row'); return r ? r.getBoundingClientRect() : null; })();
+    const firstRect = geo ? _docToVp(geo.rowRect) : (() => { const r = document.querySelector('.period-row'); return r ? r.getBoundingClientRect() : null; })();
     if (!firstRect) { barEl.style.display = 'none'; markEl.style.display = 'none'; return; }
 
     barEl.style.display  = 'none';
