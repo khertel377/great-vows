@@ -194,21 +194,52 @@ body::before {
 
 .period-row.past   { opacity: var(--op-past); }
 .period-row.future { opacity: var(--op-future); }
-.period-row.now    { opacity: 1; position: sticky; top: 0; background: var(--paper); z-index: 2; }
 
-/* Now-row: red vertical bar on the separator */
-.period-row.now .period-right {
-  border-left: 3px solid var(--seal);
+/* Now-row: grid layout for cross-column alignment without JS */
+.period-row.now {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  grid-template-areas:
+    "clock  name"
+    "ampm   meta"
+    "next   .   "
+    "enter  .   ";
+  position: sticky;
+  top: 0;
+  background: var(--paper);
+  z-index: 2;
+  opacity: 1;
 }
 
-/* Tick mark — anchored to period-name cap height */
+/* Vertical red bar at column boundary */
+.period-row.now::before {
+  content: '';
+  position: absolute;
+  left: 280px;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  transform: translateX(-50%);
+  background: var(--seal);
+  pointer-events: none;
+}
+
+/* Grid area assignments */
+.period-row.now .clock-display   { grid-area: clock; align-self: end;      padding: 10px 20px 0; }
+.period-row.now .clock-meta      { grid-area: ampm;  align-self: baseline; padding: 4px 20px 0; }
+.period-row.now .sidebar-next    { grid-area: next;  align-self: baseline; padding: 6px 20px 0; }
+.period-row.now .enter-btn       { grid-area: enter;                       padding: 0 20px 10px; }
+.period-row.now .period-name     { grid-area: name;  align-self: end;      padding: 10px 24px 0 24px; }
+.period-row.now .period-row-meta { grid-area: meta;  align-self: baseline; padding: 4px 16px 10px 24px; }
+
+/* Tick mark — anchored to period-name, straddles the column boundary bar */
 .period-row.now .period-name {
   position: relative;
 }
 .period-row.now .period-name::before {
   content: '';
   position: absolute;
-  left: -13px; /* bridge the 24px left-padding gap to reach the border */
+  left: -5px;
   top: 0.2em;
   width: 10px;
   height: 3px;
@@ -315,7 +346,6 @@ body.after-schedule .period-row.past { opacity: 0.18; }
   color: var(--ink);
   opacity: 0.45;
   line-height: 1;
-  margin-top: 4px;
 }
 
 /* ══════════════════════════════
@@ -337,9 +367,7 @@ body.quiet-mode .sidebar-next {
 body.quiet-mode .period-right {
   border-left-color: rgba(244,240,232,0.12);
 }
-body.quiet-mode .period-row.now .period-right {
-  border-left-color: rgba(244,240,232,0.7);
-}
+body.quiet-mode .period-row.now::before,
 body.quiet-mode .period-row.now .period-name::before {
   background: rgba(244,240,232,0.7);
 }
@@ -613,30 +641,6 @@ function buildTrack(state) {
       setTimeout(() => row.classList.remove('period-enter'), 700);
     }
 
-    const leftEl = document.createElement('div');
-    leftEl.className = 'period-left';
-
-    // Inject clock/info into the now-row's left cell
-    if (rowClass === 'now') {
-      leftEl.innerHTML =
-        '<div class="sidebar-now" id="sidebarNow">' +
-          '<div class="clock-display">' +
-            '<span class="clock-hm" id="clock-hm">--:--</span>' +
-            '<span class="clock-sep colon">:</span>' +
-            '<span class="clock-sec" id="clock-sec">--</span>' +
-          '</div>' +
-        '</div>' +
-        '<div class="clock-meta" id="clock-ampm"></div>' +
-        '<div class="sidebar-next" id="sidebar-next">' +
-          '<span class="next-label" id="next-label">Next</span>' +
-          '<span class="next-value baseline-probe" id="next-value"></span>' +
-        '</div>' +
-        '<a class="enter-btn hidden" id="enterBtn" href="#">Enter service \u2192</a>';
-    }
-
-    const rightEl = document.createElement('div');
-    rightEl.className = 'period-right';
-
     const nameEl = document.createElement('div');
     nameEl.className = 'period-name';
 
@@ -660,11 +664,52 @@ function buildTrack(state) {
     metaEl.className   = 'period-row-meta';
     metaEl.textContent = fmtTime12(p.time) + ' · ' + formatDuration(durMins);
 
-    rightEl.appendChild(nameEl);
-    rightEl.appendChild(metaEl);
+    if (rowClass === 'now') {
+      // Grid layout — six direct children, no wrapper divs
+      const clockEl = document.createElement('div');
+      clockEl.className = 'clock-display';
+      clockEl.innerHTML =
+        '<span class="clock-hm" id="clock-hm">--:--</span>' +
+        '<span class="clock-sep colon">:</span>' +
+        '<span class="clock-sec" id="clock-sec">--</span>';
 
-    row.appendChild(leftEl);
-    row.appendChild(rightEl);
+      const ampmEl = document.createElement('div');
+      ampmEl.className = 'clock-meta';
+      ampmEl.id = 'clock-ampm';
+
+      const nextEl = document.createElement('div');
+      nextEl.className = 'sidebar-next';
+      nextEl.id = 'sidebar-next';
+      nextEl.innerHTML =
+        '<span class="next-label" id="next-label">Next</span>' +
+        '<span class="next-value baseline-probe" id="next-value"></span>';
+
+      const enterEl = document.createElement('a');
+      enterEl.className = 'enter-btn hidden';
+      enterEl.id = 'enterBtn';
+      enterEl.href = '#';
+      enterEl.textContent = 'Enter service \u2192';
+
+      row.appendChild(clockEl);
+      row.appendChild(ampmEl);
+      row.appendChild(nextEl);
+      row.appendChild(enterEl);
+      row.appendChild(nameEl);
+      row.appendChild(metaEl);
+    } else {
+      // Flex layout — left/right cell wrappers
+      const leftEl = document.createElement('div');
+      leftEl.className = 'period-left';
+
+      const rightEl = document.createElement('div');
+      rightEl.className = 'period-right';
+      rightEl.appendChild(nameEl);
+      rightEl.appendChild(metaEl);
+
+      row.appendChild(leftEl);
+      row.appendChild(rightEl);
+    }
+
     track.appendChild(row);
   });
 
