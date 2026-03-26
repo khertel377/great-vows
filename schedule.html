@@ -809,8 +809,6 @@ window.addEventListener('scroll', () => {
     _rafPending = true;
     requestAnimationFrame(() => {
       _rafPending = false;
-      _refreshConnGeo();
-      positionConnector(_currentState, _connGeo);
       alignSidebar(_currentState);
     });
   }
