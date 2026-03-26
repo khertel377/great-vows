@@ -288,6 +288,20 @@ body.after-schedule .period-row.past { opacity: 0.18; }
   opacity: 0.55;
 }
 
+/* ── AUDIO DOT ── */
+.audio-dot {
+  display: inline-block;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--ink);
+  opacity: 0.3;
+  margin-right: 6px;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+.period-row.now .audio-dot { opacity: 0.5; }
+
 /* ══════════════════════════════
    CONNECTOR OVERLAY
    Cross slides smoothly between positions on period transitions
@@ -354,6 +368,7 @@ body.quiet-mode #now-mark-2 {
 body.quiet-mode #vline {
   background: rgba(244,240,232,0.12);
 }
+body.quiet-mode .audio-dot { background: rgba(244,240,232,0.9); }
 body.quiet-mode .sidebar-header {
   color: rgba(244,240,232,0.9);
 }
@@ -644,13 +659,21 @@ function buildTrack(state) {
 
     const nameEl = document.createElement('div');
     nameEl.className = 'period-name';
+
+    const AUDIO_PERIODS = ['wake-up-bell', 'han', 'morning-service', 'evening-service'];
+    if (AUDIO_PERIODS.includes(p.id)) {
+      const dot = document.createElement('span');
+      dot.className = 'audio-dot';
+      nameEl.appendChild(dot);
+    }
+
     if (isNextPeriod) {
       const probe = document.createElement('span');
       probe.className = 'baseline-probe';
       probe.textContent = p.name;
       nameEl.appendChild(probe);
     } else {
-      nameEl.textContent = p.name;
+      nameEl.appendChild(document.createTextNode(p.name));
     }
 
     const metaEl = document.createElement('div');
