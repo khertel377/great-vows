@@ -573,7 +573,7 @@ function updateSidebar(state, now) {
   if (state.state === 'during') {
     nextLabelEl.textContent = 'Next';
     nextValueEl.textContent = formatNextValue(state.period, now);
-    if (state.period.hasService) {
+    if (state.period.hasService && (typeof AudioEngine === 'undefined' || AudioEngine.isServiceAvailable(state.period.serviceId))) {
       enterBtn.classList.remove('hidden');
       enterBtn.href = 'index.html?service=' + state.period.serviceId;
     } else {
@@ -1205,6 +1205,22 @@ const AudioEngine = (() => {
     densho: BASE + 'temple_sounds-the_densho_bell.mp3',
   };
 
+  /* ── AudioContext health check ──────────────────────────────
+     iOS can suspend the audio session overnight even with wake lock.
+     Keep one AudioContext alive and attempt resume() on each tick
+     so that subsequent play() calls have a chance to succeed. */
+  let _audioCtx = null;
+  function _checkAudioContext() {
+    try {
+      if (!_audioCtx) _audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if (_audioCtx.state === 'suspended') {
+        _audioCtx.resume()
+          .then(() => console.log('[AudioEngine] AudioContext resumed from suspended'))
+          .catch(err => console.warn('[AudioEngine] AudioContext resume failed:', err.name, err.message));
+      }
+    } catch (e) { /* API unavailable */ }
+  }
+
   const SERVICE_AUDIO = {
     'morning-service-monday':  BASE + 'MorningService_Monday.mp4',
     'morning-service-tuesday': BASE + 'MorningService_Tuesday.mp4',
@@ -1298,9 +1314,10 @@ const AudioEngine = (() => {
         hanAudio.loop = true;
         hanAudio.currentTime = elapsed % hanDuration;
       }
-      hanAudio.play().catch(() => {
+      hanAudio.play().catch(err => {
+        console.warn('[AudioEngine] han play() failed:', err.name, err.message);
         document.addEventListener('click', () => {
-          if (hanAudio) hanAudio.play().catch(() => {});
+          if (hanAudio) hanAudio.play().catch(e => console.warn('[AudioEngine] han retry failed:', e.name, e.message));
         }, { once: true });
       });
     }, { once: true });
@@ -1335,11 +1352,12 @@ const AudioEngine = (() => {
       ambientAudio.currentTime = seekTo;
       ambientAudio.play().then(() => {
         fadeIn(ambientAudio, AMBIENT_VOLUME, FADE_DURATION_MS);
-      }).catch(() => {
+      }).catch(err => {
+        console.warn('[AudioEngine] ambient play() failed:', err.name, err.message);
         document.addEventListener('click', () => {
           if (ambientAudio) ambientAudio.play().then(() => {
             fadeIn(ambientAudio, AMBIENT_VOLUME, FADE_DURATION_MS);
-          }).catch(() => {});
+          }).catch(e => console.warn('[AudioEngine] ambient retry failed:', e.name, e.message));
         }, { once: true });
       });
     }, { once: true });
@@ -1358,7 +1376,7 @@ const AudioEngine = (() => {
           if (elapsed >= 0 && elapsed < ambientAudio.duration) ambientAudio.currentTime = elapsed;
         }
       }
-      ambientAudio.play().catch(() => {});
+      ambientAudio.play().catch(err => console.warn('[AudioEngine] ambient visibilitychange resume failed:', err.name, err.message));
     }
   });
 
@@ -1378,7 +1396,7 @@ const AudioEngine = (() => {
     denshoAudio = getAudio(AUDIO_FILES.densho);
     denshoAudio.volume = 1;
     denshoAudio.muted = isMuted;
-    denshoAudio.play().catch(() => {});
+    denshoAudio.play().catch(err => console.warn('[AudioEngine] densho play() failed:', err.name, err.message));
   }
 
   /* ── Wake-up bell — plays once at period start, no loop ── */
@@ -1391,7 +1409,7 @@ const AudioEngine = (() => {
         wakeupAudio = new Audio('audio/SFZC/koten-and-shinrei-wakeup.mp3');
         wakeupAudio.volume = isMuted ? 0 : 0.8;
         wakeupAudio.muted  = isMuted;
-        wakeupAudio.play().catch(() => {});
+        wakeupAudio.play().catch(err => console.warn('[AudioEngine] wakeup play() failed:', err.name, err.message));
         wakeupPlaying = true;
       }
     } else {
@@ -1439,8 +1457,13 @@ const AudioEngine = (() => {
     }
   }
 
+  function isServiceAvailable(serviceId) {
+    return Object.prototype.hasOwnProperty.call(SERVICE_AUDIO, serviceId);
+  }
+
   /* ── Main tick ── */
   function tick() {
+    _checkAudioContext();
     // state.state === 'during' is active-period in this codebase
     const state = typeof getScheduleState === 'function' ? getScheduleState(new Date()) : null;
     const currentPeriodId = state && state.state === 'during' ? state.period.id : null;
@@ -1474,7 +1497,7 @@ const AudioEngine = (() => {
     silent.play().then(() => { silent.pause(); }).catch(() => {});
   }
 
-  return { init, tick, applyMute, unlock };
+  return { init, tick, applyMute, unlock, isServiceAvailable };
 
 })();
 
