@@ -403,11 +403,11 @@ great-vows/
 
 | Role | Font | Size | Weight | Opacity |
 |------|------|------|--------|---------|
-| Headline | Cormorant | 48px now / 18px other | 400 | 1.0 |
-| Meta | IBM Plex Mono | 10px | 400 | 0.45 |
-| Label | Cormorant italic | 13px | 400 | 0.38 |
-| Value | IBM Plex Mono | 11px | 400 | 0.5 |
-| Institutional | IBM Plex Mono | 8px | 400 | 0.3 |
+| Headline | Cormorant | 54px now / 20px other | 400 | 1.0 |
+| Meta | IBM Plex Mono | 12px | 400 | 0.45 |
+| Label | Cormorant italic | 15px | 400 | 0.38 |
+| Value | IBM Plex Mono | 12px | 400 | 0.5 |
+| Institutional | IBM Plex Mono | 10px | 400 | 0.3 |
 
 Two families only. Five roles only. No exceptions.
 
