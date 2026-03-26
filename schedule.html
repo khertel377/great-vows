@@ -194,15 +194,23 @@ body::before {
 
 .period-row.past   { opacity: var(--op-past); }
 .period-row.future { opacity: var(--op-future); }
-.period-row.now    { opacity: 1; position: sticky; top: 38vh; background: var(--paper); z-index: 2; }
+.period-row.now    { opacity: 1; position: sticky; top: 0; background: var(--paper); z-index: 2; }
 
-/* Tick mark — replaces the JS-positioned cross */
-.period-row.now .period-right::before {
+/* Now-row: red vertical bar on the separator */
+.period-row.now .period-right {
+  border-left: 3px solid var(--seal);
+}
+
+/* Tick mark — anchored to period-name cap height */
+.period-row.now .period-name {
+  position: relative;
+}
+.period-row.now .period-name::before {
   content: '';
   position: absolute;
-  left: -9px;
-  top: 13px;
-  width: 18px;
+  left: -13px; /* bridge the 24px left-padding gap to reach the border */
+  top: 0.2em;
+  width: 10px;
   height: 3px;
   background: var(--seal);
 }
@@ -329,7 +337,10 @@ body.quiet-mode .sidebar-next {
 body.quiet-mode .period-right {
   border-left-color: rgba(244,240,232,0.12);
 }
-body.quiet-mode .period-row.now .period-right::before {
+body.quiet-mode .period-row.now .period-right {
+  border-left-color: rgba(244,240,232,0.7);
+}
+body.quiet-mode .period-row.now .period-name::before {
   background: rgba(244,240,232,0.7);
 }
 body.quiet-mode .audio-dot { background: rgba(244,240,232,0.9); }
