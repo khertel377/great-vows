@@ -445,6 +445,14 @@ body.placed .period-row.now .period-name { font-size: 52px; }
 
 <script>
 // ══════════════════════════════
+// DEBUG TIME SHIM
+// ══════════════════════════════
+let _debugOffset = 0;
+function getNow() {
+  return _debugOffset ? new Date(Date.now() + _debugOffset) : new Date();
+}
+
+// ══════════════════════════════
 // DATA
 // ══════════════════════════════
 const SCHEDULE = [
@@ -565,7 +573,7 @@ function updateTickPosition(state) {
   const start = p.time[0] * 3600 + p.time[1] * 60;
   const end   = p.end[0]  * 3600 + p.end[1]  * 60;
   const now   = Date.now() / 1000;
-  const midnight = new Date(); midnight.setHours(0,0,0,0);
+  const midnight = getNow(); midnight.setHours(0,0,0,0);
   const elapsed  = now - (midnight.getTime() / 1000 + start);
   const progress = Math.max(0, Math.min(1, elapsed / (end - start)));
 const nowRow = document.querySelector('.period-row.now');
@@ -652,7 +660,7 @@ function buildTrack(state) {
   const track     = document.getElementById('track');
   const nowId     = state.state === 'during' ? state.period.id : null;
   const newPeriod = nowId !== _lastNowId;
-  const now       = new Date();
+  const now       = getNow();
   const totalMins = now.getHours() * 60 + now.getMinutes();
   const nowIdx    = nowId ? SCHEDULE.findIndex(p => p.id === nowId) : -1;
 
@@ -1003,7 +1011,7 @@ function tickAmbientAudio(currentPeriod) {
 // MAIN TICK
 // ══════════════════════════════
 function tick() {
-  const now   = new Date();
+  const now   = getNow();
   const state = getScheduleState(now);
 
   // Day-specific service routing — update serviceId on each tick so
@@ -1082,7 +1090,7 @@ async function resumeAudioContext() {
 
 function scheduleAudioEvent(url, firesAt) {
   if (!_webAudioCtx) return;
-  const msUntil = firesAt.getTime() - Date.now();
+  const msUntil = firesAt.getTime() - (Date.now() + _debugOffset);
   if (msUntil < 0) return; // already past — skip silently
 
   setTimeout(async () => {
@@ -1103,7 +1111,7 @@ function scheduleAudioEvent(url, firesAt) {
 
 function scheduleUpcomingBells() {
   if (!_webAudioCtx) return;
-  const now = new Date();
+  const now = getNow();
 
   for (const period of SCHEDULE) {
     if (!period.audio) continue;
@@ -1128,7 +1136,7 @@ document.addEventListener('visibilitychange', () => {
 });
 
 function scheduleMidnightReschedule() {
-  const now = new Date();
+  const now = getNow();
   const midnight = new Date(now);
   midnight.setHours(24, 0, 0, 0); // next midnight
   const msUntilMidnight = midnight.getTime() - now.getTime();
@@ -1210,10 +1218,79 @@ mobileStyles.textContent = `
     stroke: var(--ink); fill: none;
     stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round;
   }
+
+  #time-travel-btn {
+    position: fixed;
+    bottom: 24px;
+    right: 68px; /* mute-btn right(24) + width(36) + gap(8) */
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: none;
+    background: var(--paper);
+    opacity: 0.5;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 30;
+    transition: opacity 0.2s;
+    padding: 0;
+  }
+  #time-travel-btn:hover { opacity: 0.7; }
+  #time-travel-btn svg {
+    width: 16px; height: 16px;
+    stroke: var(--ink); fill: none;
+    stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round;
+  }
+  #time-travel-dot {
+    position: absolute;
+    top: 2px;
+    right: -10px;
+  }
+  @media (max-width: 600px) {
+    #time-travel-btn { bottom: 16px; right: 60px; }
+  }
 `;
 document.head.appendChild(mobileStyles);
 
 
+
+/* ── Time-travel debug button ── */
+const ttBtn = document.createElement('button');
+ttBtn.id = 'time-travel-btn';
+ttBtn.title = 'Debug: set time';
+ttBtn.setAttribute('aria-label', 'Debug: set time');
+ttBtn.innerHTML = `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg><span id="time-travel-dot" class="audio-dot" style="display:none"></span>`;
+document.body.appendChild(ttBtn);
+
+const ttInput = document.createElement('input');
+ttInput.type = 'time';
+ttInput.id = 'time-travel-input';
+ttInput.style.cssText = 'position:absolute;opacity:0;pointer-events:none';
+document.body.appendChild(ttInput);
+
+ttBtn.addEventListener('click', () => {
+  if (_debugOffset) {
+    _debugOffset = 0;
+    document.getElementById('time-travel-dot').style.display = 'none';
+    buildTrack(getScheduleState(getNow()));
+    scheduleUpcomingBells();
+    console.log('[debug] time travel cleared — returning to real time');
+  } else {
+    ttInput.click();
+  }
+});
+
+ttInput.addEventListener('change', () => {
+  const [h, m] = ttInput.value.split(':').map(Number);
+  const target = getNow(); target.setHours(h, m, 0, 0);
+  _debugOffset = target - Date.now();
+  document.getElementById('time-travel-dot').style.display = '';
+  buildTrack(getScheduleState(getNow()));
+  scheduleUpcomingBells();
+  console.log('[debug] synthetic time active:', getNow().toTimeString());
+});
 
 /* ── Mute button ── */
 const speakerOnSVG  = `<svg viewBox="0 0 24 24"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>`;
@@ -1281,7 +1358,7 @@ const AudioEngine = (() => {
   let lastPeriodId    = null;
 
   function nowSeconds() {
-    const d = new Date();
+    const d = getNow();
     return d.getHours() * 3600 + d.getMinutes() * 60 + d.getSeconds();
   }
 
@@ -1478,7 +1555,7 @@ const AudioEngine = (() => {
   function updateMobileClock() {
     const mobileClock = document.getElementById('mobile-clock');
     if (!mobileClock) return;
-    const now = new Date();
+    const now = getNow();
     const h = now.getHours() % 12 || 12; // 12h, no padding
     const m = String(now.getMinutes()).padStart(2, '0');
     mobileClock.textContent = `${h}:${m}`;
@@ -1486,7 +1563,7 @@ const AudioEngine = (() => {
     const mobileNext = document.getElementById('mobile-next');
     if (mobileNext) {
       // state.next is the next period in this codebase (not state.nextPeriod)
-      const state = getScheduleState(new Date());
+      const state = getScheduleState(getNow());
       if (state && state.next) {
         const nextMin = state.next.time[0] * 60 + state.next.time[1];
         const nowMin  = now.getHours() * 60 + now.getMinutes();
@@ -1507,7 +1584,7 @@ const AudioEngine = (() => {
   function tick() {
     _checkAudioContext();
     // state.state === 'during' is active-period in this codebase
-    const state = typeof getScheduleState === 'function' ? getScheduleState(new Date()) : null;
+    const state = typeof getScheduleState === 'function' ? getScheduleState(getNow()) : null;
     const currentPeriodId = state && state.state === 'during' ? state.period.id : null;
 
     tickWakeup(state);
