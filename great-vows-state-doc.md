@@ -470,7 +470,7 @@ all three together.
 - `.period-row.now` must have an opaque background (`var(--paper)`) — past rows scroll behind it
 - Quiet mode inversion must also invert the now-row background
 - The vertical red bar is bounded by now-row height — no full-viewport bar. Accepted tradeoff.
-- Tick mark position is CSS em-unit approximate. Current value: `top: 0.38em` on `.period-name::before`. Tune per Cormorant cap-height if type size changes.
+- Tick mark travels top-to-bottom over the period's duration via `--tick-progress` CSS custom property. JS writes a 0–1 float to `.period-row.now` once per second; CSS reads it as `top: calc(var(--tick-progress, 0.1) * 100%)` with `transform: translateY(-50%)` on `.period-name::before`. Default 0.1 keeps the mark visible before JS fires on first load.
 - "Next" baseline alignment with next period title was removed — grid approach inflated now-row height. `sidebar-next` sits below meta row at fixed `margin-top: 8px` instead.
 
 ### Branch

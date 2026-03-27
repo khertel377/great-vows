@@ -240,7 +240,8 @@ body::before {
   content: '';
   position: absolute;
   left: -5px;
-  top: 0.38em;
+  top: calc(var(--tick-progress, 0.1) * 100%);
+  transform: translateY(-50%);
   width: 10px;
   height: 3px;
   background: var(--seal);
@@ -532,6 +533,23 @@ function formatUntilTomorrow(now) {
   const hanMins = han ? han.time[0] * 60 + han.time[1] : 310;
   const nowMins = now.getHours() * 60 + now.getMinutes();
   return 'in ' + formatDuration((24 * 60 - nowMins) + hanMins);
+}
+
+// ══════════════════════════════
+// TICK POSITION
+// ══════════════════════════════
+function updateTickPosition(state) {
+  if (!state || state.state !== 'during') return;
+  const p = state.period;
+  const start = p.time[0] * 3600 + p.time[1] * 60;
+  const end   = p.end[0]  * 3600 + p.end[1]  * 60;
+  const now   = Date.now() / 1000;
+  const midnight = new Date(); midnight.setHours(0,0,0,0);
+  const elapsed  = now - (midnight.getTime() / 1000 + start);
+  const progress = Math.max(0, Math.min(1, elapsed / (end - start)));
+  const nowRow = document.querySelector('.period-row.now');
+  if (!nowRow) return;
+  nowRow.style.setProperty('--tick-progress', progress);
 }
 
 // ══════════════════════════════
@@ -925,6 +943,7 @@ function tick() {
   document.body.classList.toggle('quiet-mode', state.state === 'during' && state.period.type === 'quiet');
 
   updateClock(now);
+  updateTickPosition(state);
   updateSidebar(state, now);
 
   // Rebuild only on period change — not every minute.
