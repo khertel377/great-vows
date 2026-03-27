@@ -1197,9 +1197,9 @@ mobileStyles.textContent = `
   #mute-btn {
     position: fixed;
     bottom: 24px;
-    right: 24px;
-    width: 36px;
-    height: 36px;
+    right: 16px;
+    width: 44px;
+    height: 44px;
     border-radius: 50%;
     border: 0.5px solid rgba(26,24,20,0.2);
     background: rgba(244,240,232,0.92);
@@ -1221,10 +1221,10 @@ mobileStyles.textContent = `
 
   #time-travel-btn {
     position: fixed;
-    bottom: 68px; /* stacked above mute */
-    right: 24px;
-    width: 36px;
-    height: 36px;
+    bottom: 76px; /* mute bottom(24) + mute height(44) + gap(8) */
+    right: 16px;
+    width: 44px;
+    height: 44px;
     border-radius: 50%;
     border: 0.5px solid rgba(26,24,20,0.2);
     background: rgba(244,240,232,0.92);
@@ -1250,7 +1250,7 @@ mobileStyles.textContent = `
   }
   #tt-panel {
     position: fixed;
-    bottom: 112px; /* above time-travel-btn */
+    bottom: 128px; /* time-travel bottom(76) + height(44) + gap(8) */
     right: 16px;
     background: rgba(244,240,232,0.96);
     backdrop-filter: blur(4px);
@@ -1282,8 +1282,8 @@ mobileStyles.textContent = `
     cursor: pointer; font-family: inherit;
   }
   @media (max-width: 600px) {
-    #time-travel-btn { bottom: 60px; right: 16px; }
-    #tt-panel        { bottom: 104px; right: 8px; }
+    #time-travel-btn { bottom: 68px; right: 16px; } /* mute mobile(16) + height(44) + gap(8) */
+    #tt-panel        { bottom: 120px; right: 8px; }
   }
 `;
 document.head.appendChild(mobileStyles);
