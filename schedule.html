@@ -468,7 +468,8 @@ const SCHEDULE = [
   { id: 'dinner',         time: [18,0],  end: [19,30], name: 'Dinner',                type: 'meal',  hasService: false },
   { id: 'zazen-night',    time: [19,30], end: [20,50], name: 'Zazen',                 type: 'zazen', hasService: false },
   { id: 'three-refuges',  time: [20,50], end: [21,0],  name: 'Three Refuges',         type: 'chant', hasService: false },
-  { id: 'firewatch',      time: [21,0],  end: [22,0],  name: 'Firewatch',             type: 'quiet', hasService: false, audio: 'audio/sfzc/konsho-evening-bell.mp3' },
+  { id: 'firewatch-bell',     time: [21,0],  end: [21,30], name: 'Firewatch',             type: 'quiet', hasService: false, audio: 'audio/sfzc/konsho-evening-bell.mp3' },
+  { id: 'firewatch-clappers', time: [21,30], end: [22,0],  name: 'Firewatch',             type: 'quiet', hasService: false, audio: 'audio/sfzc/firewatch-clappers.mp3' },
   { id: 'quiet-night',    time: [22,0],  end: [24,0],  name: 'Quiet',                 type: 'quiet', hasService: false },
 ];
 
@@ -958,26 +959,33 @@ function resolveServiceId(periodId, date) {
 // AMBIENT AUDIO
 // ══════════════════════════════
 function tickAmbientAudio(currentPeriod) {
-  const targetId = currentPeriod?.audio ? currentPeriod.id : null;
-  if (targetId === _ambientPeriodId) return;
+  const periodId = currentPeriod?.id ?? null;
+  if (periodId === _ambientPeriodId) return;
 
+  // Period changed — stop old audio and clear pending flag unconditionally
   if (_ambientAudio) {
     _ambientAudio.pause();
     _ambientAudio = null;
   }
-  _ambientPeriodId = targetId;
-
-  if (currentPeriod?.audio) {
-    _ambientAudio = new Audio(currentPeriod.audio);
-    _ambientAudio.loop = true;
-    _ambientAudio.muted = false;
-    _ambientAudio.play().catch(e => {
-      console.warn('[ambient] play blocked, queuing for next gesture:', e);
-      _pendingAmbientPlay = true;
-    });
-  }
+  _ambientPeriodId = periodId;
+  _pendingAmbientPlay = false;
 
   const dot = document.getElementById('ambient-dot');
+
+  // Only start if this period has audio
+  if (!currentPeriod?.audio) {
+    if (dot) dot.classList.toggle('playing', false);
+    return;
+  }
+
+  _ambientAudio = new Audio(currentPeriod.audio);
+  _ambientAudio.loop = true;
+  _ambientAudio.muted = false;
+  _ambientAudio.play().catch(e => {
+    console.warn('[ambient] play blocked, queuing for next gesture:', e);
+    _pendingAmbientPlay = true;
+  });
+
   if (dot) dot.classList.toggle('playing', !!_ambientAudio);
 }
 
@@ -1039,6 +1047,80 @@ document.addEventListener('click', function retryAmbient() {
       .catch(e => console.warn('[ambient] retry failed:', e));
   }
 });
+
+// ══════════════════════════════
+// WEB AUDIO SCHEDULING — overnight bell scheduler
+// Schedules bell events via AudioContext so they fire after background/idle.
+// Only type:'bell' periods are scheduled here — ambient loops (firewatch etc.)
+// stay on the existing Audio() retry path and are not migrated.
+// ══════════════════════════════
+let _webAudioCtx = null;
+
+function unlockAudioContext() {
+  if (_webAudioCtx) return;
+  try {
+    _webAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  } catch (e) { console.warn('[WebAudio] AudioContext unavailable:', e); }
+}
+
+async function scheduleAudioEvent(url, firesAt) {
+  if (!_webAudioCtx) return;
+  const offsetSeconds = (firesAt.getTime() - Date.now()) / 1000;
+  if (offsetSeconds < 0) return; // already past — skip silently
+
+  try {
+    const response = await fetch(url);
+    const arrayBuffer = await response.arrayBuffer();
+    const audioBuffer = await _webAudioCtx.decodeAudioData(arrayBuffer);
+
+    const source = _webAudioCtx.createBufferSource();
+    source.buffer = audioBuffer;
+    source.connect(_webAudioCtx.destination);
+    source.start(_webAudioCtx.currentTime + offsetSeconds);
+
+    return source; // caller can cancel if needed
+  } catch (e) {
+    console.warn('[WebAudio] scheduleAudioEvent failed for', url, ':', e);
+  }
+}
+
+function scheduleUpcomingBells() {
+  if (!_webAudioCtx) return;
+  const now = new Date();
+
+  for (const period of SCHEDULE) {
+    if (!period.audio) continue;
+    if (period.type !== 'bell') continue; // skip ambient loops (type:'quiet' firewatch etc.)
+
+    const [h, m] = period.time;
+    const firesAt = new Date(now);
+    firesAt.setHours(h, m, 0, 0);
+
+    if (firesAt <= now) continue; // already past today
+
+    console.log('[WebAudio] scheduling', period.id, 'at', firesAt.toLocaleTimeString());
+    scheduleAudioEvent(period.audio, firesAt);
+  }
+}
+
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible' && _webAudioCtx) {
+    if (_webAudioCtx.state === 'suspended') _webAudioCtx.resume();
+    scheduleUpcomingBells(); // safe — already-past events skipped by offset < 0 check
+  }
+});
+
+function scheduleMidnightReschedule() {
+  const now = new Date();
+  const midnight = new Date(now);
+  midnight.setHours(24, 0, 0, 0); // next midnight
+  const msUntilMidnight = midnight.getTime() - now.getTime();
+
+  setTimeout(() => {
+    scheduleUpcomingBells();
+    scheduleMidnightReschedule(); // set up the next night's reschedule
+  }, msUntilMidnight);
+}
 </script>
 
 <script>
@@ -1516,6 +1598,9 @@ document.addEventListener('visibilitychange', WakeLock.onVisibilityChange);
 
   overlay.addEventListener('click', function () {
     AudioEngine.unlock();
+    unlockAudioContext();       // create Web Audio context on first gesture
+    scheduleUpcomingBells();   // schedule all remaining bell events for today
+    scheduleMidnightReschedule(); // queue reschedule at midnight for next day
     WakeLock.request(); // user gesture — same tap acquires wake lock
     sessionStorage.setItem('gv-audio-unlocked', '1');
     overlay.style.opacity = '0';

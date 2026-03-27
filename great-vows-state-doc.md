@@ -1,5 +1,5 @@
 # Great Vows — Project State Document
-*Updated after schedule canonization, three-mode system, bell taxonomy, iOS fixes, file hygiene, all three mode arrays formalized, Safari 18+ cross jitter fix, sticky now-row architecture, konsho evening bell loop, ambient audio engine, audio dot, git case-sensitivity fix, audio files committed to repo, ambient audio retry logic fix, and audio dot alignment fix (March 2026).*
+*Updated after schedule canonization, three-mode system, bell taxonomy, iOS fixes, file hygiene, all three mode arrays formalized, Safari 18+ cross jitter fix, sticky now-row architecture, konsho evening bell loop, ambient audio engine, audio dot, git case-sensitivity fix, audio files committed to repo, ambient audio retry logic fix, audio dot alignment fix, Web Audio overnight bell scheduling, midnight reschedule, ambient audio stop bug fix, and firewatch split (March 2026).*
 
 ---
 
@@ -145,7 +145,8 @@ const SCHEDULE_CASUAL = [
   { id: 'evening-service', time: [17,50], end: [18,10], name: 'Evening Service',      type: 'chant', hasService: true  },
   { id: 'dinner',          time: [18,10], end: [20,50], name: 'Dinner',               type: 'meal',  hasService: false },
   { id: 'three-refuges',   time: [20,50], end: [21,0],  name: 'Three Refuges',        type: 'chant', hasService: false },
-  { id: 'firewatch',       time: [21,0],  end: [22,0],  name: 'Firewatch',            type: 'quiet', hasService: false },
+  { id: 'firewatch-bell',     time: [21,0],  end: [21,30], name: 'Firewatch',            type: 'quiet', hasService: false, audio: 'audio/sfzc/konsho-evening-bell.mp3' },
+  { id: 'firewatch-clappers', time: [21,30], end: [22,0],  name: 'Firewatch',            type: 'quiet', hasService: false, audio: 'audio/sfzc/firewatch-clappers.mp3' },
   { id: 'quiet-night',     time: [22,0],  end: [24,0],  name: 'Quiet',                type: 'quiet', hasService: false },
 ];
 ```
@@ -176,7 +177,8 @@ const SCHEDULE_STANDARD = [
   { id: 'dinner',          time: [18,0],  end: [19,30], name: 'Dinner',                 type: 'meal',  hasService: false },
   { id: 'zazen-night',     time: [19,30], end: [20,50], name: 'Zazen',                  type: 'zazen', hasService: false },
   { id: 'three-refuges',   time: [20,50], end: [21,0],  name: 'Three Refuges',          type: 'chant', hasService: false },
-  { id: 'firewatch',       time: [21,0],  end: [22,0],  name: 'Firewatch',              type: 'quiet', hasService: false },
+  { id: 'firewatch-bell',     time: [21,0],  end: [21,30], name: 'Firewatch',              type: 'quiet', hasService: false, audio: 'audio/sfzc/konsho-evening-bell.mp3' },
+  { id: 'firewatch-clappers', time: [21,30], end: [22,0],  name: 'Firewatch',              type: 'quiet', hasService: false, audio: 'audio/sfzc/firewatch-clappers.mp3' },
   { id: 'quiet-night',     time: [22,0],  end: [24,0],  name: 'Quiet',                  type: 'quiet', hasService: false },
 ];
 ```
@@ -218,7 +220,8 @@ const SCHEDULE_INTENSIVE = [
   { id: 'rest-4',           time: [19,30], end: [19,30], name: 'Rest',             type: 'rest',  hasService: false },
   { id: 'zazen-5',          time: [19,30], end: [20,55], name: 'Zazen',            type: 'zazen', hasService: false },
   { id: 'three-refuges',    time: [20,55], end: [21,0],  name: 'Three Refuges',    type: 'chant', hasService: false },
-  { id: 'firewatch',        time: [21,0],  end: [22,0],  name: 'Firewatch',        type: 'quiet', hasService: false },
+  { id: 'firewatch-bell',     time: [21,0],  end: [21,30], name: 'Firewatch',        type: 'quiet', hasService: false, audio: 'audio/sfzc/konsho-evening-bell.mp3' },
+  { id: 'firewatch-clappers', time: [21,30], end: [22,0],  name: 'Firewatch',        type: 'quiet', hasService: false, audio: 'audio/sfzc/firewatch-clappers.mp3' },
   { id: 'quiet-night',      time: [22,0],  end: [24,0],  name: 'Quiet',            type: 'quiet', hasService: false },
 ];
 ```
@@ -257,7 +260,7 @@ Future: generate correct koten pattern programmatically for any schedule time.
 - 🔍 Meal bell — may need field recording
 - 🔍 Railroad bell — Freesound likely
 - 🔍 Work meeting drum — unique pattern, worth recording; watch haptic candidate
-- 🔍 Hyoshigi clappers — `kaishaku-clappers-meal.m4a` extracted from Eiheiji, confirm usability
+- 🎙 Hyoshigi clappers — needs dedicated edit/recording for `firewatch-clappers.mp3` (wired in schedule, file pending)
 
 ---
 
@@ -523,7 +526,8 @@ Stops old loop, starts new `Audio()` with `loop = true`.
 Any period with an `audio:` field automatically gets ambient playback + track dot.
 
 Current ambient periods:
-- `firewatch` (all three mode arrays) → `audio/sfzc/konsho-evening-bell.mp3`
+- `firewatch-bell` (all three mode arrays) → `audio/sfzc/konsho-evening-bell.mp3`
+- `firewatch-clappers` (all three mode arrays) → `audio/sfzc/firewatch-clappers.mp3` ← placeholder, file pending
 
 **Retry logic:** `.play()` is blocked by autoplay policy until a user gesture.
 When blocked, `_pendingAmbientPlay = true`. Two retry paths:
@@ -548,6 +552,15 @@ Whole row is the tap target; `.audio-dot` is visual only.
 Morning/evening service rows not wired (no `data-audio`, `hasService` lookup
 removed — those dots are visual-only until service audio dev tool is built).
 Console unlock step removed — tap itself sets `sessionStorage`.
+
+### Web Audio scheduling — working
+`unlockAudioContext()` creates `_webAudioCtx` (top-level, separate from `AudioEngine._audioCtx`) on first user gesture. `scheduleAudioEvent(url, firesAt)` fetches and decodes the audio file, then fires it via `BufferSource.start()` at the precise future offset. `scheduleUpcomingBells()` iterates `SCHEDULE`, skips past events and non-bell periods (`type !== 'bell'`), and schedules all remaining bell events for the day — no time cap.
+
+**Midnight reschedule:** `scheduleMidnightReschedule()` sets a `setTimeout` to midnight; when it fires it calls `scheduleUpcomingBells()` for the new day and resets itself. Called once from the overlay tap alongside `scheduleUpcomingBells()`.
+
+**Ambient loops excluded:** `firewatch-bell` and `firewatch-clappers` (`type: 'quiet'`) stay on the `Audio()` retry path — not scheduled here.
+
+**visibilitychange:** Resumes `_webAudioCtx` if suspended and calls `scheduleUpcomingBells()` on return from background (already-past events skipped by `offsetSeconds < 0` check).
 
 ### Near term
 - Mode switcher UI: drop in `SCHEDULE_CASUAL` or `SCHEDULE_INTENSIVE` from this doc
