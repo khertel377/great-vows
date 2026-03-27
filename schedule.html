@@ -335,6 +335,16 @@ body.after-schedule .period-row.past { opacity: 0.18; }
 }
 .period-row.now .audio-dot { opacity: 0.5; }
 
+/* Dev tool: clickable dot on rows with audio */
+[data-audio] .audio-dot { cursor: pointer; }
+@keyframes audioDotPulse {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50%       { opacity: 0.9; transform: scale(1.8); }
+}
+.period-row.playing .audio-dot {
+  animation: audioDotPulse 1.2s ease-in-out infinite;
+}
+
 
 /* Clock meta — AM/PM */
 .clock-meta {
@@ -632,6 +642,7 @@ function buildTrack(state) {
     const row = document.createElement('div');
     row.dataset.periodId = p.id; // enables [data-period-id] selector
     row.dataset.idx      = i;
+    if (p.audio) row.dataset.audio = p.audio;
     row.style.minHeight  = rowHeight(durMins) + 'px';
 
     let classes = 'period-row ' + rowClass;
@@ -737,6 +748,50 @@ function buildTrack(state) {
 
   _lastNowId      = nowId;
   _trackEverBuilt = true;
+  wireAudioDevTool();
+}
+
+// ══════════════════════════════
+// TAP-TO-PLAY DEV TOOL
+// Wired on every buildTrack() rebuild. Click an audio dot to play/pause.
+// Requires sessionStorage['gv-audio-unlocked'] = '1' (set manually in console,
+// or via AudioEngine.unlock() after a user gesture).
+// ══════════════════════════════
+function wireAudioDevTool() {
+  document.querySelectorAll('.period-row[data-audio]').forEach(row => {
+    const dot = row.querySelector('.audio-dot');
+    if (!dot) return;
+    dot.addEventListener('click', (e) => {
+      e.stopPropagation();
+
+      if (!sessionStorage.getItem('gv-audio-unlocked')) {
+        console.warn('[DevTool] Audio not unlocked. Run in console: sessionStorage.setItem(\'gv-audio-unlocked\',\'1\')');
+        return;
+      }
+
+      // Toggle: pause if this row is already playing
+      if (_devPlayingRow === row && _devAudio && !_devAudio.paused) {
+        _devAudio.pause();
+        row.classList.remove('playing');
+        _devPlayingRow = null;
+        return;
+      }
+
+      // Stop whatever was playing before
+      if (_devAudio) _devAudio.pause();
+      if (_devPlayingRow) _devPlayingRow.classList.remove('playing');
+
+      if (!_devAudio) _devAudio = new Audio();
+      _devAudio.src = row.dataset.audio;
+      _devAudio.onended = () => {
+        row.classList.remove('playing');
+        _devPlayingRow = null;
+      };
+      _devAudio.play().catch(err => console.warn('[DevTool] play() failed:', err.message));
+      row.classList.add('playing');
+      _devPlayingRow = row;
+    });
+  });
 }
 
 // ══════════════════════════════
@@ -820,7 +875,9 @@ document.getElementById('track').addEventListener('mouseleave', () => {
 // ══════════════════════════════
 // SCROLL SURFACING
 // ══════════════════════════════
-let _scrollTimer = null;
+let _scrollTimer   = null;
+let _devAudio      = null; // shared audio element for tap-to-play dev tool
+let _devPlayingRow = null;
 window.addEventListener('scroll', () => {
   document.getElementById('track').classList.add('scrolling');
   if (_scrollTimer) clearTimeout(_scrollTimer);
