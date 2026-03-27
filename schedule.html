@@ -879,8 +879,6 @@ function _showMeta(row) {
   if (_metaVisibleRow && _metaVisibleRow !== row) _clearMeta(_metaVisibleRow);
   row.classList.add('meta-visible');
   _metaVisibleRow = row;
-  if (_metaDismissTimer) clearTimeout(_metaDismissTimer);
-  _metaDismissTimer = setTimeout(() => _clearMeta(row), 2000);
 }
 
 function _attachHoverHandlers() {
@@ -896,11 +894,12 @@ function _attachHoverHandlers() {
     });
   });
 
-  // ── Mobile only: tap + scroll-center meta reveal ──
-  const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+  // ── Mobile only: tap to reveal meta (single open) ──
+  // hover: none matches touch-primary devices without UA sniffing
+  const isTouchDevice = window.matchMedia('(hover: none)').matches;
   if (!isTouchDevice) return;
 
-  // Tap: toggle meta on the tapped row; clear others
+  // Tap: toggle this row; close any other open row (single-open)
   rows.forEach(row => {
     row.addEventListener('click', (e) => {
       if (row.classList.contains('now')) return;
@@ -911,25 +910,6 @@ function _attachHoverHandlers() {
       }
       e.stopPropagation();
     });
-  });
-
-  // Scroll-center observer: fires when a row crosses the center ±20% band
-  if (_metaObserver) _metaObserver.disconnect();
-  const centerBand = Math.round(window.innerHeight * 0.2);
-  _metaObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (!entry.isIntersecting) return;
-      const row = entry.target;
-      if (row.classList.contains('now')) return;
-      _showMeta(row);
-    });
-  }, {
-    rootMargin: `-${Math.round(window.innerHeight * 0.5 - centerBand)}px 0px -${Math.round(window.innerHeight * 0.5 - centerBand)}px 0px`,
-    threshold: 0,
-  });
-
-  rows.forEach(row => {
-    if (!row.classList.contains('now')) _metaObserver.observe(row);
   });
 }
 
