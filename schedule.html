@@ -890,6 +890,8 @@ mobileStyles.textContent = `
   @media (max-width: 600px) {
     /* 50/50 portrait split */
     .period-left { width: 50vw; }
+    .period-row.now { grid-template-columns: 50vw 1fr; }
+    .period-row.now::before { left: 50vw; }
 
     /* Clock 36px on mobile portrait */
     .clock-hm, .clock-sep, .clock-sec { font-size: 36px; }
@@ -911,6 +913,8 @@ mobileStyles.textContent = `
 
   @media (max-width: 900px) and (orientation: landscape) {
     .period-left { width: 160px; }
+    .period-row.now { grid-template-columns: 160px 1fr; }
+    .period-row.now::before { left: 160px; }
     .clock-hm, .clock-sep, .clock-sec { font-size: 36px !important; }
   }
 
