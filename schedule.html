@@ -1251,8 +1251,9 @@ mobileStyles.textContent = `
   }
   #tt-panel {
     position: fixed;
-    bottom: 128px; /* time-travel bottom(76) + height(44) + gap(8) */
-    right: 16px;
+    bottom: 128px;
+    left: 16px;
+    right: auto;
     background: rgba(244,240,232,0.96);
     backdrop-filter: blur(4px);
     border: 0.5px solid rgba(26,24,20,0.2);
@@ -1284,7 +1285,7 @@ mobileStyles.textContent = `
   }
   @media (max-width: 600px) {
     #time-travel-btn { bottom: calc(16px + env(safe-area-inset-bottom, 0px)); left: 16px; right: auto; }
-    #tt-panel        { bottom: calc(120px + env(safe-area-inset-bottom, 0px)); right: 8px; }
+    #tt-panel        { bottom: calc(120px + env(safe-area-inset-bottom, 0px)); left: 8px; right: auto; }
   }
 `;
 document.head.appendChild(mobileStyles);
