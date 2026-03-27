@@ -232,19 +232,17 @@ body::before {
 .period-row.now .period-name     { grid-area: name;  align-self: end;      padding: 10px 24px 0 24px; }
 .period-row.now .period-row-meta { grid-area: meta;  align-self: baseline; padding: 6px 16px 10px 24px; }
 
-/* Tick mark — anchored to period-name, straddles the column boundary bar */
-.period-row.now .period-name {
-  position: relative;
-}
-.period-row.now .period-name::before {
+/* Tick mark — on now-row itself so it travels full row height */
+.period-row.now::after {
   content: '';
   position: absolute;
-  left: -5px;
+  left: 280px;
   top: calc(var(--tick-progress, 0.1) * 100%);
-  transform: translateY(-50%);
+  transform: translate(-50%, -50%);
   width: 10px;
   height: 3px;
   background: var(--seal);
+  pointer-events: none;
 }
 
 
@@ -405,7 +403,7 @@ body.quiet-mode .period-right {
   border-left-color: rgba(244,240,232,0.12);
 }
 body.quiet-mode .period-row.now::before,
-body.quiet-mode .period-row.now .period-name::before {
+body.quiet-mode .period-row.now::after {
   background: rgba(244,240,232,0.7);
 }
 body.quiet-mode .audio-dot { background: rgba(244,240,232,0.9); }
@@ -570,7 +568,7 @@ function updateTickPosition(state) {
   const midnight = new Date(); midnight.setHours(0,0,0,0);
   const elapsed  = now - (midnight.getTime() / 1000 + start);
   const progress = Math.max(0, Math.min(1, elapsed / (end - start)));
-  const nowRow = document.querySelector('.period-row.now');
+const nowRow = document.querySelector('.period-row.now');
   if (!nowRow) return;
   nowRow.style.setProperty('--tick-progress', progress);
 }
@@ -1144,6 +1142,7 @@ mobileStyles.textContent = `
     .period-left { width: 50vw; }
     .period-row.now { grid-template-columns: 50vw 1fr; }
     .period-row.now::before { left: 50vw; }
+    .period-row.now::after  { left: 50vw; }
 
     /* Clock 36px on mobile portrait */
     .clock-hm, .clock-sep, .clock-sec { font-size: 36px; }
@@ -1167,6 +1166,7 @@ mobileStyles.textContent = `
     .period-left { width: 160px; }
     .period-row.now { grid-template-columns: 160px 1fr; }
     .period-row.now::before { left: 160px; }
+    .period-row.now::after  { left: 160px; }
     .clock-hm, .clock-sep, .clock-sec { font-size: 36px !important; }
   }
 
