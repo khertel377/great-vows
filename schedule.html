@@ -1183,7 +1183,7 @@ mobileStyles.textContent = `
     /* Sidebar header too cramped at mobile */
     .sidebar-header { display: none; }
 
-    #mute-btn { bottom: 16px; right: 16px; }
+    #mute-btn { bottom: calc(16px + env(safe-area-inset-bottom, 0px)); right: 16px; }
   }
 
   @media (max-width: 900px) and (orientation: landscape) {
@@ -1196,7 +1196,7 @@ mobileStyles.textContent = `
 
   #mute-btn {
     position: fixed;
-    bottom: 24px;
+    bottom: calc(24px + env(safe-area-inset-bottom, 0px));
     right: 16px;
     width: 44px;
     height: 44px;
@@ -1221,7 +1221,7 @@ mobileStyles.textContent = `
 
   #time-travel-btn {
     position: fixed;
-    bottom: 76px; /* mute bottom(24) + mute height(44) + gap(8) */
+    bottom: calc(76px + env(safe-area-inset-bottom, 0px)); /* mute bottom(24) + height(44) + gap(8) */
     right: 16px;
     width: 44px;
     height: 44px;
@@ -1282,8 +1282,8 @@ mobileStyles.textContent = `
     cursor: pointer; font-family: inherit;
   }
   @media (max-width: 600px) {
-    #time-travel-btn { bottom: 68px; right: 16px; } /* mute mobile(16) + height(44) + gap(8) */
-    #tt-panel        { bottom: 120px; right: 8px; }
+    #time-travel-btn { bottom: calc(68px + env(safe-area-inset-bottom, 0px)); right: 16px; }
+    #tt-panel        { bottom: calc(120px + env(safe-area-inset-bottom, 0px)); right: 8px; }
   }
 `;
 document.head.appendChild(mobileStyles);
