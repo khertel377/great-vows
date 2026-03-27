@@ -1003,6 +1003,16 @@ function tick() {
   updateSidebar(state, now);
   tickAmbientAudio(state.state === 'during' ? state.period : null);
 
+  if (_pendingAmbientPlay && _ambientAudio) {
+    _ambientAudio.play()
+      .then(() => {
+        _pendingAmbientPlay = false;
+        const dot = document.getElementById('ambient-dot');
+        if (dot) dot.classList.add('playing');
+      })
+      .catch(() => {}); // silent — will retry next tick
+  }
+
   // Rebuild only on period change — not every minute.
   // Row classes and clock DOM are stable within a period; only the period
   // identity crossing a boundary requires a full track rebuild.
@@ -1016,18 +1026,19 @@ tick();
 window._scheduleTick = tick; // AudioEngine hooks in via this
 setInterval(tick, 1000);
 
-// Immediate ambient attempt on load — queues deferred retry if blocked
-const _loadState = getScheduleState(new Date());
-tickAmbientAudio(_loadState.state === 'during' ? _loadState.period : null);
-
-// Retry blocked ambient play on first user gesture
+// Retry blocked ambient play on any user gesture — persistent, no-ops when nothing pending
 document.addEventListener('click', function retryAmbient() {
   if (_pendingAmbientPlay && _ambientAudio) {
-    _ambientAudio.play().catch(e => console.warn('[ambient] retry failed:', e));
-    _pendingAmbientPlay = false;
+    _ambientAudio.play()
+      .then(() => {
+        _pendingAmbientPlay = false;
+        const dot = document.getElementById('ambient-dot');
+        if (dot) dot.classList.add('playing');
+        console.log('[ambient] retry succeeded');
+      })
+      .catch(e => console.warn('[ambient] retry failed:', e));
   }
-  document.removeEventListener('click', retryAmbient);
-}, { once: true });
+});
 </script>
 
 <script>
