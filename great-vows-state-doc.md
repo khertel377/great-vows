@@ -1,5 +1,5 @@
 # Great Vows — Project State Document
-*Updated after schedule canonization, three-mode system, bell taxonomy, iOS fixes, file hygiene, all three mode arrays formalized, Safari 18+ cross jitter fix, and document-space connector cache.*
+*Updated after schedule canonization, three-mode system, bell taxonomy, iOS fixes, file hygiene, all three mode arrays formalized, Safari 18+ cross jitter fix, and sticky now-row architecture (March 2026).*
 
 ---
 
@@ -424,25 +424,57 @@ Two families only. Five roles only. No exceptions.
 
 ---
 
-## Cross Implementation
+## Cross Implementation — Architecture Decision (March 2026)
 
-Cross runs in a `requestAnimationFrame` loop — never in the 1s `setInterval` tick. This prevents Safari 18+ layout thrash (read-after-write in the same task forced synchronous reflow, causing jitter on new devices; older Safari coalesced them).
+### What changed
+Replaced the fixed overlay + JS positioning system with a CSS sticky now-row.
+Deleted ~280 lines: `positionConnector()`, the rAF loop, `alignSidebar()`,
+`initSidebarAlignment()`, `_refreshConnGeo()`, `_connGeo`, `clockNaturalTop`,
+`clockNaturalBottom`, and all coordinate cache vars.
 
-**Geometry cache (`_connGeo`)** — refreshed on: minute change (post-`buildTrack` setTimeout), resize. NOT on scroll, NOT every second.
-- `_toDocRect(el)` — captures `getBoundingClientRect()` + `window.scrollY` → document-space coords
-- `_docToVp(d)` — subtracts current `window.scrollY` each rAF frame → current viewport coords
-- `sepX` (sidebar right edge) stored as-is — sidebar is `position: sticky`, never drifts with scroll
+### Old architecture (removed)
+- `#sidebar`: position sticky, contained clock
+- `#now-overlay`: position fixed, full viewport
+- `#now-bar` / `#now-mark`: position absolute children of overlay
+- JS ran at 60fps reading `getBoundingClientRect()` to sync three separate layout contexts
+- Root cause of all scroll jitter bugs: read-after-write layout thrash, iOS `scrollY` unreliable during momentum scroll, dynamic viewport geometry invalidating stored coords
 
-**Mark position math:**
-```js
-const elapsed  = nowSecs() - periodStartSeconds(period);
-const duration = periodEndSeconds(period) - periodStartSeconds(period);
-const progress = elapsed / duration;
-const markY    = rowRect.top + (progress * rowRect.height); // rowRect is viewport-converted
+### New architecture (current)
+- Every `.period-row` is `display: flex` with `.period-left` and `.period-right`
+- `.period-row.now` gets `display: grid` (2-column, 4 named rows), `position: sticky; top: 0; background: var(--paper)`
+- Clock and info live as direct grid children of the now-row, injected by `buildTrack()`
+- Cross is pure CSS: `::before` on `.period-row.now` for the full-height red bar at the column boundary; `::before` on `.period-name` for the tick mark
+- Zero JS positioning. Browser compositor handles sticky natively.
+
+### Grid layout (now-row only)
+```css
+.period-row.now {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  grid-template-areas:
+    "clock  name "
+    "ampm   meta "
+    "next   .    "
+    "enter  .    ";
+}
 ```
-`transition: none` always except temporarily during period boundary crossings (450ms, then removed).
+Six grid children: `.clock-display`, `.clock-meta`, `.sidebar-next`, `.enter-btn`, `.period-name`, `.period-row-meta`.
 
-**Scroll handler** — calls `alignSidebar()` only. No `_refreshConnGeo()`, no `positionConnector()`. Cross is time-driven, not scroll-driven.
+### Key constraints
+- `.period-row.now` must have an opaque background (`var(--paper)`) — past rows scroll behind it
+- Quiet mode inversion must also invert the now-row background
+- The vertical red bar is bounded by now-row height — no full-viewport bar. Accepted tradeoff.
+- Tick mark position is CSS em-unit approximate. Current value: `top: 0.38em` on `.period-name::before`. Tune per Cormorant cap-height if type size changes.
+- "Next" baseline alignment with next period title was removed — grid approach inflated now-row height. `sidebar-next` sits below meta row at fixed `margin-top: 8px` instead.
+
+### Branch
+Prototyped on `sticky-now-row` branch. Mobile scroll smoothness is the primary motivation — has not yet been fully validated on new iPhone Safari (pending).
+
+### Do not regress
+- No JS positioning of any kind for the cross or clock
+- No rAF loops for layout
+- No `getBoundingClientRect()` in scroll handlers
+- No fixed overlay for the now indicator
 
 ---
 
@@ -500,8 +532,8 @@ const markY    = rowRect.top + (progress * rowRect.height); // rowRect is viewpo
 2. The cross has no CSS transition during normal operation
 3. Nothing at the far right of any row
 4. Five type roles, two families, no exceptions
-5. `--seal` red appears exactly twice — bar and mark. Nowhere else.
-6. `alignSidebar()` not on every second tick — scroll and minute change only. Cross is on rAF, not in tick or scroll handler.
+5. `--seal` red appears exactly twice — the vertical bar (`::before` on `.period-row.now`) and the tick mark (`::before` on `.period-name`). Nowhere else.
+6. No JS positioning for the cross or clock. No rAF loops for layout. No `getBoundingClientRect()` in scroll handlers. Cross is pure CSS sticky.
 7. Audio path is `audio/SFZC/` — capital letters, Linux case-sensitive
 8. `audio.muted` not `audio.volume` for iOS compatibility
 9. `getScheduleState(new Date())` — requires Date argument
