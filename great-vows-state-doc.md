@@ -460,6 +460,12 @@ Deleted ~280 lines: `positionConnector()`, the rAF loop, `alignSidebar()`,
 ```
 Six grid children: `.clock-display`, `.clock-meta`, `.sidebar-next`, `.enter-btn`, `.period-name`, `.period-row-meta`.
 
+### Mobile column width — keep in sync
+Three values must always match at every breakpoint: `.period-left { width }`,
+`.period-row.now { grid-template-columns }`, and `.period-row.now::before { left }`.
+All three live in the same `mobileStyles` block. If column width changes, update
+all three together.
+
 ### Key constraints
 - `.period-row.now` must have an opaque background (`var(--paper)`) — past rows scroll behind it
 - Quiet mode inversion must also invert the now-row background
