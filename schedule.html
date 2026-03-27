@@ -1221,8 +1221,9 @@ mobileStyles.textContent = `
 
   #time-travel-btn {
     position: fixed;
-    bottom: calc(76px + env(safe-area-inset-bottom, 0px)); /* mute bottom(24) + height(44) + gap(8) */
-    right: 16px;
+    bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+    left: 24px;
+    right: auto;
     width: 44px;
     height: 44px;
     border-radius: 50%;
@@ -1282,7 +1283,7 @@ mobileStyles.textContent = `
     cursor: pointer; font-family: inherit;
   }
   @media (max-width: 600px) {
-    #time-travel-btn { bottom: calc(68px + env(safe-area-inset-bottom, 0px)); right: 16px; }
+    #time-travel-btn { bottom: calc(16px + env(safe-area-inset-bottom, 0px)); left: 16px; right: auto; }
     #tt-panel        { bottom: calc(120px + env(safe-area-inset-bottom, 0px)); right: 8px; }
   }
 `;
