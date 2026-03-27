@@ -554,13 +554,13 @@ removed — those dots are visual-only until service audio dev tool is built).
 Console unlock step removed — tap itself sets `sessionStorage`.
 
 ### Web Audio scheduling — working
-`unlockAudioContext()` creates `_webAudioCtx` (top-level, separate from `AudioEngine._audioCtx`) on first user gesture. `scheduleAudioEvent(url, firesAt)` fetches and decodes the audio file, then fires it via `BufferSource.start()` at the precise future offset. `scheduleUpcomingBells()` iterates `SCHEDULE`, skips past events and non-bell periods (`type !== 'bell'`), and schedules all remaining bell events for the day — no time cap.
+`unlockAudioContext()` creates `_webAudioCtx` on first user gesture. `scheduleAudioEvent(url, firesAt)` computes `msUntil = firesAt - Date.now()` and calls `setTimeout(msUntil)`. At fire time, the callback calls `resumeAudioContext()` (new helper — resumes `_webAudioCtx` if suspended), then fetches, decodes, and plays the buffer immediately via `src.start(0)`. No future AudioContext offset is computed at scheduling time. This makes bell timing immune to AudioContext clock drift over long sessions and to overnight context suspension, even on foreground tabs. `scheduleUpcomingBells()` and `scheduleMidnightReschedule()` are unchanged. `visibilitychange` calls `resumeAudioContext()` via the same helper.
 
 **Midnight reschedule:** `scheduleMidnightReschedule()` sets a `setTimeout` to midnight; when it fires it calls `scheduleUpcomingBells()` for the new day and resets itself. Called once from the overlay tap alongside `scheduleUpcomingBells()`.
 
 **Ambient loops excluded:** `firewatch-bell` and `firewatch-clappers` (`type: 'quiet'`) stay on the `Audio()` retry path — not scheduled here.
 
-**visibilitychange:** Resumes `_webAudioCtx` if suspended and calls `scheduleUpcomingBells()` on return from background (already-past events skipped by `offsetSeconds < 0` check).
+**Remaining failure mode:** If iOS kills the tab entirely overnight, scheduled bells are lost — no web app can recover from this. setTimeout drift on a foreground, screen-on tab is negligible (well under 1 second). Next solution class if needed: Service Worker + Web Push.
 
 ### Near term
 - Mode switcher UI: drop in `SCHEDULE_CASUAL` or `SCHEDULE_INTENSIVE` from this doc
