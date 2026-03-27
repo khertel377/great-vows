@@ -572,7 +572,7 @@ function updateTickPosition(state) {
   const p = state.period;
   const start = p.time[0] * 3600 + p.time[1] * 60;
   const end   = p.end[0]  * 3600 + p.end[1]  * 60;
-  const now   = Date.now() / 1000;
+  const now   = (Date.now() + _debugOffset) / 1000;
   const midnight = getNow(); midnight.setHours(0,0,0,0);
   const elapsed  = now - (midnight.getTime() / 1000 + start);
   const progress = Math.max(0, Math.min(1, elapsed / (end - start)));
@@ -1260,9 +1260,28 @@ mobileStyles.textContent = `
     border: none;
     padding: 0;
   }
+  #time-travel-confirm {
+    position: fixed;
+    bottom: 68px; /* above the clock button */
+    right: 52px;
+    background: rgba(244,240,232,0.96);
+    backdrop-filter: blur(4px);
+    border: 0.5px solid rgba(26,24,20,0.2);
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--ink);
+    cursor: pointer;
+    z-index: 32;
+    display: none;
+    white-space: nowrap;
+  }
+  #time-travel-confirm:hover { opacity: 0.7; }
   @media (max-width: 600px) {
-    #time-travel-btn   { bottom: 16px; right: 60px; }
-    #time-travel-input { bottom: 16px; right: 60px; }
+    #time-travel-btn     { bottom: 16px; right: 60px; }
+    #time-travel-input   { bottom: 16px; right: 60px; }
+    #time-travel-confirm { bottom: 60px; right: 44px; }
   }
 `;
 document.head.appendChild(mobileStyles);
@@ -1282,6 +1301,12 @@ ttInput.type = 'time';
 ttInput.id = 'time-travel-input';
 document.body.appendChild(ttInput);
 
+const ttConfirm = document.createElement('button');
+ttConfirm.id = 'time-travel-confirm';
+document.body.appendChild(ttConfirm);
+
+let _pendingOffset = 0;
+
 // Input overlays button (z-index: 31 > button z-index: 30).
 // When offset is active, pointer-events:none lets button clicks through for clear.
 function _ttSetPickerActive(active) {
@@ -1293,7 +1318,9 @@ ttBtn.addEventListener('click', () => {
   // Only fires when _debugOffset is set (input has pointer-events:none)
   if (_debugOffset) {
     _debugOffset = 0;
+    _pendingOffset = 0;
     document.getElementById('time-travel-dot').style.display = 'none';
+    ttConfirm.style.display = 'none';
     _ttSetPickerActive(true);
     buildTrack(getScheduleState(getNow()));
     scheduleUpcomingBells();
@@ -1303,8 +1330,17 @@ ttBtn.addEventListener('click', () => {
 
 ttInput.addEventListener('change', () => {
   const [h, m] = ttInput.value.split(':').map(Number);
-  const target = getNow(); target.setHours(h, m, 0, 0);
-  _debugOffset = target - Date.now();
+  const target = new Date(); target.setHours(h, m, 0, 0);
+  _pendingOffset = target - Date.now();
+  // Format label: "Go to 4:30 AM →"
+  const label12h = (h % 12 || 12) + ':' + String(m).padStart(2, '0') + ' ' + (h >= 12 ? 'PM' : 'AM');
+  ttConfirm.textContent = 'Go to ' + label12h + ' →';
+  ttConfirm.style.display = '';
+});
+
+ttConfirm.addEventListener('click', () => {
+  _debugOffset = _pendingOffset;
+  ttConfirm.style.display = 'none';
   document.getElementById('time-travel-dot').style.display = '';
   _ttSetPickerActive(false); // let button clicks through to clear handler
   buildTrack(getScheduleState(getNow()));
