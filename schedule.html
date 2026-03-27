@@ -710,13 +710,16 @@ function buildTrack(state) {
       nameEl.appendChild(dot);
     }
 
-    if (isNextPeriod) {
-      const probe = document.createElement('span');
-      probe.className = 'baseline-probe';
-      probe.textContent = p.name;
-      nameEl.appendChild(probe);
-    } else {
-      nameEl.appendChild(document.createTextNode(p.name));
+    const isContinuation = i > 0 && SCHEDULE[i - 1].name === p.name;
+    if (!isContinuation) {
+      if (isNextPeriod) {
+        const probe = document.createElement('span');
+        probe.className = 'baseline-probe';
+        probe.textContent = p.name;
+        nameEl.appendChild(probe);
+      } else {
+        nameEl.appendChild(document.createTextNode(p.name));
+      }
     }
 
     const metaEl = document.createElement('div');
