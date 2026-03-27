@@ -349,13 +349,15 @@ body.after-schedule .period-row.past { opacity: 0.18; }
 
 /* Ambient audio status dot — lives in clock-meta, gold when loop is playing */
 #ambient-dot {
+  position: absolute;
+  top: 2px;
+  right: -10px;
   width: 6px;
   height: 6px;
+  border-radius: 50%;
   background: #B8860B;
   opacity: 0;
   transition: opacity 0.4s;
-  margin-right: 5px;
-  vertical-align: middle;
 }
 #ambient-dot.playing {
   opacity: 0.6;
@@ -368,6 +370,7 @@ body.after-schedule .period-row.past { opacity: 0.18; }
 
 /* Clock meta — AM/PM */
 .clock-meta {
+  position: relative;
   font-family: var(--mono);
   font-size: 12px;
   font-weight: 400;
