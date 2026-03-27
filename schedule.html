@@ -448,8 +448,8 @@ body.placed .period-row.now .period-name { font-size: 52px; }
 // ══════════════════════════════
 const SCHEDULE = [
   { id: 'quiet-morning',  time: [0,0],   end: [4,30],  name: 'Quiet',                 type: 'quiet', hasService: false },
-  { id: 'wake-up-bell',   time: [4,30],  end: [4,45],  name: 'Wake-up Bell',          type: 'bell',  hasService: false, audio: 'audio/SFZC/koten-and-shinrei-wakeup.mp3' },
-  { id: 'han',            time: [4,45],  end: [5,0],   name: 'Han',                   type: 'bell',  hasService: false, audio: 'audio/SFZC/temple_sounds-the_han.mp3' },
+  { id: 'wake-up-bell',   time: [4,30],  end: [4,45],  name: 'Wake-up Bell',          type: 'bell',  hasService: false, audio: 'audio/sfzc/koten-and-shinrei-wakeup.mp3' },
+  { id: 'han',            time: [4,45],  end: [5,0],   name: 'Han',                   type: 'bell',  hasService: false, audio: 'audio/sfzc/temple_sounds-the_han.mp3' },
   { id: 'zazen-morning',  time: [5,0],   end: [6,30],  name: 'Zazen',                 type: 'zazen', hasService: false },
   { id: 'morning-service',time: [6,30],  end: [7,0],   name: 'Morning Service',       type: 'chant', hasService: true  },
   { id: 'soji',           time: [7,0],   end: [7,20],  name: 'Soji',                  type: 'work',  hasService: false },
@@ -465,7 +465,7 @@ const SCHEDULE = [
   { id: 'dinner',         time: [18,0],  end: [19,30], name: 'Dinner',                type: 'meal',  hasService: false },
   { id: 'zazen-night',    time: [19,30], end: [20,50], name: 'Zazen',                 type: 'zazen', hasService: false },
   { id: 'three-refuges',  time: [20,50], end: [21,0],  name: 'Three Refuges',         type: 'chant', hasService: false },
-  { id: 'firewatch',      time: [21,0],  end: [22,0],  name: 'Firewatch',             type: 'quiet', hasService: false, audio: 'audio/SFZC/konsho-evening-bell.mp3' },
+  { id: 'firewatch',      time: [21,0],  end: [22,0],  name: 'Firewatch',             type: 'quiet', hasService: false, audio: 'audio/sfzc/konsho-evening-bell.mp3' },
   { id: 'quiet-night',    time: [22,0],  end: [24,0],  name: 'Quiet',                 type: 'quiet', hasService: false },
 ];
 
@@ -1108,7 +1108,7 @@ muteBtn.addEventListener('click', () => {
    ══════════════════════════════════════════════════════════ */
 const AudioEngine = (() => {
 
-  const BASE = 'audio/SFZC/';
+  const BASE = 'audio/sfzc/';
 
   const AUDIO_FILES = {
     han:    BASE + 'temple_sounds-the_han.mp3',
@@ -1316,7 +1316,7 @@ const AudioEngine = (() => {
   function tickWakeup(state) {
     if (state && state.state === 'during' && state.period.id === 'wake-up-bell') {
       if (!wakeupPlaying) {
-        wakeupAudio = new Audio('audio/SFZC/koten-and-shinrei-wakeup.mp3');
+        wakeupAudio = new Audio('audio/sfzc/koten-and-shinrei-wakeup.mp3');
         wakeupAudio.volume = isMuted ? 0 : 0.8;
         wakeupAudio.muted  = isMuted;
         wakeupAudio.play().catch(err => console.warn('[AudioEngine] wakeup play() failed:', err.name, err.message));

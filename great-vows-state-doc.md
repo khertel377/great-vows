@@ -15,7 +15,7 @@ There is exactly **one** state doc: `great-vows-state-doc.md` in the project roo
 ### General file hygiene rules
 - No duplicate HTML files — `schedule copy.html` and similar are traps
 - One canonical file per purpose. Experiment on a git branch, not a copy.
-- Audio path is `audio/SFZC/` — capital letters, always. Linux is case-sensitive.
+- Audio path is `audio/sfzc/` — lowercase. Linux/GitHub Pages is case-sensitive.
 - Source recordings over 50MB: local only + .gitignore. Extracted clips under 5MB: in repo.
 
 ---
@@ -135,7 +135,7 @@ The practitioner who sits in the morning, moves through their day, and comes hom
 ```javascript
 const SCHEDULE_CASUAL = [
   { id: 'quiet-morning',   time: [0,0],   end: [5,10],  name: 'Quiet',               type: 'quiet', hasService: false },
-  { id: 'han',             time: [5,10],  end: [5,20],  name: 'Han',                  type: 'bell',  hasService: false, audio: 'audio/SFZC/temple_sounds-the_han.mp3' },
+  { id: 'han',             time: [5,10],  end: [5,20],  name: 'Han',                  type: 'bell',  hasService: false, audio: 'audio/sfzc/temple_sounds-the_han.mp3' },
   { id: 'zazen-morning',   time: [5,20],  end: [6,20],  name: 'Zazen',                type: 'zazen', hasService: false },
   { id: 'morning-service', time: [6,20],  end: [6,50],  name: 'Morning Service',      type: 'chant', hasService: true  },
   { id: 'breakfast',       time: [6,50],  end: [8,0],   name: 'Breakfast',            type: 'meal',  hasService: false },
@@ -159,8 +159,8 @@ Full monastic day. GGF/GDT consensus schedule. Three zazen periods, full work st
 ```javascript
 const SCHEDULE_STANDARD = [
   { id: 'quiet-morning',   time: [0,0],   end: [4,30],  name: 'Quiet',                 type: 'quiet', hasService: false },
-  { id: 'wake-up-bell',    time: [4,30],  end: [4,45],  name: 'Wake-up Bell',           type: 'bell',  hasService: false, audio: 'audio/SFZC/koten-and-shinrei-wakeup.mp3' },
-  { id: 'han',             time: [4,45],  end: [5,0],   name: 'Han',                    type: 'bell',  hasService: false, audio: 'audio/SFZC/temple_sounds-the_han.mp3' },
+  { id: 'wake-up-bell',    time: [4,30],  end: [4,45],  name: 'Wake-up Bell',           type: 'bell',  hasService: false, audio: 'audio/sfzc/koten-and-shinrei-wakeup.mp3' },
+  { id: 'han',             time: [4,45],  end: [5,0],   name: 'Han',                    type: 'bell',  hasService: false, audio: 'audio/sfzc/temple_sounds-the_han.mp3' },
   { id: 'zazen-morning',   time: [5,0],   end: [6,30],  name: 'Zazen',                  type: 'zazen', hasService: false },
   { id: 'morning-service', time: [6,30],  end: [7,0],   name: 'Morning Service',        type: 'chant', hasService: true  },
   { id: 'soji',            time: [7,0],   end: [7,20],  name: 'Soji',                   type: 'work',  hasService: false },
@@ -198,8 +198,8 @@ Zenshinji-style. Five or six zazen periods. Work compressed or absent. Rest repl
 ```javascript
 const SCHEDULE_INTENSIVE = [
   { id: 'quiet-morning',    time: [0,0],   end: [4,25],  name: 'Quiet',            type: 'quiet', hasService: false },
-  { id: 'wake-up-bell',     time: [4,25],  end: [4,50],  name: 'Wake-up Bell',     type: 'bell',  hasService: false, audio: 'audio/SFZC/koten-and-shinrei-wakeup.mp3' },
-  { id: 'han',              time: [4,50],  end: [5,0],   name: 'Han',              type: 'bell',  hasService: false, audio: 'audio/SFZC/temple_sounds-the_han.mp3' },
+  { id: 'wake-up-bell',     time: [4,25],  end: [4,50],  name: 'Wake-up Bell',     type: 'bell',  hasService: false, audio: 'audio/sfzc/koten-and-shinrei-wakeup.mp3' },
+  { id: 'han',              time: [4,50],  end: [5,0],   name: 'Han',              type: 'bell',  hasService: false, audio: 'audio/sfzc/temple_sounds-the_han.mp3' },
   { id: 'zazen-1',          time: [5,0],   end: [6,30],  name: 'Zazen',            type: 'zazen', hasService: false },
   { id: 'morning-service',  time: [6,30],  end: [7,0],   name: 'Morning Service',  type: 'chant', hasService: true  },
   { id: 'soji',             time: [7,0],   end: [7,20],  name: 'Soji',             type: 'work',  hasService: false },
@@ -253,7 +253,7 @@ Future: generate correct koten pattern programmatically for any schedule time.
 **Sound side quest status:**
 - ✅ Han — in app (`temple_sounds-the_han.mp3`)
 - ✅ Densho — in app
-- ✅ Koten + shinrei wake-up — `audio/SFZC/koten-and-shinrei-wakeup.mp3` (polished, ready)
+- ✅ Koten + shinrei wake-up — `audio/sfzc/koten-and-shinrei-wakeup.mp3` (polished, ready)
 - 🔍 Meal bell — may need field recording
 - 🔍 Railroad bell — Freesound likely
 - 🔍 Work meeting drum — unique pattern, worth recording; watch haptic candidate
@@ -308,7 +308,7 @@ great-vows/
   sanghas/
     sfzc.json
     zcd.json
-  audio/SFZC/
+  audio/sfzc/
     koten-and-shinrei-wakeup.mp3  ← polished wake-up bell audio, ready
     Great_Vows.mp3
     MorningService_Monday.mp4
@@ -320,7 +320,7 @@ great-vows/
     temple_sounds-the_han.mp3
     temple_sounds-the_densho_bell.mp3
     temple_sounds-opening_chant.mp3
-  audio/SFZC/clips/
+  audio/sfzc/clips/
   audio/eiheiji-clips/
     koten-time-drum-gong.m4a
     shinrei-hand-bell.m4a
@@ -548,7 +548,7 @@ Console unlock step removed — tap itself sets `sessionStorage`.
 4. Five type roles, two families, no exceptions
 5. `--seal` red appears exactly twice — the vertical bar (`::before` on `.period-row.now`) and the tick mark (`::before` on `.period-name`). Nowhere else.
 6. No JS positioning for the cross or clock. No rAF loops for layout. No `getBoundingClientRect()` in scroll handlers. Cross is pure CSS sticky.
-7. Audio path is `audio/SFZC/` — capital letters, Linux case-sensitive
+7. Audio path is `audio/sfzc/` — lowercase. Linux/GitHub Pages is case-sensitive.
 8. `audio.muted` not `audio.volume` for iOS compatibility
 9. `getScheduleState(new Date())` — requires Date argument
 10. `state.state === 'during'` not `state.type === 'current'`
