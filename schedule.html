@@ -758,16 +758,24 @@ function buildTrack(state) {
 // or via AudioEngine.unlock() after a user gesture).
 // ══════════════════════════════
 function wireAudioDevTool() {
-  document.querySelectorAll('.period-row[data-audio]').forEach(row => {
+  document.querySelectorAll('.period-row').forEach(row => {
     const dot = row.querySelector('.audio-dot');
     if (!dot) return;
     dot.addEventListener('click', (e) => {
       e.stopPropagation();
 
-      if (!sessionStorage.getItem('gv-audio-unlocked')) {
-        console.warn('[DevTool] Audio not unlocked. Run in console: sessionStorage.setItem(\'gv-audio-unlocked\',\'1\')');
-        return;
+      // The tap itself is a user gesture — satisfy iOS unlock requirement
+      sessionStorage.setItem('gv-audio-unlocked', '1');
+
+      // Resolve src: static audio first, then service lookup
+      let src = row.dataset.audio;
+      if (!src) {
+        const period = SCHEDULE.find(p => p.id === row.dataset.periodId);
+        if (period && period.hasService) {
+          src = 'audio/SFZC/' + resolveServiceId(period.id, new Date()) + '.mp4';
+        }
       }
+      if (!src) return;
 
       // Toggle: pause if this row is already playing
       if (_devPlayingRow === row && _devAudio && !_devAudio.paused) {
@@ -782,7 +790,7 @@ function wireAudioDevTool() {
       if (_devPlayingRow) _devPlayingRow.classList.remove('playing');
 
       if (!_devAudio) _devAudio = new Audio();
-      _devAudio.src = row.dataset.audio;
+      _devAudio.src = src;
       _devAudio.onended = () => {
         row.classList.remove('playing');
         _devPlayingRow = null;
@@ -897,6 +905,16 @@ window.addEventListener('resize', updatePlacedMode);
 updatePlacedMode();
 
 // ══════════════════════════════
+// SERVICE ID RESOLVER
+// Returns e.g. 'morning-service-thursday' for today's date.
+// Used by both tick() and wireAudioDevTool().
+// ══════════════════════════════
+function resolveServiceId(periodId, date) {
+  const day = ['sunday','monday','tuesday','wednesday','thursday','friday','saturday'][date.getDay()];
+  return periodId + '-' + day;
+}
+
+// ══════════════════════════════
 // MAIN TICK
 // ══════════════════════════════
 function tick() {
@@ -905,11 +923,10 @@ function tick() {
 
   // Day-specific service routing — update serviceId on each tick so
   // Enter Service link and ambient audio always match today's recording
-  const _dayName = ['sunday','monday','tuesday','wednesday','thursday','friday','saturday'][now.getDay()];
   const _mornSvc = SCHEDULE.find(p => p.id === 'morning-service');
-  if (_mornSvc) _mornSvc.serviceId = `morning-service-${_dayName}`;
+  if (_mornSvc) _mornSvc.serviceId = resolveServiceId('morning-service', now);
   const _evenSvc = SCHEDULE.find(p => p.id === 'evening-service');
-  if (_evenSvc) _evenSvc.serviceId = `evening-service-${_dayName}`;
+  if (_evenSvc) _evenSvc.serviceId = resolveServiceId('evening-service', now);
 
   // Quiet mode: dark inversion during 10pm–4:30am
   document.body.classList.toggle('quiet-mode', state.state === 'during' && state.period.type === 'quiet');
