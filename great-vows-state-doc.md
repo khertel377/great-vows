@@ -1,5 +1,5 @@
 # Great Vows — Project State Document
-*Updated after schedule canonization, three-mode system, bell taxonomy, iOS fixes, file hygiene, all three mode arrays formalized, Safari 18+ cross jitter fix, and sticky now-row architecture (March 2026).*
+*Updated after schedule canonization, three-mode system, bell taxonomy, iOS fixes, file hygiene, all three mode arrays formalized, Safari 18+ cross jitter fix, sticky now-row architecture, konsho evening bell loop, ambient audio engine, audio dot, git case-sensitivity fix, and audio files committed to repo (March 2026).*
 
 ---
 
@@ -15,7 +15,7 @@ There is exactly **one** state doc: `great-vows-state-doc.md` in the project roo
 ### General file hygiene rules
 - No duplicate HTML files — `schedule copy.html` and similar are traps
 - One canonical file per purpose. Experiment on a git branch, not a copy.
-- Audio path is `audio/sfzc/` — lowercase. Linux/GitHub Pages is case-sensitive.
+- Audio path is `audio/sfzc/` — lowercase always. GitHub Pages (Linux) is case-sensitive. macOS git silently ignores case (`core.ignorecase=true` default) — always use `git -c core.ignorecase=false add audio/sfzc/` when adding new audio files.
 - Source recordings over 50MB: local only + .gitignore. Extracted clips under 5MB: in repo.
 
 ---
@@ -509,9 +509,26 @@ Prototyped on `sticky-now-row` branch. Mobile scroll smoothness is the primary m
 ## On the Horizon
 
 ### Immediate (next CC session)
-*(Cleared — all items from previous session done)*
+*(Cleared)*
 
-**Diagnose 4:30 wake-up + han sequence not firing:** Leading suspect is iOS audio context expiring overnight despite wake lock. Instrumentation is now in place (try/catch logging + AudioContext health check). Reproduce by leaving page open overnight; check console at 4:30.
+**Diagnose 4:30 wake-up + han sequence not firing:** Still pending overnight test. Leading suspect is iOS audio context expiring overnight despite wake lock. Instrumentation is in place (try/catch logging + AudioContext health check). Reproduce by leaving page open overnight; check console at 4:30.
+
+### Ambient audio engine — working
+`tickAmbientAudio(currentPeriod)` runs each second from `tick()`.
+Compares `currentPeriod.id` to `_ambientPeriodId` — only acts on transitions.
+Stops old loop, starts new `Audio()` with `loop = true`.
+Any period with an `audio:` field automatically gets ambient playback + track dot.
+
+Current ambient periods:
+- `firewatch` (all three mode arrays) → `audio/sfzc/konsho-evening-bell.mp3`
+
+iOS caveat: `.play()` is blocked until a user gesture. Will silently fail if page
+loads mid-Firewatch before any tap. Future: retry `_ambientAudio.play()` from the
+Enter button or a dedicated unmute gesture.
+
+`#ambient-dot` injected as sibling in `ampmEl`. Pulses gold (#B8860B, opacity 0.6)
+while ambient is playing. Auto-appears on any `audio:`-bearing period — no
+hardcoding required.
 
 ### Dev tap-to-play tool — working
 Click any `.period-row[data-audio]` row to play/pause that period's audio.
@@ -548,7 +565,7 @@ Console unlock step removed — tap itself sets `sessionStorage`.
 4. Five type roles, two families, no exceptions
 5. `--seal` red appears exactly twice — the vertical bar (`::before` on `.period-row.now`) and the tick mark (`::before` on `.period-name`). Nowhere else.
 6. No JS positioning for the cross or clock. No rAF loops for layout. No `getBoundingClientRect()` in scroll handlers. Cross is pure CSS sticky.
-7. Audio path is `audio/sfzc/` — lowercase. Linux/GitHub Pages is case-sensitive.
+7. Audio path is `audio/sfzc/` — lowercase always. GitHub Pages (Linux) is case-sensitive.
 8. `audio.muted` not `audio.volume` for iOS compatibility
 9. `getScheduleState(new Date())` — requires Date argument
 10. `state.state === 'during'` not `state.type === 'current'`
@@ -558,3 +575,5 @@ Console unlock step removed — tap itself sets `sessionStorage`.
 14. One canonical state doc — `great-vows-state-doc.md`, kebab-case, overwrite in place, never duplicate
 15. The frame is constant, the content varies — all modes open and close the same way
 16. Three Refuges is universal — every mode, every night, not a Practice Period exclusive
+17. Any period with `audio:` in the schedule array auto-gets ambient playback + track dot — no hardcoding in `buildTrack()`
+18. `core.ignorecase=true` is macOS git default — always use `git -c core.ignorecase=false add audio/sfzc/` when adding audio files. GitHub Pages is case-sensitive and will 404 silently otherwise.
