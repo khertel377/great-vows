@@ -200,10 +200,10 @@ body::before {
   display: grid;
   grid-template-columns: 280px 1fr;
   grid-template-areas:
-    "clock  name"
-    "ampm   meta"
-    "next   .   "
-    "enter  .   ";
+    "clock  name       "
+    "ampm   meta       "
+    "next   period-next"
+    "enter  .          ";
   position: sticky;
   top: 0;
   background: var(--paper);
@@ -240,10 +240,22 @@ body::before {
   content: '';
   position: absolute;
   left: -5px;
-  top: 0.2em;
+  top: 0.38em;
   width: 10px;
   height: 3px;
   background: var(--seal);
+}
+
+/* Next period name injected into now-row's grid (period-next area) */
+.now-next-period-name {
+  grid-area: period-next;
+  align-self: baseline;
+  font-family: var(--serif);
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--ink);
+  opacity: var(--op-future);
+  padding: 6px 16px 10px 24px;
 }
 
 /* Imminent: next period when we're in a gap — slightly brighter */
@@ -696,6 +708,15 @@ function buildTrack(state) {
       row.appendChild(enterEl);
       row.appendChild(nameEl);
       row.appendChild(metaEl);
+
+      // Inject next period name into period-next grid area for baseline alignment
+      const nextPeriod = nowIdx !== -1 ? SCHEDULE[nowIdx + 1] : null;
+      if (nextPeriod) {
+        const nextNameEl = document.createElement('div');
+        nextNameEl.className = 'now-next-period-name';
+        nextNameEl.textContent = nextPeriod.name;
+        row.appendChild(nextNameEl);
+      }
     } else {
       // Flex layout — left/right cell wrappers
       const leftEl = document.createElement('div');
