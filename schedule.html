@@ -899,12 +899,9 @@ updatePlacedMode();
 // ══════════════════════════════
 // MAIN TICK
 // ══════════════════════════════
-let _lastMinute = -1;
-
 function tick() {
   const now   = new Date();
   const state = getScheduleState(now);
-  const min   = now.getHours() * 60 + now.getMinutes();
 
   // Day-specific service routing — update serviceId on each tick so
   // Enter Service link and ambient audio always match today's recording
@@ -920,9 +917,12 @@ function tick() {
   updateClock(now);
   updateSidebar(state, now);
 
-  if (min !== _lastMinute || !_trackEverBuilt) {
+  // Rebuild only on period change — not every minute.
+  // Row classes and clock DOM are stable within a period; only the period
+  // identity crossing a boundary requires a full track rebuild.
+  const nowId = state.state === 'during' ? state.period.id : null;
+  if (!_trackEverBuilt || nowId !== _lastNowId) {
     buildTrack(state);
-    _lastMinute = min;
   }
 }
 
