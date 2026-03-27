@@ -725,6 +725,9 @@ function buildTrack(state) {
     metaEl.textContent = fmtTime12(p.time) + ' · ' + formatDuration(durMins);
 
     if (rowClass === 'now') {
+      // Reset tick to 0 atomically with the class assignment — before any repaint
+      row.style.setProperty('--tick-progress', '0');
+
       // Grid layout — six direct children, no wrapper divs
       const clockEl = document.createElement('div');
       clockEl.className = 'clock-display';
@@ -784,12 +787,18 @@ function buildTrack(state) {
 
   _attachHoverHandlers();
 
+  // Populate clock and sidebar immediately — no flash of --:-- before next tick
+  updateClock(now);
+  updateSidebar(state, now);
+
   if (!_trackEverBuilt) {
     setTimeout(() => {
       document.querySelector('.period-row.now')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }, 40);
   } else if (newPeriod) {
-    setTimeout(() => scrollToNow('smooth'), 40);
+    requestAnimationFrame(() => {
+      document.querySelector('.period-row.now')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
   }
 
   _lastNowId      = nowId;
