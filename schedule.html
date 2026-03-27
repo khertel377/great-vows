@@ -923,8 +923,9 @@ document.getElementById('track').addEventListener('mouseleave', () => {
 let _scrollTimer   = null;
 let _devAudio      = null; // shared audio element for tap-to-play dev tool
 let _devPlayingRow = null;
-let _ambientAudio    = null;
-let _ambientPeriodId = null;
+let _ambientAudio       = null;
+let _ambientPeriodId    = null;
+let _pendingAmbientPlay = false;
 window.addEventListener('scroll', () => {
   document.getElementById('track').classList.add('scrolling');
   if (_scrollTimer) clearTimeout(_scrollTimer);
@@ -970,7 +971,10 @@ function tickAmbientAudio(currentPeriod) {
     _ambientAudio = new Audio(currentPeriod.audio);
     _ambientAudio.loop = true;
     _ambientAudio.muted = false;
-    _ambientAudio.play().catch(e => console.warn('[ambient] play blocked:', e));
+    _ambientAudio.play().catch(e => {
+      console.warn('[ambient] play blocked, queuing for next gesture:', e);
+      _pendingAmbientPlay = true;
+    });
   }
 
   const dot = document.getElementById('ambient-dot');
@@ -1011,6 +1015,19 @@ function tick() {
 tick();
 window._scheduleTick = tick; // AudioEngine hooks in via this
 setInterval(tick, 1000);
+
+// Immediate ambient attempt on load — queues deferred retry if blocked
+const _loadState = getScheduleState(new Date());
+tickAmbientAudio(_loadState.state === 'during' ? _loadState.period : null);
+
+// Retry blocked ambient play on first user gesture
+document.addEventListener('click', function retryAmbient() {
+  if (_pendingAmbientPlay && _ambientAudio) {
+    _ambientAudio.play().catch(e => console.warn('[ambient] retry failed:', e));
+    _pendingAmbientPlay = false;
+  }
+  document.removeEventListener('click', retryAmbient);
+}, { once: true });
 </script>
 
 <script>
