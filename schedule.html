@@ -1226,9 +1226,9 @@ mobileStyles.textContent = `
     width: 36px;
     height: 36px;
     border-radius: 50%;
-    border: none;
-    background: var(--paper);
-    opacity: 0.5;
+    border: 0.5px solid rgba(26,24,20,0.2);
+    background: rgba(244,240,232,0.92);
+    backdrop-filter: blur(4px);
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -1248,8 +1248,21 @@ mobileStyles.textContent = `
     top: 2px;
     right: -10px;
   }
+  #time-travel-input {
+    position: fixed;
+    bottom: 24px;
+    right: 68px;
+    width: 36px;
+    height: 36px;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 31;
+    border: none;
+    padding: 0;
+  }
   @media (max-width: 600px) {
-    #time-travel-btn { bottom: 16px; right: 60px; }
+    #time-travel-btn   { bottom: 16px; right: 60px; }
+    #time-travel-input { bottom: 16px; right: 60px; }
   }
 `;
 document.head.appendChild(mobileStyles);
@@ -1267,18 +1280,24 @@ document.body.appendChild(ttBtn);
 const ttInput = document.createElement('input');
 ttInput.type = 'time';
 ttInput.id = 'time-travel-input';
-ttInput.style.cssText = 'position:absolute;opacity:0;pointer-events:none';
 document.body.appendChild(ttInput);
 
+// Input overlays button (z-index: 31 > button z-index: 30).
+// When offset is active, pointer-events:none lets button clicks through for clear.
+function _ttSetPickerActive(active) {
+  ttInput.style.pointerEvents = active ? 'auto' : 'none';
+}
+_ttSetPickerActive(true); // picker receives taps by default
+
 ttBtn.addEventListener('click', () => {
+  // Only fires when _debugOffset is set (input has pointer-events:none)
   if (_debugOffset) {
     _debugOffset = 0;
     document.getElementById('time-travel-dot').style.display = 'none';
+    _ttSetPickerActive(true);
     buildTrack(getScheduleState(getNow()));
     scheduleUpcomingBells();
     console.log('[debug] time travel cleared — returning to real time');
-  } else {
-    ttInput.click();
   }
 });
 
@@ -1287,6 +1306,7 @@ ttInput.addEventListener('change', () => {
   const target = getNow(); target.setHours(h, m, 0, 0);
   _debugOffset = target - Date.now();
   document.getElementById('time-travel-dot').style.display = '';
+  _ttSetPickerActive(false); // let button clicks through to clear handler
   buildTrack(getScheduleState(getNow()));
   scheduleUpcomingBells();
   console.log('[debug] synthetic time active:', getNow().toTimeString());
