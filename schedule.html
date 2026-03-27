@@ -335,8 +335,8 @@ body.after-schedule .period-row.past { opacity: 0.18; }
 }
 .period-row.now .audio-dot { opacity: 0.5; }
 
-/* Dev tool: clickable dot on rows with audio */
-[data-audio] .audio-dot { cursor: pointer; }
+/* Dev tool: whole row is the click target */
+.period-row[data-audio] { cursor: pointer; }
 @keyframes audioDotPulse {
   0%, 100% { opacity: 0.3; transform: scale(1); }
   50%       { opacity: 0.9; transform: scale(1.8); }
@@ -758,38 +758,31 @@ function buildTrack(state) {
 // or via AudioEngine.unlock() after a user gesture).
 // ══════════════════════════════
 function wireAudioDevTool() {
-  document.querySelectorAll('.period-row').forEach(row => {
-    const dot = row.querySelector('.audio-dot');
-    if (!dot) return;
-    dot.addEventListener('click', (e) => {
+  document.querySelectorAll('.period-row[data-audio]').forEach(row => {
+    row.addEventListener('click', (e) => {
       e.stopPropagation();
 
       // The tap itself is a user gesture — satisfy iOS unlock requirement
       sessionStorage.setItem('gv-audio-unlocked', '1');
 
-      // Resolve src: static audio first, then service lookup
-      let src = row.dataset.audio;
-      if (!src) {
-        const period = SCHEDULE.find(p => p.id === row.dataset.periodId);
-        if (period && period.hasService) {
-          src = 'audio/SFZC/' + resolveServiceId(period.id, new Date()) + '.mp4';
-        }
-      }
+      const src = row.dataset.audio;
       if (!src) return;
 
-      // Toggle: pause if this row is already playing
+      // Toggle: stop if this row is already playing
       if (_devPlayingRow === row && _devAudio && !_devAudio.paused) {
         _devAudio.pause();
+        _devAudio = null;
         row.classList.remove('playing');
         _devPlayingRow = null;
         return;
       }
 
       // Stop whatever was playing before
-      if (_devAudio) _devAudio.pause();
       if (_devPlayingRow) _devPlayingRow.classList.remove('playing');
+      if (_devAudio) { _devAudio.pause(); _devAudio = null; }
 
-      if (!_devAudio) _devAudio = new Audio();
+      // Fresh Audio object each time — eliminates pause/play race
+      _devAudio = new Audio();
       _devAudio.src = src;
       _devAudio.onended = () => {
         row.classList.remove('playing');
