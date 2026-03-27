@@ -1,5 +1,5 @@
 # Great Vows — Project State Document
-*Updated after schedule canonization, three-mode system, bell taxonomy, iOS fixes, file hygiene, all three mode arrays formalized, Safari 18+ cross jitter fix, sticky now-row architecture, konsho evening bell loop, ambient audio engine, audio dot, git case-sensitivity fix, and audio files committed to repo (March 2026).*
+*Updated after schedule canonization, three-mode system, bell taxonomy, iOS fixes, file hygiene, all three mode arrays formalized, Safari 18+ cross jitter fix, sticky now-row architecture, konsho evening bell loop, ambient audio engine, audio dot, git case-sensitivity fix, audio files committed to repo, ambient audio retry logic fix, and audio dot alignment fix (March 2026).*
 
 ---
 
@@ -511,7 +511,10 @@ Prototyped on `sticky-now-row` branch. Mobile scroll smoothness is the primary m
 ### Immediate (next CC session)
 *(Cleared)*
 
-**Diagnose 4:30 wake-up + han sequence not firing:** Still pending overnight test. Leading suspect is iOS audio context expiring overnight despite wake lock. Instrumentation is in place (try/catch logging + AudioContext health check). Reproduce by leaving page open overnight; check console at 4:30.
+**Diagnose 4:30 wake-up + han sequence not firing:** Still pending overnight test.
+Overnight unattended playback requires Web Audio API scheduling (load buffer at
+gesture time, schedule future playback via AudioContext). Current HTML Audio()
+approach will be blocked after long idle. Defer to dedicated session.
 
 ### Ambient audio engine — working
 `tickAmbientAudio(currentPeriod)` runs each second from `tick()`.
@@ -522,13 +525,21 @@ Any period with an `audio:` field automatically gets ambient playback + track do
 Current ambient periods:
 - `firewatch` (all three mode arrays) → `audio/sfzc/konsho-evening-bell.mp3`
 
-iOS caveat: `.play()` is blocked until a user gesture. Will silently fail if page
-loads mid-Firewatch before any tap. Future: retry `_ambientAudio.play()` from the
-Enter button or a dedicated unmute gesture.
+**Retry logic:** `.play()` is blocked by autoplay policy until a user gesture.
+When blocked, `_pendingAmbientPlay = true`. Two retry paths:
+1. Every `tick()` silently retries if flag is set
+2. Any tap retries with console logging
+First success clears the flag and lights the dot.
+`{ once: true }` pattern was a bug — listener was consumed by entry screen tap
+before play block occurred. Persistent listener with flag check is the correct pattern.
 
-`#ambient-dot` injected as sibling in `ampmEl`. Pulses gold (#B8860B, opacity 0.6)
-while ambient is playing. Auto-appears on any `audio:`-bearing period — no
-hardcoding required.
+**`#ambient-dot`** positioned absolute, anchored to `ampmEl` (position: relative).
+Pulses gold (#B8860B, opacity 0.6) while ambient is playing.
+Auto-appears on any `audio:`-bearing period — no hardcoding required.
+
+**Night mode flash at Firewatch transition** — known cosmetic quirk. now-row
+background flips synchronously; body background transitions asynchronously.
+Would need transition-delay on now-row to fix. Not worth the complexity.
 
 ### Dev tap-to-play tool — working
 Click any `.period-row[data-audio]` row to play/pause that period's audio.
@@ -577,3 +588,4 @@ Console unlock step removed — tap itself sets `sessionStorage`.
 16. Three Refuges is universal — every mode, every night, not a Practice Period exclusive
 17. Any period with `audio:` in the schedule array auto-gets ambient playback + track dot — no hardcoding in `buildTrack()`
 18. `core.ignorecase=true` is macOS git default — always use `git -c core.ignorecase=false add audio/sfzc/` when adding audio files. GitHub Pages is case-sensitive and will 404 silently otherwise.
+19. Ambient audio retry: use a persistent click listener with a `_pendingAmbientPlay` flag — never `{ once: true }`. The entry screen tap will consume a one-time listener before the play block occurs.
