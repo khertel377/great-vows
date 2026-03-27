@@ -1221,8 +1221,8 @@ mobileStyles.textContent = `
 
   #time-travel-btn {
     position: fixed;
-    bottom: 24px;
-    right: 68px; /* mute-btn right(24) + width(36) + gap(8) */
+    bottom: 68px; /* stacked above mute */
+    right: 24px;
     width: 36px;
     height: 36px;
     border-radius: 50%;
@@ -1248,47 +1248,49 @@ mobileStyles.textContent = `
     top: 2px;
     right: -10px;
   }
-  #time-travel-input {
+  #tt-panel {
     position: fixed;
-    bottom: 24px;
-    right: 68px;
-    width: 36px;
-    height: 36px;
-    opacity: 0;
-    cursor: pointer;
-    z-index: 31;
-    border: none;
-    padding: 0;
-  }
-  #time-travel-confirm {
-    position: fixed;
-    bottom: 68px; /* above the clock button */
-    right: 52px;
+    bottom: 112px; /* above time-travel-btn */
+    right: 16px;
     background: rgba(244,240,232,0.96);
     backdrop-filter: blur(4px);
     border: 0.5px solid rgba(26,24,20,0.2);
-    border-radius: 20px;
-    padding: 6px 14px;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 11px;
-    color: var(--ink);
-    cursor: pointer;
-    z-index: 32;
+    border-radius: 8px;
+    padding: 12px 16px;
+    z-index: 50;
     display: none;
-    white-space: nowrap;
+    align-items: center;
+    gap: 8px;
+    font-family: 'IBM Plex Mono', monospace;
   }
-  #time-travel-confirm:hover { opacity: 0.7; }
+  #tt-panel input[type=number] {
+    width: 36px; font-size: 18px; text-align: center;
+    border: none; background: transparent; color: var(--ink);
+    font-family: inherit;
+  }
+  #tt-panel input[type=number]::-webkit-inner-spin-button,
+  #tt-panel input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; }
+  #tt-panel input[type=number] { -moz-appearance: textfield; }
+  #tt-ampm {
+    font-size: 14px; border: 0.5px solid rgba(26,24,20,0.2);
+    border-radius: 4px; padding: 2px 6px; background: transparent;
+    cursor: pointer; color: var(--ink); font-family: inherit;
+  }
+  #tt-go {
+    font-size: 14px; background: var(--seal); color: #f4f0e8;
+    border: none; border-radius: 4px; padding: 4px 10px;
+    cursor: pointer; font-family: inherit;
+  }
   @media (max-width: 600px) {
-    #time-travel-btn     { bottom: 16px; right: 60px; }
-    #time-travel-input   { bottom: 16px; right: 60px; }
-    #time-travel-confirm { bottom: 60px; right: 44px; }
+    #time-travel-btn { bottom: 60px; right: 16px; }
+    #tt-panel        { bottom: 104px; right: 8px; }
   }
 `;
 document.head.appendChild(mobileStyles);
 
 
 
-/* ── Time-travel debug button ── */
+/* ── Time-travel debug button + panel ── */
 const ttBtn = document.createElement('button');
 ttBtn.id = 'time-travel-btn';
 ttBtn.title = 'Debug: set time';
@@ -1296,53 +1298,54 @@ ttBtn.setAttribute('aria-label', 'Debug: set time');
 ttBtn.innerHTML = `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg><span id="time-travel-dot" class="audio-dot" style="display:none"></span>`;
 document.body.appendChild(ttBtn);
 
-const ttInput = document.createElement('input');
-ttInput.type = 'time';
-ttInput.id = 'time-travel-input';
-document.body.appendChild(ttInput);
+const ttPanel = document.createElement('div');
+ttPanel.id = 'tt-panel';
+ttPanel.innerHTML = `
+  <input id="tt-hour" type="number" min="1" max="12" placeholder="12">
+  <span style="font-size:18px;color:var(--ink)">:</span>
+  <input id="tt-min"  type="number" min="0" max="59" placeholder="00">
+  <button id="tt-ampm">PM</button>
+  <button id="tt-go">Go</button>
+`;
+document.body.appendChild(ttPanel);
 
-const ttConfirm = document.createElement('button');
-ttConfirm.id = 'time-travel-confirm';
-document.body.appendChild(ttConfirm);
-
-let _pendingOffset = 0;
-
-// Input overlays button (z-index: 31 > button z-index: 30).
-// When offset is active, pointer-events:none lets button clicks through for clear.
-function _ttSetPickerActive(active) {
-  ttInput.style.pointerEvents = active ? 'auto' : 'none';
-}
-_ttSetPickerActive(true); // picker receives taps by default
+const ttDot = document.getElementById('time-travel-dot');
 
 ttBtn.addEventListener('click', () => {
-  // Only fires when _debugOffset is set (input has pointer-events:none)
   if (_debugOffset) {
     _debugOffset = 0;
-    _pendingOffset = 0;
-    document.getElementById('time-travel-dot').style.display = 'none';
-    ttConfirm.style.display = 'none';
-    _ttSetPickerActive(true);
+    ttDot.style.display = 'none';
+    ttPanel.style.display = 'none';
     buildTrack(getScheduleState(getNow()));
     scheduleUpcomingBells();
     console.log('[debug] time travel cleared — returning to real time');
+  } else {
+    const n = getNow();
+    let h = n.getHours();
+    const ampm = h >= 12 ? 'PM' : 'AM';
+    h = h % 12 || 12;
+    document.getElementById('tt-hour').value = h;
+    document.getElementById('tt-min').value = String(n.getMinutes()).padStart(2, '0');
+    document.getElementById('tt-ampm').textContent = ampm;
+    ttPanel.style.display = 'flex';
   }
 });
 
-ttInput.addEventListener('change', () => {
-  const [h, m] = ttInput.value.split(':').map(Number);
-  const target = new Date(); target.setHours(h, m, 0, 0);
-  _pendingOffset = target - Date.now();
-  // Format label: "Go to 4:30 AM →"
-  const label12h = (h % 12 || 12) + ':' + String(m).padStart(2, '0') + ' ' + (h >= 12 ? 'PM' : 'AM');
-  ttConfirm.textContent = 'Go to ' + label12h + ' →';
-  ttConfirm.style.display = '';
+document.getElementById('tt-ampm').addEventListener('click', () => {
+  const el = document.getElementById('tt-ampm');
+  el.textContent = el.textContent === 'AM' ? 'PM' : 'AM';
 });
 
-ttConfirm.addEventListener('click', () => {
-  _debugOffset = _pendingOffset;
-  ttConfirm.style.display = 'none';
-  document.getElementById('time-travel-dot').style.display = '';
-  _ttSetPickerActive(false); // let button clicks through to clear handler
+document.getElementById('tt-go').addEventListener('click', () => {
+  let h = parseInt(document.getElementById('tt-hour').value);
+  const m = parseInt(document.getElementById('tt-min').value);
+  const isPM = document.getElementById('tt-ampm').textContent === 'PM';
+  if (isPM && h !== 12) h += 12;
+  if (!isPM && h === 12) h = 0;
+  const target = new Date(); target.setHours(h, m, 0, 0);
+  _debugOffset = target - Date.now();
+  ttDot.style.display = '';
+  ttPanel.style.display = 'none';
   buildTrack(getScheduleState(getNow()));
   scheduleUpcomingBells();
   console.log('[debug] synthetic time active:', getNow().toTimeString());
