@@ -208,7 +208,7 @@ body::before {
   top: 0;
   background: var(--paper);
   z-index: 2;
-  opacity: 1;
+  opacity: 1 !important; /* immune to neighbor data-hover dim */
 }
 
 /* Vertical red bar at column boundary */
@@ -260,9 +260,10 @@ body.after-schedule .period-row.past { opacity: 0.18; }
   margin: 0 0 0 24px;
 }
 
-/* Hover surfacing */
-.period-row[data-hover="active"]   { opacity: 0.88; }
-.period-row[data-hover="neighbor"] { opacity: 0.55; }
+/* Hover surfacing — suppressed during touch scroll so ghost hovers don't fire */
+body:not(.is-scrolling) .period-row[data-hover="active"]   { opacity: 0.88; }
+body:not(.is-scrolling) .period-row[data-hover="neighbor"] { opacity: 0.55; }
+body.is-scrolling .period-row:not(.now):hover .period-row-meta { opacity: 0; }
 
 /* Scroll surfacing */
 #track.scrolling .period-row.past   { opacity: 0.68; }
@@ -951,6 +952,19 @@ window.addEventListener('scroll', () => {
   _scrollTimer = setTimeout(() => {
     document.getElementById('track').classList.remove('scrolling');
   }, 1800);
+}, { passive: true });
+
+// Suppress ghost hovers during touch scroll — iOS fires synthetic mouseenter
+// at the finger-lift position. body.is-scrolling gates the hover CSS rules.
+let _touchScrollTimer = null;
+document.addEventListener('touchstart', () => {
+  document.body.classList.add('is-scrolling');
+}, { passive: true });
+document.addEventListener('touchend', () => {
+  clearTimeout(_touchScrollTimer);
+  _touchScrollTimer = setTimeout(() => {
+    document.body.classList.remove('is-scrolling');
+  }, 300);
 }, { passive: true });
 
 
