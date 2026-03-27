@@ -200,10 +200,10 @@ body::before {
   display: grid;
   grid-template-columns: 280px 1fr;
   grid-template-areas:
-    "clock  name       "
-    "ampm   meta       "
-    "next   period-next"
-    "enter  .          ";
+    "clock  name "
+    "ampm   meta "
+    "next   .    "
+    "enter  .    ";
   position: sticky;
   top: 0;
   background: var(--paper);
@@ -227,7 +227,7 @@ body::before {
 /* Grid area assignments */
 .period-row.now .clock-display   { grid-area: clock; align-self: end;      padding: 10px 20px 0; }
 .period-row.now .clock-meta      { grid-area: ampm;  align-self: baseline; padding: 4px 20px 0; }
-.period-row.now .sidebar-next    { grid-area: next;  align-self: baseline; padding: 6px 20px 0; }
+.period-row.now .sidebar-next    { grid-area: next;  margin-top: 8px; padding: 0 20px 0; }
 .period-row.now .enter-btn       { grid-area: enter;                       padding: 0 20px 10px; }
 .period-row.now .period-name     { grid-area: name;  align-self: end;      padding: 10px 24px 0 24px; }
 .period-row.now .period-row-meta { grid-area: meta;  align-self: baseline; padding: 4px 16px 10px 24px; }
@@ -246,17 +246,6 @@ body::before {
   background: var(--seal);
 }
 
-/* Next period name injected into now-row's grid (period-next area) */
-.now-next-period-name {
-  grid-area: period-next;
-  align-self: baseline;
-  font-family: var(--serif);
-  font-size: 20px;
-  font-weight: 400;
-  color: var(--ink);
-  opacity: var(--op-future);
-  padding: 6px 16px 10px 24px;
-}
 
 /* Imminent: next period when we're in a gap — slightly brighter */
 .period-row.imminent { opacity: 0.82; }
@@ -709,14 +698,6 @@ function buildTrack(state) {
       row.appendChild(nameEl);
       row.appendChild(metaEl);
 
-      // Inject next period name into period-next grid area for baseline alignment
-      const nextPeriod = nowIdx !== -1 ? SCHEDULE[nowIdx + 1] : null;
-      if (nextPeriod) {
-        const nextNameEl = document.createElement('div');
-        nextNameEl.className = 'now-next-period-name';
-        nextNameEl.textContent = nextPeriod.name;
-        row.appendChild(nextNameEl);
-      }
     } else {
       // Flex layout — left/right cell wrappers
       const leftEl = document.createElement('div');
