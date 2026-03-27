@@ -1064,25 +1064,32 @@ function unlockAudioContext() {
   } catch (e) { console.warn('[WebAudio] AudioContext unavailable:', e); }
 }
 
-async function scheduleAudioEvent(url, firesAt) {
+async function resumeAudioContext() {
   if (!_webAudioCtx) return;
-  const offsetSeconds = (firesAt.getTime() - Date.now()) / 1000;
-  if (offsetSeconds < 0) return; // already past — skip silently
-
-  try {
-    const response = await fetch(url);
-    const arrayBuffer = await response.arrayBuffer();
-    const audioBuffer = await _webAudioCtx.decodeAudioData(arrayBuffer);
-
-    const source = _webAudioCtx.createBufferSource();
-    source.buffer = audioBuffer;
-    source.connect(_webAudioCtx.destination);
-    source.start(_webAudioCtx.currentTime + offsetSeconds);
-
-    return source; // caller can cancel if needed
-  } catch (e) {
-    console.warn('[WebAudio] scheduleAudioEvent failed for', url, ':', e);
+  if (_webAudioCtx.state === 'suspended') {
+    try { await _webAudioCtx.resume(); } catch (e) { console.warn('[WebAudio] resume failed:', e); }
   }
+}
+
+function scheduleAudioEvent(url, firesAt) {
+  if (!_webAudioCtx) return;
+  const msUntil = firesAt.getTime() - Date.now();
+  if (msUntil < 0) return; // already past — skip silently
+
+  setTimeout(async () => {
+    try {
+      await resumeAudioContext();
+      const response = await fetch(url);
+      const arrayBuffer = await response.arrayBuffer();
+      const audioBuffer = await _webAudioCtx.decodeAudioData(arrayBuffer);
+      const source = _webAudioCtx.createBufferSource();
+      source.buffer = audioBuffer;
+      source.connect(_webAudioCtx.destination);
+      source.start(0); // play immediately — wall-clock setTimeout already handled the delay
+    } catch (e) {
+      console.warn('[WebAudio] scheduleAudioEvent failed for', url, ':', e);
+    }
+  }, msUntil);
 }
 
 function scheduleUpcomingBells() {
@@ -1106,8 +1113,8 @@ function scheduleUpcomingBells() {
 
 document.addEventListener('visibilitychange', () => {
   if (document.visibilityState === 'visible' && _webAudioCtx) {
-    if (_webAudioCtx.state === 'suspended') _webAudioCtx.resume();
-    scheduleUpcomingBells(); // safe — already-past events skipped by offset < 0 check
+    resumeAudioContext();
+    scheduleUpcomingBells(); // safe — already-past events skipped by msUntil < 0 check
   }
 });
 
