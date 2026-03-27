@@ -1053,7 +1053,9 @@ window._scheduleTick = tick; // AudioEngine hooks in via this
 setInterval(tick, 1000);
 
 // Retry blocked ambient play on any user gesture — persistent, no-ops when nothing pending
+// Also warms AudioContext so any tap anywhere keeps the Web Audio path healthy
 document.addEventListener('click', function retryAmbient() {
+  resumeAudioContext();
   if (_pendingAmbientPlay && _ambientAudio) {
     _ambientAudio.play()
       .then(() => {
@@ -1072,7 +1074,18 @@ document.addEventListener('click', function retryAmbient() {
 // Only type:'bell' periods are scheduled here — ambient loops (firewatch etc.)
 // stay on the existing Audio() retry path and are not migrated.
 // ══════════════════════════════
-let _webAudioCtx = null;
+let _webAudioCtx    = null;
+let _keepaliveAudio = null;
+
+function startIOSKeepalive() {
+  if (_keepaliveAudio) return; // already running
+  _keepaliveAudio = new Audio('audio/sfzc/silence.mp3');
+  _keepaliveAudio.loop = true;
+  _keepaliveAudio.volume = 0;
+  _keepaliveAudio.play().catch(() => {
+    _keepaliveAudio = null; // silently fail — will be retried on next gesture
+  });
+}
 
 function unlockAudioContext() {
   if (_webAudioCtx) return;
@@ -1102,6 +1115,7 @@ function scheduleAudioEvent(url, firesAt) {
       const source = _webAudioCtx.createBufferSource();
       source.buffer = audioBuffer;
       source.connect(_webAudioCtx.destination);
+      if (isMuted) return; // respect mute for Web Audio path
       source.start(0); // play immediately — wall-clock setTimeout already handled the delay
     } catch (e) {
       console.warn('[WebAudio] scheduleAudioEvent failed for', url, ':', e);
@@ -1756,6 +1770,7 @@ document.addEventListener('visibilitychange', WakeLock.onVisibilityChange);
   overlay.addEventListener('click', function () {
     AudioEngine.unlock();
     unlockAudioContext();       // create Web Audio context on first gesture
+    startIOSKeepalive();        // silent loop keeps iOS audio session alive overnight
     scheduleUpcomingBells();   // schedule all remaining bell events for today
     scheduleMidnightReschedule(); // queue reschedule at midnight for next day
     WakeLock.request(); // user gesture — same tap acquires wake lock
