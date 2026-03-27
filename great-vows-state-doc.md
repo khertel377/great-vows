@@ -1,5 +1,5 @@
 # Great Vows — Project State Document
-*Updated after schedule canonization, three-mode system, bell taxonomy, iOS fixes, file hygiene, all three mode arrays formalized, Safari 18+ cross jitter fix, sticky now-row architecture, konsho evening bell loop, ambient audio engine, audio dot, git case-sensitivity fix, audio files committed to repo, ambient audio retry logic fix, audio dot alignment fix, Web Audio overnight bell scheduling, midnight reschedule, ambient audio stop bug fix, and firewatch split (March 2026).*
+*Updated after schedule canonization, three-mode system, bell taxonomy, iOS fixes, file hygiene, all three mode arrays formalized, Safari 18+ cross jitter fix, sticky now-row architecture, konsho evening bell loop, ambient audio engine, audio dot, git case-sensitivity fix, audio files committed to repo, ambient audio retry logic fix, audio dot alignment fix, Web Audio overnight bell scheduling, midnight reschedule, ambient audio stop bug fix, firewatch split, and tick mark full-height fix (March 2026).*
 
 ---
 
@@ -446,7 +446,7 @@ Deleted ~280 lines: `positionConnector()`, the rAF loop, `alignSidebar()`,
 - Every `.period-row` is `display: flex` with `.period-left` and `.period-right`
 - `.period-row.now` gets `display: grid` (2-column, 4 named rows), `position: sticky; top: 0; background: var(--paper)`
 - Clock and info live as direct grid children of the now-row, injected by `buildTrack()`
-- Cross is pure CSS: `::before` on `.period-row.now` for the full-height red bar at the column boundary; `::before` on `.period-name` for the tick mark
+- Cross is pure CSS: `::before` on `.period-row.now` for the full-height red bar at the column boundary; `::after` on `.period-row.now` for the tick mark (travels full now-row height)
 - Zero JS positioning. Browser compositor handles sticky natively.
 
 ### Grid layout (now-row only)
@@ -464,16 +464,16 @@ Deleted ~280 lines: `positionConnector()`, the rAF loop, `alignSidebar()`,
 Six grid children: `.clock-display`, `.clock-meta`, `.sidebar-next`, `.enter-btn`, `.period-name`, `.period-row-meta`.
 
 ### Mobile column width — keep in sync
-Three values must always match at every breakpoint: `.period-left { width }`,
-`.period-row.now { grid-template-columns }`, and `.period-row.now::before { left }`.
-All three live in the same `mobileStyles` block. If column width changes, update
-all three together.
+Four values must always match at every breakpoint: `.period-left { width }`,
+`.period-row.now { grid-template-columns }`, `.period-row.now::before { left }`, and `.period-row.now::after { left }`.
+All four live in the same `mobileStyles` block. If column width changes, update
+all four together.
 
 ### Key constraints
 - `.period-row.now` must have an opaque background (`var(--paper)`) — past rows scroll behind it
 - Quiet mode inversion must also invert the now-row background
 - The vertical red bar is bounded by now-row height — no full-viewport bar. Accepted tradeoff.
-- Tick mark travels top-to-bottom over the period's duration via `--tick-progress` CSS custom property. JS writes a 0–1 float to `.period-row.now` once per second; CSS reads it as `top: calc(var(--tick-progress, 0.1) * 100%)` with `transform: translateY(-50%)` on `.period-name::before`. Default 0.1 keeps the mark visible before JS fires on first load.
+- Tick mark travels top-to-bottom over the period's duration via `--tick-progress` CSS custom property. JS writes a 0–1 float to `.period-row.now` once per second; CSS reads it as `top: calc(var(--tick-progress, 0.1) * 100%)` with `transform: translate(-50%, -50%)` on `.period-row.now::after`. Anchored to `.period-row.now` (not `.period-name`) so it travels the full now-row height. Default 0.1 keeps the mark visible before JS fires on first load.
 - "Next" baseline alignment with next period title was removed — grid approach inflated now-row height. `sidebar-next` sits below meta row at fixed `margin-top: 8px` instead.
 
 ### Branch
@@ -587,7 +587,7 @@ Console unlock step removed — tap itself sets `sessionStorage`.
 2. The cross has no CSS transition during normal operation
 3. Nothing at the far right of any row
 4. Five type roles, two families, no exceptions
-5. `--seal` red appears exactly twice — the vertical bar (`::before` on `.period-row.now`) and the tick mark (`::before` on `.period-name`). Nowhere else.
+5. `--seal` red appears exactly twice — the vertical bar (`::before` on `.period-row.now`) and the tick mark (`::after` on `.period-row.now`). Nowhere else.
 6. No JS positioning for the cross or clock. No rAF loops for layout. No `getBoundingClientRect()` in scroll handlers. Cross is pure CSS sticky.
 7. Audio path is `audio/sfzc/` — lowercase always. GitHub Pages (Linux) is case-sensitive.
 8. `audio.muted` not `audio.volume` for iOS compatibility
@@ -602,3 +602,5 @@ Console unlock step removed — tap itself sets `sessionStorage`.
 17. Any period with `audio:` in the schedule array auto-gets ambient playback + track dot — no hardcoding in `buildTrack()`
 18. `core.ignorecase=true` is macOS git default — always use `git -c core.ignorecase=false add audio/sfzc/` when adding audio files. GitHub Pages is case-sensitive and will 404 silently otherwise.
 19. Ambient audio retry: use a persistent click listener with a `_pendingAmbientPlay` flag — never `{ once: true }`. The entry screen tap will consume a one-time listener before the play block occurs.
+20. `tickAmbientAudio` tracks `_ambientPeriodId` by `currentPeriod?.id` (not by whether the period has audio). This ensures stop logic fires on every period transition, not just audio→no-audio changes. `_pendingAmbientPlay` is cleared on every transition.
+21. Consecutive periods with the same `name` render as one visual label — `buildTrack` detects `isContinuation` (prev period same name) and skips the name text node. Proportional height and audio dot still render. Used by the firewatch-bell / firewatch-clappers split.
