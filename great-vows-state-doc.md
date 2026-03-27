@@ -1,5 +1,5 @@
 # Great Vows — Project State Document
-*Updated after schedule canonization, three-mode system, bell taxonomy, iOS fixes, file hygiene, all three mode arrays formalized, Safari 18+ cross jitter fix, sticky now-row architecture, konsho evening bell loop, ambient audio engine, audio dot, git case-sensitivity fix, audio files committed to repo, ambient audio retry logic fix, audio dot alignment fix, Web Audio overnight bell scheduling, midnight reschedule, ambient audio stop bug fix, firewatch split, and tick mark full-height fix (March 2026).*
+*Updated after schedule canonization, three-mode system, bell taxonomy, iOS fixes, file hygiene, all three mode arrays formalized, Safari 18+ cross jitter fix, sticky now-row architecture, konsho evening bell loop, ambient audio engine, audio dot, git case-sensitivity fix, audio files committed to repo, ambient audio retry logic fix, audio dot alignment fix, Web Audio overnight bell scheduling, midnight reschedule, ambient audio stop bug fix, firewatch split, tick mark full-height fix, Web Audio wall-clock setTimeout fix, period transition polish, and time-travel debug tool (March 2026).*
 
 ---
 
@@ -362,6 +362,8 @@ great-vows/
 - Thursday Enter button hidden (service audio not yet available) ✅
 - Cross on rAF loop, geometry cached in `_connGeo` — no `getBoundingClientRect()` per frame ✅
 - Row rects stored as document-space coords (+ scrollY); `_docToVp()` converts back each frame ✅
+- Period transition polish ✅ — `--tick-progress` reset to 0 atomically on new now-row; `updateClock()` + `updateSidebar()` called at end of `buildTrack()` (no `--:--` flash); `rAF` scroll-to-now on transition
+- `getNow()` shim ✅ — all bare `new Date()` "give me now" calls replaced; `_debugOffset` drives synthetic time for debug tool
 
 ### Quiet mode
 ```js
@@ -378,7 +380,7 @@ great-vows/
 4. **Period transition bell** — densho on boundary, skips first tick.
 
 **API corrections (locked — do not regress):**
-- `getScheduleState(new Date())` — requires Date argument
+- `getScheduleState(getNow())` — use `getNow()` not `new Date()` at all call sites
 - `state.state === 'during'` not `state.type === 'current'`
 - `state.next` not `state.nextPeriod`
 - `#sidebar` / `#track` not `.sidebar` / `.track`
@@ -387,8 +389,10 @@ great-vows/
 ### Mobile portrait layout
 - `#sidebar` 50vw, hairline at 50vw, track fills right half
 - Now-row font 36px, meta always visible on now-row
-- `env(safe-area-inset-bottom)` on vertical bar
+- `env(safe-area-inset-bottom)` on vertical bar and both fixed buttons
 - Scroll bounce guard: skip if `window.scrollY < 0`
+- Mute button: `position: fixed; bottom-right` — `calc(24px + env(safe-area-inset-bottom, 0px))`
+- Time-travel button: `position: fixed; bottom-left` — same safe-area formula, mirrored side
 
 ---
 
@@ -514,10 +518,7 @@ Prototyped on `sticky-now-row` branch. Mobile scroll smoothness is the primary m
 ### Immediate (next CC session)
 *(Cleared)*
 
-**Diagnose 4:30 wake-up + han sequence not firing:** Still pending overnight test.
-Overnight unattended playback requires Web Audio API scheduling (load buffer at
-gesture time, schedule future playback via AudioContext). Current HTML Audio()
-approach will be blocked after long idle. Defer to dedicated session.
+**4:30 wake-up bell overnight test:** Wall-clock setTimeout architecture is in place. First real overnight test was this session. If 4:30 fires cleanly the issue is closed. If not, next suspect is iOS killing the tab under memory pressure — which requires Service Worker + Web Push.
 
 ### Ambient audio engine — working
 `tickAmbientAudio(currentPeriod)` runs each second from `tick()`.
@@ -554,13 +555,22 @@ removed — those dots are visual-only until service audio dev tool is built).
 Console unlock step removed — tap itself sets `sessionStorage`.
 
 ### Web Audio scheduling — working
-`unlockAudioContext()` creates `_webAudioCtx` on first user gesture. `scheduleAudioEvent(url, firesAt)` computes `msUntil = firesAt - Date.now()` and calls `setTimeout(msUntil)`. At fire time, the callback calls `resumeAudioContext()` (new helper — resumes `_webAudioCtx` if suspended), then fetches, decodes, and plays the buffer immediately via `src.start(0)`. No future AudioContext offset is computed at scheduling time. This makes bell timing immune to AudioContext clock drift over long sessions and to overnight context suspension, even on foreground tabs. `scheduleUpcomingBells()` and `scheduleMidnightReschedule()` are unchanged. `visibilitychange` calls `resumeAudioContext()` via the same helper.
+`unlockAudioContext()` creates `_webAudioCtx` on first user gesture. `scheduleAudioEvent(url, firesAt)` computes `msUntil = firesAt.getTime() - (Date.now() + _debugOffset)` and calls `setTimeout(msUntil)`. At fire time, the callback calls `resumeAudioContext()` (new helper — resumes `_webAudioCtx` if suspended), then fetches, decodes, and plays the buffer immediately via `src.start(0)`. No future AudioContext offset is computed at scheduling time. Immune to AudioContext clock drift over long sessions and overnight context suspension on foreground tabs. `visibilitychange` calls `resumeAudioContext()` via the same helper.
 
 **Midnight reschedule:** `scheduleMidnightReschedule()` sets a `setTimeout` to midnight; when it fires it calls `scheduleUpcomingBells()` for the new day and resets itself. Called once from the overlay tap alongside `scheduleUpcomingBells()`.
 
 **Ambient loops excluded:** `firewatch-bell` and `firewatch-clappers` (`type: 'quiet'`) stay on the `Audio()` retry path — not scheduled here.
 
 **Remaining failure mode:** If iOS kills the tab entirely overnight, scheduled bells are lost — no web app can recover from this. setTimeout drift on a foreground, screen-on tab is negligible (well under 1 second). Next solution class if needed: Service Worker + Web Push.
+
+### Time-travel debug tool — working
+`#time-travel-btn` — clock icon, `position: fixed`, bottom-left, mirroring mute button bottom-right. Both use `calc(Npx + env(safe-area-inset-bottom, 0px))`.
+
+Tap opens `#tt-panel` — small floating panel with hour/minute number inputs, AM/PM toggle (`#tt-ampm`), and Go button (`#tt-go`). No `<input type="time">` — unreliable cross-platform. Panel pre-fills with current `getNow()` time. On Go: computes `_debugOffset = target - Date.now()`, rebuilds track, reschedules bells.
+
+`#time-travel-dot` (reuses `.audio-dot` class) pulses gold on the button while debug mode is active. Tap button again while active to clear `_debugOffset` and return to real time.
+
+`getNow()` shim: returns `new Date(Date.now() + _debugOffset)` when offset is set, plain `new Date()` otherwise. All bare `new Date()` call sites use `getNow()`. Bell scheduling uses `Date.now() + _debugOffset` for `msUntil` math. Tick progress uses `(Date.now() + _debugOffset) / 1000` for the now-seconds value.
 
 ### Near term
 - Mode switcher UI: drop in `SCHEDULE_CASUAL` or `SCHEDULE_INTENSIVE` from this doc
@@ -604,3 +614,4 @@ Console unlock step removed — tap itself sets `sessionStorage`.
 19. Ambient audio retry: use a persistent click listener with a `_pendingAmbientPlay` flag — never `{ once: true }`. The entry screen tap will consume a one-time listener before the play block occurs.
 20. `tickAmbientAudio` tracks `_ambientPeriodId` by `currentPeriod?.id` (not by whether the period has audio). This ensures stop logic fires on every period transition, not just audio→no-audio changes. `_pendingAmbientPlay` is cleared on every transition.
 21. Consecutive periods with the same `name` render as one visual label — `buildTrack` detects `isContinuation` (prev period same name) and skips the name text node. Proportional height and audio dot still render. Used by the firewatch-bell / firewatch-clappers split.
+22. Use `getNow()` everywhere "give me the current time" is needed — never bare `new Date()`. Use `new Date(someValue)` only for parsing/constructing from a known value. `_debugOffset` is the single source of truth for synthetic time; `msUntil` and tick progress both derive from `Date.now() + _debugOffset`.
