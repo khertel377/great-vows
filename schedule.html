@@ -347,6 +347,25 @@ body.after-schedule .period-row.past { opacity: 0.18; }
 }
 
 
+/* Ambient audio status dot — lives in clock-meta, gold when loop is playing */
+#ambient-dot {
+  width: 6px;
+  height: 6px;
+  background: #B8860B;
+  opacity: 0;
+  transition: opacity 0.4s;
+  margin-right: 5px;
+  vertical-align: middle;
+}
+#ambient-dot.playing {
+  opacity: 0.6;
+  animation: dot-pulse 2s ease-in-out infinite;
+}
+@keyframes dot-pulse {
+  0%, 100% { opacity: 0.6; }
+  50%       { opacity: 0.25; }
+}
+
 /* Clock meta — AM/PM */
 .clock-meta {
   font-family: var(--mono);
@@ -446,7 +465,7 @@ const SCHEDULE = [
   { id: 'dinner',         time: [18,0],  end: [19,30], name: 'Dinner',                type: 'meal',  hasService: false },
   { id: 'zazen-night',    time: [19,30], end: [20,50], name: 'Zazen',                 type: 'zazen', hasService: false },
   { id: 'three-refuges',  time: [20,50], end: [21,0],  name: 'Three Refuges',         type: 'chant', hasService: false },
-  { id: 'firewatch',      time: [21,0],  end: [22,0],  name: 'Firewatch',             type: 'quiet', hasService: false },
+  { id: 'firewatch',      time: [21,0],  end: [22,0],  name: 'Firewatch',             type: 'quiet', hasService: false, audio: 'audio/SFZC/konsho-evening-bell.m4a' },
   { id: 'quiet-night',    time: [22,0],  end: [24,0],  name: 'Quiet',                 type: 'quiet', hasService: false },
 ];
 
@@ -564,7 +583,11 @@ function updateClock(now) {
   const h = now.getHours() % 12 || 12;
   hmEl.textContent   = h + ':' + pad2(now.getMinutes());
   secEl.textContent  = pad2(now.getSeconds());
-  ampmEl.textContent = now.getHours() >= 12 ? 'PM' : 'AM';
+  // Update AM/PM text node without disturbing the #ambient-dot span
+  const ampmText = now.getHours() >= 12 ? 'PM' : 'AM';
+  let ampmNode = Array.from(ampmEl.childNodes).find(n => n.nodeType === Node.TEXT_NODE);
+  if (ampmNode) { ampmNode.textContent = ampmText; }
+  else { ampmEl.appendChild(document.createTextNode(ampmText)); }
 
   document.querySelectorAll('.colon').forEach(c => {
     c.classList.add('pulse');
@@ -677,8 +700,7 @@ function buildTrack(state) {
     const nameEl = document.createElement('div');
     nameEl.className = 'period-name';
 
-    const AUDIO_PERIODS = ['wake-up-bell', 'han', 'morning-service', 'evening-service'];
-    if (AUDIO_PERIODS.includes(p.id)) {
+    if (p.audio) {
       const dot = document.createElement('span');
       dot.className = 'audio-dot';
       nameEl.appendChild(dot);
@@ -709,6 +731,7 @@ function buildTrack(state) {
       const ampmEl = document.createElement('div');
       ampmEl.className = 'clock-meta';
       ampmEl.id = 'clock-ampm';
+      ampmEl.innerHTML = '<span class="audio-dot" id="ambient-dot"></span>';
 
       const nextEl = document.createElement('div');
       nextEl.className = 'sidebar-next';
@@ -897,6 +920,8 @@ document.getElementById('track').addEventListener('mouseleave', () => {
 let _scrollTimer   = null;
 let _devAudio      = null; // shared audio element for tap-to-play dev tool
 let _devPlayingRow = null;
+let _ambientAudio    = null;
+let _ambientPeriodId = null;
 window.addEventListener('scroll', () => {
   document.getElementById('track').classList.add('scrolling');
   if (_scrollTimer) clearTimeout(_scrollTimer);
@@ -926,6 +951,30 @@ function resolveServiceId(periodId, date) {
 }
 
 // ══════════════════════════════
+// AMBIENT AUDIO
+// ══════════════════════════════
+function tickAmbientAudio(currentPeriod) {
+  const targetId = currentPeriod?.audio ? currentPeriod.id : null;
+  if (targetId === _ambientPeriodId) return;
+
+  if (_ambientAudio) {
+    _ambientAudio.pause();
+    _ambientAudio = null;
+  }
+  _ambientPeriodId = targetId;
+
+  if (currentPeriod?.audio) {
+    _ambientAudio = new Audio(currentPeriod.audio);
+    _ambientAudio.loop = true;
+    _ambientAudio.muted = false;
+    _ambientAudio.play().catch(e => console.warn('[ambient] play blocked:', e));
+  }
+
+  const dot = document.getElementById('ambient-dot');
+  if (dot) dot.classList.toggle('playing', !!_ambientAudio);
+}
+
+// ══════════════════════════════
 // MAIN TICK
 // ══════════════════════════════
 function tick() {
@@ -945,6 +994,7 @@ function tick() {
   updateClock(now);
   updateTickPosition(state);
   updateSidebar(state, now);
+  tickAmbientAudio(state.state === 'during' ? state.period : null);
 
   // Rebuild only on period change — not every minute.
   // Row classes and clock DOM are stable within a period; only the period
