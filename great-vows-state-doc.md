@@ -1,5 +1,5 @@
 # Great Vows — Project State Document
-*Updated after schedule canonization, three-mode system, bell taxonomy, iOS fixes, file hygiene, all three mode arrays formalized, Safari 18+ cross jitter fix, sticky now-row architecture, konsho evening bell loop, ambient audio engine, audio dot, git case-sensitivity fix, audio files committed to repo, ambient audio retry logic fix, audio dot alignment fix, Web Audio overnight bell scheduling, midnight reschedule, ambient audio stop bug fix, firewatch split, tick mark full-height fix, Web Audio wall-clock setTimeout fix, period transition polish, time-travel debug tool, mute covers Web Audio path, iOS keepalive, entry overlay z-index fix (March 2026).*
+*Updated after schedule canonization, three-mode system, bell taxonomy, iOS fixes, file hygiene, all three mode arrays formalized, Safari 18+ cross jitter fix, sticky now-row architecture, konsho evening bell loop, ambient audio engine, audio dot, git case-sensitivity fix, audio files committed to repo, ambient audio retry logic fix, audio dot alignment fix, Web Audio overnight bell scheduling, midnight reschedule, ambient audio stop bug fix, firewatch split, tick mark full-height fix, Web Audio wall-clock setTimeout fix, period transition polish, time-travel debug tool, mute covers Web Audio path, iOS keepalive, entry overlay z-index fix, ghost hover suppression, meta row tap-only on mobile (March 2026).*
 
 ---
 
@@ -393,6 +393,13 @@ great-vows/
 - Scroll bounce guard: skip if `window.scrollY < 0`
 - Mute button: `position: fixed; bottom-right` — `calc(24px + env(safe-area-inset-bottom, 0px))`
 - Time-travel button: `position: fixed; bottom-left` — same safe-area formula, mirrored side
+
+### Meta row reveal
+- **Desktop:** `mouseenter`/`mouseleave` on `.period-row` — sets `data-hover="active"` and `data-hover="neighbor"` on adjacent rows; CSS drives opacity
+- **Mobile:** tap-to-toggle, single open — `_showMeta(row)` / `_clearMeta(row)` toggle `meta-visible` class; `_showMeta` closes any previously open row before opening the new one; no auto-dismiss
+- `isTouchDevice` detection: `window.matchMedia('(hover: none)').matches` — pointer capability, not UA sniffing
+- IntersectionObserver scroll-trigger removed — was auto-revealing meta when row crossed center band; replaced by tap-only
+- `_metaObserver` and `_metaDismissTimer` are declared but inert — remove in next cleanup pass
 
 ---
 
