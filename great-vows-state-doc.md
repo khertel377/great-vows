@@ -513,6 +513,14 @@ Prototyped on `sticky-now-row` branch. Mobile scroll smoothness is the primary m
 
 **Diagnose 4:30 wake-up + han sequence not firing:** Leading suspect is iOS audio context expiring overnight despite wake lock. Instrumentation is now in place (try/catch logging + AudioContext health check). Reproduce by leaving page open overnight; check console at 4:30.
 
+### Dev tap-to-play tool — working
+Click any `.period-row[data-audio]` row to play/pause that period's audio.
+Whole row is the tap target; `.audio-dot` is visual only.
+`_devAudio` is always a fresh `Audio()` object — no reuse, no play/pause race.
+Morning/evening service rows not wired (no `data-audio`, `hasService` lookup
+removed — those dots are visual-only until service audio dev tool is built).
+Console unlock step removed — tap itself sets `sessionStorage`.
+
 ### Near term
 - Mode switcher UI: drop in `SCHEDULE_CASUAL` or `SCHEDULE_INTENSIVE` from this doc
 - Weekly schedule layer: day-off on 4th & 9th days
