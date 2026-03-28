@@ -163,7 +163,8 @@ const SCHEDULE_STANDARD = [
   { id: 'wake-up-bell',    time: [4,30],  end: [4,45],  name: 'Wake-up Bell',           type: 'bell',  hasService: false, audio: 'audio/sfzc/koten-and-shinrei-wakeup.mp3' },
   { id: 'han',             time: [4,45],  end: [5,0],   name: 'Han',                    type: 'bell',  hasService: false, audio: 'audio/sfzc/temple_sounds-the_han.mp3' },
   { id: 'zazen-morning',   time: [5,0],   end: [6,30],  name: 'Zazen',                  type: 'zazen', hasService: false, bell: 'audio/sfzc/3_Floor_Bells.mp3', bellEnd: { src: 'audio/sfzc/morning_zazen_end.mp3', offsetMs: -211000 } },
-  { id: 'morning-service', time: [6,30],  end: [7,0],   name: 'Morning Service',        type: 'chant', hasService: true  },
+  { id: 'morning-service', time: [6,30],  end: [7,0],   name: 'Morning Service',        type: 'chant', hasService: true,
+    service: { mon: 'audio/sfzc/MorningService_Monday.mp4', tue: 'audio/sfzc/MorningService_Tuesday.mp4', wed: 'audio/sfzc/MorningService_Wednesday.mp4', thu: 'audio/sfzc/MorningService_Thursday.mp4' } },
   { id: 'soji',            time: [7,0],   end: [7,20],  name: 'Soji',                   type: 'work',  hasService: false },
   { id: 'breakfast',       time: [7,20],  end: [8,10],  name: 'Breakfast',              type: 'meal',  hasService: false },
   { id: 'study-hall',      time: [8,10],  end: [9,10],  name: 'Study Hall',             type: 'study', hasService: false, bell: 'audio/sfzc/study-bell.mp3', bellEnd: 'audio/sfzc/study-bell.mp3' },
@@ -389,14 +390,16 @@ great-vows/
 | `audio` | string | Ambient loop — plays for duration of period, shown as track dot |
 | `bell` | string | One-shot bell — fires once at period start via Web Audio, shown as track dot |
 | `bellEnd` | string \| `{ src, offsetMs }` | One-shot bell at period end — or before it when offsetMs is negative. String form: fires at `period.end`. Object form: fires at `period.end + offsetMs`. `-211000` = 3m31s before end (morning zazen end recording). Array-driven, shown as track dot. |
+| `service` | `{ mon, tue, wed, thu, fri, sat, sun }` | Day-keyed map of service audio files. Only wired days need entries — missing keys fall back to silence. Played by `tickServiceAudio()` during the period. Shown as track dot. |
 
-`audio:` and `bell:` can coexist on a period (e.g., a period that both loops ambient sound and fires a start bell). Both render a dot; dot pulses when ambient is playing.
+`audio:`, `bell:`, `bellEnd:`, and `service:` can coexist on a period. All render a dot; ambient dot pulses when ambient is playing.
 
 ### Audio engine
 1. **Wake-up bell** — plays `koten-and-shinrei-wakeup.mp3` once when `wake-up-bell` period begins. Uses `wakeupPlaying` flag to prevent re-trigger on every tick.
 2. **Han** — plays `temple_sounds-the_han.mp3` starting 15 min before any `type: 'zazen'` period. Seeks/loops.
-3. **Ambient service** — MP4 at 0.33 volume, radio-model elapsed seek, 3s crossfade.
+3. **Ambient service** — MP4 at 0.33 volume, radio-model elapsed seek, 3s crossfade. (index.html path — not schedule.html)
 4. **Period transition bell** — densho on boundary, skips first tick.
+5. **Service audio** — `tickServiceAudio(currentPeriod)` runs each second from `tick()`. On period change, stops previous, reads `currentPeriod.service[getDayKey()]`, creates a fresh `Audio()` and plays from the beginning. No elapsed seek — schedule.html plays audio; index.html handles aligned chant player. Mon–Thu wired; Fri/Sat/Sun absent keys fall back to silence. `_serviceAudio` / `_servicePeriodId` globals in script #1; covered in `applyMute()` via `typeof` guard. `getDayKey()` uses `getNow()` — debug-aware.
 
 **API corrections (locked — do not regress):**
 - `getScheduleState(getNow())` — use `getNow()` not `new Date()` at all call sites

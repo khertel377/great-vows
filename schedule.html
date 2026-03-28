@@ -462,7 +462,8 @@ const SCHEDULE = [
   { id: 'wake-up-bell',   time: [4,30],  end: [4,45],  name: 'Wake-up Bell',          type: 'bell',  hasService: false, audio: 'audio/sfzc/koten-and-shinrei-wakeup.mp3' },
   { id: 'han',            time: [4,45],  end: [5,0],   name: 'Han',                   type: 'bell',  hasService: false, audio: 'audio/sfzc/temple_sounds-the_han.mp3' },
   { id: 'zazen-morning',  time: [5,0],   end: [6,30],  name: 'Zazen',                 type: 'zazen', hasService: false, bell: 'audio/sfzc/3_Floor_Bells.mp3', bellEnd: { src: 'audio/sfzc/morning_zazen_end.mp3', offsetMs: -211000 } },
-  { id: 'morning-service',time: [6,30],  end: [7,0],   name: 'Morning Service',       type: 'chant', hasService: true  },
+  { id: 'morning-service',time: [6,30],  end: [7,0],   name: 'Morning Service',       type: 'chant', hasService: true,
+    service: { mon: 'audio/sfzc/MorningService_Monday.mp4', tue: 'audio/sfzc/MorningService_Tuesday.mp4', wed: 'audio/sfzc/MorningService_Wednesday.mp4', thu: 'audio/sfzc/MorningService_Thursday.mp4' } },
   { id: 'soji',           time: [7,0],   end: [7,20],  name: 'Soji',                  type: 'work',  hasService: false },
   { id: 'breakfast',      time: [7,20],  end: [8,10],  name: 'Breakfast',             type: 'meal',  hasService: false },
   { id: 'study-hall',     time: [8,10],  end: [9,10],  name: 'Study Hall',            type: 'study', hasService: false, bell: 'audio/sfzc/study-bell.mp3', bellEnd: 'audio/sfzc/study-bell.mp3' },
@@ -714,7 +715,7 @@ function buildTrack(state) {
     const nameEl = document.createElement('div');
     nameEl.className = 'period-name';
 
-    if (p.audio || p.bell || p.bellEnd) {
+    if (p.audio || p.bell || p.bellEnd || p.service) {
       const dot = document.createElement('span');
       dot.className = 'audio-dot';
       nameEl.appendChild(dot);
@@ -931,6 +932,8 @@ let _devAudio      = null; // shared audio element for tap-to-play dev tool
 let _devPlayingRow = null;
 let _ambientAudio       = null;
 let _ambientPeriodId    = null;
+let _serviceAudio       = null;
+let _servicePeriodId    = null;
 let _pendingAmbientPlay = false;
 window.addEventListener('scroll', () => {
   document.getElementById('track').classList.add('scrolling');
@@ -1008,6 +1011,32 @@ function tickAmbientAudio(currentPeriod) {
 }
 
 // ══════════════════════════════
+// SERVICE AUDIO
+// ══════════════════════════════
+function getDayKey() {
+  return ['sun','mon','tue','wed','thu','fri','sat'][getNow().getDay()];
+}
+
+function tickServiceAudio(currentPeriod) {
+  const id = currentPeriod?.id ?? null;
+  if (id === _servicePeriodId) return;
+  _servicePeriodId = id;
+
+  if (_serviceAudio) {
+    _serviceAudio.pause();
+    _serviceAudio = null;
+  }
+
+  if (!currentPeriod?.service) return;
+  const src = currentPeriod.service[getDayKey()];
+  if (!src) return; // no file for this day — silent
+
+  _serviceAudio = new Audio(src);
+  _serviceAudio.muted = localStorage.getItem('gv-muted') === '1';
+  _serviceAudio.play().catch(e => console.warn('[Service] play() blocked:', e));
+}
+
+// ══════════════════════════════
 // MAIN TICK
 // ══════════════════════════════
 function tick() {
@@ -1028,6 +1057,7 @@ function tick() {
   updateTickPosition(state);
   updateSidebar(state, now);
   tickAmbientAudio(state.state === 'during' ? state.period : null);
+  tickServiceAudio(state.state === 'during' ? state.period : null);
 
   if (_pendingAmbientPlay && _ambientAudio) {
     _ambientAudio.play()
@@ -1523,6 +1553,7 @@ const AudioEngine = (() => {
     } else {
       console.log('[mute] _ambientAudio not reachable');
     }
+    if (typeof _serviceAudio !== 'undefined' && _serviceAudio) _serviceAudio.muted = isMuted;
     if (typeof _devAudio !== 'undefined' && _devAudio) _devAudio.muted = isMuted;
   }
 
