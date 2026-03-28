@@ -1109,6 +1109,7 @@ function scheduleAudioEvent(url, firesAt) {
       const source = _webAudioCtx.createBufferSource();
       source.buffer = audioBuffer;
       source.connect(_webAudioCtx.destination);
+      console.log('[WebAudio] fire callback — muted=', localStorage.getItem('gv-muted'));
       if (localStorage.getItem('gv-muted') === '1') return; // respect mute for Web Audio path
       source.start(0); // play immediately — wall-clock setTimeout already handled the delay
     } catch (e) {
@@ -1606,6 +1607,7 @@ const AudioEngine = (() => {
         wakeupAudio = new Audio('audio/sfzc/koten-and-shinrei-wakeup.mp3');
         wakeupAudio.volume = isMuted ? 0 : 0.8;
         wakeupAudio.muted  = isMuted;
+        console.log('[wakeupAudio] playing — isMuted=', isMuted);
         wakeupAudio.play().catch(err => console.warn('[AudioEngine] wakeup play() failed:', err.name, err.message));
         wakeupPlaying = true;
       }
