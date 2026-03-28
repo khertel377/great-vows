@@ -336,7 +336,8 @@ body.is-scrolling .period-row:not(.now):hover .period-row-meta { opacity: 0; }
 .period-row.now .audio-dot { opacity: 0.5; }
 
 /* Dev tool: whole row is the click target */
-.period-row[data-audio] { cursor: pointer; }
+.period-row[data-audio],
+.period-row[data-bell]  { cursor: pointer; }
 @keyframes audioDotPulse {
   0%, 100% { opacity: 0.3; transform: scale(1); }
   50%       { opacity: 0.9; transform: scale(1.8); }
@@ -464,11 +465,11 @@ const SCHEDULE = [
   { id: 'morning-service',time: [6,30],  end: [7,0],   name: 'Morning Service',       type: 'chant', hasService: true  },
   { id: 'soji',           time: [7,0],   end: [7,20],  name: 'Soji',                  type: 'work',  hasService: false },
   { id: 'breakfast',      time: [7,20],  end: [8,10],  name: 'Breakfast',             type: 'meal',  hasService: false },
-  { id: 'study-hall',     time: [8,10],  end: [9,10],  name: 'Study Hall',            type: 'study', hasService: false },
-  { id: 'work-morning',   time: [9,10],  end: [12,15], name: 'Work Period',           type: 'work',  hasService: false },
+  { id: 'study-hall',     time: [8,10],  end: [9,10],  name: 'Study Hall',            type: 'study', hasService: false, bell: 'audio/sfzc/study-bell.mp3' },
+  { id: 'work-morning',   time: [9,10],  end: [12,15], name: 'Work Period',           type: 'work',  hasService: false, bell: 'audio/sfzc/railroad-bell.mp3' },
   { id: 'midday-service', time: [12,15], end: [12,30], name: 'Mid-day Service',       type: 'chant', hasService: false },
   { id: 'lunch',          time: [12,30], end: [13,15], name: 'Lunch',                 type: 'meal',  hasService: false },
-  { id: 'work-afternoon', time: [13,15], end: [15,0],  name: 'Afternoon Work',        type: 'work',  hasService: false },
+  { id: 'work-afternoon', time: [13,15], end: [15,0],  name: 'Afternoon Work',        type: 'work',  hasService: false, bell: 'audio/sfzc/railroad-bell.mp3' },
   { id: 'personal',       time: [15,0],  end: [17,15], name: 'Personal Time',type: 'rest',  hasService: false },
   { id: 'zazen-evening',  time: [17,15], end: [17,50], name: 'Zazen',                 type: 'zazen', hasService: false },
   { id: 'evening-service',time: [17,50], end: [18,0],  name: 'Evening Service',       type: 'chant', hasService: true  },
@@ -695,6 +696,7 @@ function buildTrack(state) {
     row.dataset.periodId = p.id; // enables [data-period-id] selector
     row.dataset.idx      = i;
     if (p.audio) row.dataset.audio = p.audio;
+    if (p.bell)  row.dataset.bell  = p.bell;
     row.style.minHeight  = rowHeight(durMins) + 'px';
 
     let classes = 'period-row ' + rowClass;
@@ -711,7 +713,7 @@ function buildTrack(state) {
     const nameEl = document.createElement('div');
     nameEl.className = 'period-name';
 
-    if (p.audio) {
+    if (p.audio || p.bell) {
       const dot = document.createElement('span');
       dot.className = 'audio-dot';
       nameEl.appendChild(dot);
@@ -822,14 +824,14 @@ function buildTrack(state) {
 // or via AudioEngine.unlock() after a user gesture).
 // ══════════════════════════════
 function wireAudioDevTool() {
-  document.querySelectorAll('.period-row[data-audio]').forEach(row => {
+  document.querySelectorAll('.period-row[data-audio], .period-row[data-bell]').forEach(row => {
     row.addEventListener('click', (e) => {
       e.stopPropagation();
 
       // The tap itself is a user gesture — satisfy iOS unlock requirement
       sessionStorage.setItem('gv-audio-unlocked', '1');
 
-      const src = row.dataset.audio;
+      const src = row.dataset.audio || row.dataset.bell;
       if (!src) return;
 
       // Toggle: stop if this row is already playing
@@ -1139,39 +1141,40 @@ function scheduleUpcomingBells() {
     scheduleAudioEvent(period.audio, firesAt);
   }
 
-  // Study bell — Standard schedule only
-  // 8:10 open (+ future: english opening chant offset from bell duration)
-  // 9:05 close (+ future: japanese closing chant offset from bell duration)
-  // 9:10 railroad bell then signals work — study bell is the soft interior close 5 min prior
+  // bell: field — one-shot period-start bells, array-driven
+  // Any period with a bell: field in the schedule array is automatically scheduled here.
+  // No per-bell hardcoding needed — add bell: to the array entry and it fires.
+  for (const period of SCHEDULE) {
+    if (!period.bell) continue;
+    const [h, m] = period.time;
+    const firesAt = new Date(now);
+    firesAt.setHours(h, m, 0, 0);
+    if (firesAt <= now) continue;
+    console.log('[WebAudio] scheduling bell for', period.id, 'at', firesAt.toLocaleTimeString());
+    scheduleAudioEvent(period.bell, firesAt);
+  }
+
+  // Study hall closing bell — 9:05, fires inside the study-hall period (not at period start)
+  // Cannot be expressed as bell: on the array entry (which fires at period.time = 8:10).
+  // Future: bellEnd: field if this pattern recurs. For now: one explicit entry.
   if (SCHEDULE.some(p => p.id === 'study-hall')) {
-    const STUDY_BELL = 'audio/sfzc/study-bell.mp3';
-    const studyTimes = [
-      [8, 10],  // study hall open
-      [9,  5],  // study hall close (railroad bell at 9:10 is the exterior end-of-study signal)
-    ];
-    for (const [h, m] of studyTimes) {
-      const firesAt = new Date(now);
-      firesAt.setHours(h, m, 0, 0);
-      if (firesAt <= now) continue;
-      console.log('[WebAudio] scheduling study-bell at', firesAt.toLocaleTimeString());
-      scheduleAudioEvent(STUDY_BELL, firesAt);
+    const firesAt = new Date(now);
+    firesAt.setHours(9, 5, 0, 0);
+    if (firesAt > now) {
+      console.log('[WebAudio] scheduling study-bell close at', firesAt.toLocaleTimeString());
+      scheduleAudioEvent('audio/sfzc/study-bell.mp3', firesAt);
     }
   }
 
-  // Railroad bell — Standard schedule only (Casual and Intensive have no work periods)
-  // Guard: SCHEDULE_STANDARD contains work-morning; Casual/Intensive do not.
-  if (SCHEDULE.some(p => p.id === 'work-morning')) {
-    const RAILROAD_BELL = 'audio/sfzc/railroad-bell.mp3';
-    const railroadTimes = [
-      [9, 10],   // work-morning start
-      [14, 55],  // end of work-afternoon, before personal at 15:00
-    ];
-    for (const [h, m] of railroadTimes) {
-      const firesAt = new Date(now);
-      firesAt.setHours(h, m, 0, 0);
-      if (firesAt <= now) continue;
-      console.log('[WebAudio] scheduling railroad-bell at', firesAt.toLocaleTimeString());
-      scheduleAudioEvent(RAILROAD_BELL, firesAt);
+  // Work-afternoon end bell — 14:55, fires inside work-afternoon (not at period start 13:15)
+  // Same case as above: fires before the period ends, not at its start.
+  // Future: bellEnd: field. For now: one explicit entry.
+  if (SCHEDULE.some(p => p.id === 'work-afternoon')) {
+    const firesAt = new Date(now);
+    firesAt.setHours(14, 55, 0, 0);
+    if (firesAt > now) {
+      console.log('[WebAudio] scheduling railroad-bell work-afternoon end at', firesAt.toLocaleTimeString());
+      scheduleAudioEvent('audio/sfzc/railroad-bell.mp3', firesAt);
     }
   }
 }

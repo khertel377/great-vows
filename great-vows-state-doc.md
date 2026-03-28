@@ -258,8 +258,8 @@ Future: generate correct koten pattern programmatically for any schedule time.
 - ✅ Densho — in app
 - ✅ Koten + shinrei wake-up — `audio/sfzc/koten-and-shinrei-wakeup.mp3` (polished, ready)
 - 🔍 Meal bell — may need field recording
-- ✅ Railroad bell — `audio/sfzc/railroad-bell.mp3`; scheduled at 9:10 AM (work-morning start) and 2:55 PM (end of work-afternoon); Standard schedule only
-- ✅ Study bell — `audio/sfzc/study-bell.mp3`; scheduled at 8:10 AM (study hall open) and 9:05 AM (study hall close); Standard schedule only. Sequence: 8:10 bell → english opening chant (future, offset from bell duration); 9:05 bell → japanese closing chant (future, offset from bell duration); 9:10 railroad bell signals work begins
+- ✅ Railroad bell — `audio/sfzc/railroad-bell.mp3`; array-driven via `bell:` on `work-morning` (9:10) and `work-afternoon` (13:15); end-of-afternoon bell at 14:55 via hardcoded `bellEnd`-pattern entry; Standard schedule only
+- ✅ Study bell — `audio/sfzc/study-bell.mp3`; array-driven via `bell:` on `study-hall` (8:10 open); close at 9:05 via hardcoded `bellEnd`-pattern entry; Standard schedule only. Sequence: 8:10 bell → english opening chant (future, offset from bell duration); 9:05 bell → japanese closing chant (future, offset from bell duration); 9:10 railroad bell signals work begins
 - 🔍 Work meeting drum — unique pattern, worth recording; watch haptic candidate
 - 🎙 Hyoshigi clappers — needs dedicated edit/recording for `firewatch-clappers.mp3` (wired in schedule, file pending)
 
@@ -373,6 +373,22 @@ great-vows/
 ```
 - `body.quiet-mode` class: full color inversion, `#1a1814` bg, 4s fade
 - Midnight treadmill handles the 23:42→00:00 seam seamlessly
+
+### Schedule array field schema
+
+| Field | Type | Purpose |
+|-------|------|---------|
+| `id` | string | Unique period identifier |
+| `time` | [h, m] | Start time |
+| `end` | [h, m] | End time |
+| `name` | string | Display name |
+| `type` | string | `quiet`, `bell`, `zazen`, `chant`, `work`, `study`, `meal`, `rest` |
+| `hasService` | bool | Whether Enter button should appear |
+| `audio` | string | Ambient loop — plays for duration of period, shown as track dot |
+| `bell` | string | One-shot bell — fires once at period start via Web Audio, shown as track dot |
+| `bellEnd` | *(future)* | One-shot bell at period end — not yet implemented; pattern used for study-hall close (9:05) and work-afternoon end (14:55) which are currently hardcoded in `scheduleUpcomingBells()` |
+
+`audio:` and `bell:` can coexist on a period (e.g., a period that both loops ambient sound and fires a start bell). Both render a dot; dot pulses when ambient is playing.
 
 ### Audio engine
 1. **Wake-up bell** — plays `koten-and-shinrei-wakeup.mp3` once when `wake-up-bell` period begins. Uses `wakeupPlaying` flag to prevent re-trigger on every tick.
@@ -635,7 +651,7 @@ Tap opens `#tt-panel` — small floating panel with hour/minute number inputs, A
 14. One canonical state doc — `great-vows-state-doc.md`, kebab-case, overwrite in place, never duplicate
 15. The frame is constant, the content varies — all modes open and close the same way
 16. Three Refuges is universal — every mode, every night, not a Practice Period exclusive
-17. Any period with `audio:` in the schedule array auto-gets ambient playback + track dot — no hardcoding in `buildTrack()`
+17. Any period with `audio:` or `bell:` in the schedule array auto-gets a track dot — no hardcoding in `buildTrack()`. `audio:` drives ambient looping; `bell:` drives one-shot Web Audio scheduling via `scheduleUpcomingBells()`. Adding either field is sufficient.
 18. `core.ignorecase=true` is macOS git default — always use `git -c core.ignorecase=false add audio/sfzc/` when adding audio files. GitHub Pages is case-sensitive and will 404 silently otherwise.
 19. Ambient audio retry: use a persistent click listener with a `_pendingAmbientPlay` flag — never `{ once: true }`. The entry screen tap will consume a one-time listener before the play block occurs.
 20. `tickAmbientAudio` tracks `_ambientPeriodId` by `currentPeriod?.id` (not by whether the period has audio). This ensures stop logic fires on every period transition, not just audio→no-audio changes. `_pendingAmbientPlay` is cleared on every transition.
