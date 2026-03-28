@@ -1402,6 +1402,7 @@ document.getElementById('tt-go').addEventListener('click', () => {
   const isPM = document.getElementById('tt-ampm').textContent === 'PM';
   if (isPM && h !== 12) h += 12;
   if (!isPM && h === 12) h = 0;
+  unlockAudioContext(); // creates _webAudioCtx if not already exists — idempotent
   const target = new Date(); target.setHours(h, m, 0, 0);
   _debugOffset = target - Date.now();
   ttDot.style.display = '';
