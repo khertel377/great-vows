@@ -1464,6 +1464,7 @@ const AudioEngine = (() => {
     if (hanAudio)     hanAudio.muted     = isMuted;
     if (denshoAudio)  denshoAudio.muted  = isMuted;
     if (wakeupAudio)  wakeupAudio.muted  = isMuted;
+    if (typeof _ambientAudio !== 'undefined' && _ambientAudio) _ambientAudio.muted = isMuted;
   }
 
   /* ── Han ── */
