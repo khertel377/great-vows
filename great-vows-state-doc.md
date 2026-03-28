@@ -164,7 +164,8 @@ const SCHEDULE_STANDARD = [
   { id: 'han',             time: [4,45],  end: [5,0],   name: 'Han',                    type: 'bell',  hasService: false, audio: 'audio/sfzc/temple_sounds-the_han.mp3' },
   { id: 'zazen-morning',   time: [5,0],   end: [6,30],  name: 'Zazen',                  type: 'zazen', hasService: false, bell: 'audio/sfzc/3_Floor_Bells.mp3', bellEnd: { src: 'audio/sfzc/morning_zazen_end.mp3', offsetMs: -211000 } },
   { id: 'morning-service', time: [6,30],  end: [7,0],   name: 'Morning Service',        type: 'chant', hasService: true,
-    service: { mon: 'audio/sfzc/MorningService_Monday.mp4', tue: 'audio/sfzc/MorningService_Tuesday.mp4', wed: 'audio/sfzc/MorningService_Wednesday.mp4', thu: 'audio/sfzc/MorningService_Thursday.mp4' } },
+    service: { mon: 'audio/sfzc/MorningService_Monday.mp4', tue: 'audio/sfzc/MorningService_Tuesday.mp4', wed: 'audio/sfzc/MorningService_Wednesday.mp4', thu: 'audio/sfzc/MorningService_Thursday.mp4',
+               default: 'audio/sfzc/MorningService_Monday.mp4' } },
   { id: 'soji',            time: [7,0],   end: [7,20],  name: 'Soji',                   type: 'work',  hasService: false },
   { id: 'breakfast',       time: [7,20],  end: [8,10],  name: 'Breakfast',              type: 'meal',  hasService: false },
   { id: 'study-hall',      time: [8,10],  end: [9,10],  name: 'Study Hall',             type: 'study', hasService: false, bell: 'audio/sfzc/study-bell.mp3', bellEnd: 'audio/sfzc/study-bell.mp3' },
@@ -390,7 +391,7 @@ great-vows/
 | `audio` | string | Ambient loop — plays for duration of period, shown as track dot |
 | `bell` | string | One-shot bell — fires once at period start via Web Audio, shown as track dot |
 | `bellEnd` | string \| `{ src, offsetMs }` | One-shot bell at period end — or before it when offsetMs is negative. String form: fires at `period.end`. Object form: fires at `period.end + offsetMs`. `-211000` = 3m31s before end (morning zazen end recording). Array-driven, shown as track dot. |
-| `service` | `{ mon, tue, wed, thu, fri, sat, sun }` | Day-keyed map of service audio files. Only wired days need entries — missing keys fall back to silence. Played by `tickServiceAudio()` during the period. Shown as track dot. |
+| `service` | `{ mon, tue, wed, thu, default }` | Day-keyed map of service audio files. Resolution: `service[dayKey] \|\| service.default`. `default` covers Fri/Sat/Sun until dedicated recordings exist — currently points to Monday. Missing both key and default → `console.warn` + silence. Played by `tickServiceAudio()`. Shown as track dot. |
 
 `audio:`, `bell:`, `bellEnd:`, and `service:` can coexist on a period. All render a dot; ambient dot pulses when ambient is playing.
 
