@@ -992,7 +992,7 @@ function tickAmbientAudio(currentPeriod) {
 
   _ambientAudio = new Audio(currentPeriod.audio);
   _ambientAudio.loop = true;
-  _ambientAudio.muted = isMuted;
+  _ambientAudio.muted = localStorage.getItem('gv-muted') === '1';
   _ambientAudio.play().catch(e => {
     console.warn('[ambient] play blocked, queuing for next gesture:', e);
     _pendingAmbientPlay = true;
@@ -1109,7 +1109,7 @@ function scheduleAudioEvent(url, firesAt) {
       const source = _webAudioCtx.createBufferSource();
       source.buffer = audioBuffer;
       source.connect(_webAudioCtx.destination);
-      if (isMuted) return; // respect mute for Web Audio path
+      if (localStorage.getItem('gv-muted') === '1') return; // respect mute for Web Audio path
       source.start(0); // play immediately — wall-clock setTimeout already handled the delay
     } catch (e) {
       console.warn('[WebAudio] scheduleAudioEvent failed for', url, ':', e);
