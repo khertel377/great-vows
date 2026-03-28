@@ -1,5 +1,5 @@
 # Great Vows — Project State Document
-*Updated after schedule canonization, three-mode system, bell taxonomy, iOS fixes, file hygiene, all three mode arrays formalized, Safari 18+ cross jitter fix, sticky now-row architecture, konsho evening bell loop, ambient audio engine, audio dot, git case-sensitivity fix, audio files committed to repo, ambient audio retry logic fix, audio dot alignment fix, Web Audio overnight bell scheduling, midnight reschedule, ambient audio stop bug fix, firewatch split, tick mark full-height fix, Web Audio wall-clock setTimeout fix, period transition polish, time-travel debug tool, mute covers Web Audio path, iOS keepalive, entry overlay z-index fix, ghost hover suppression, meta row tap-only on mobile, two-script-block mute fix (March 2026).*
+*Updated after schedule canonization, three-mode system, bell taxonomy, iOS fixes, file hygiene, all three mode arrays formalized, Safari 18+ cross jitter fix, sticky now-row architecture, konsho evening bell loop, ambient audio engine, audio dot, git case-sensitivity fix, audio files committed to repo, ambient audio retry logic fix, audio dot alignment fix, Web Audio overnight bell scheduling, midnight reschedule, ambient audio stop bug fix, firewatch split, tick mark full-height fix, Web Audio wall-clock setTimeout fix, period transition polish, time-travel debug tool, mute covers Web Audio path, iOS keepalive, entry overlay z-index fix, ghost hover suppression, meta row tap-only on mobile, full mute system architecture (March 2026).*
 
 ---
 
@@ -395,9 +395,22 @@ great-vows/
 - Time-travel button: `position: fixed; bottom-left` — same safe-area formula, mirrored side
 
 ### Two script blocks
-`schedule.html` has two `<script>` tags. Script #1 contains `tickAmbientAudio`, `scheduleAudioEvent`, and the core tick/audio engine. Script #2 contains the mute button, `isMuted`, and UI controls. `let`/`const` in script #2 are not visible in script #1. Even `var` doesn't help — script #2 hasn't executed yet when script #1's `tick()` fires on page load. **Rule: script #1 must never reference variables declared in script #2.** For mute state, script #1 reads `localStorage.getItem('gv-muted') === '1'` directly at call sites (lines 995, 1112). Script #2's `isMuted` variable owns the button state and `applyMute()` as before.
+`schedule.html` has two `<script>` tags. Script #1 contains `tickAmbientAudio`, `scheduleAudioEvent`, and the core tick/audio engine. Script #2 contains the mute button, `isMuted`, and UI controls. `let`/`const` in script #2 are not visible in script #1. Even `var` doesn't help — script #2 hasn't executed yet when script #1's `tick()` fires on page load. **Rule: script #1 must never reference variables declared in script #2.** Script #1 always reads mute state directly from `localStorage.getItem('gv-muted') === '1'`.
 
-**Mute system — two audio paths:** Script #1 owns `_ambientAudio` (looping ambient periods — firewatch bell etc.). Script #2's `AudioEngine` owns `ambientAudio` (service audio), `hanAudio`, `denshoAudio`, `wakeupAudio`. `applyMute()` must cover both. `_ambientAudio` is accessed from script #2 via `typeof _ambientAudio !== 'undefined'` guard — necessary because it's a `let` in script #1, not on `window`. New ambient loops read mute state directly from `localStorage.getItem('gv-muted') === '1'` at creation (line 995) — no cross-script variable dependency.
+**Mute system — complete architecture (all four paths):**
+Script #1 owns `_ambientAudio` (ambient period loops) and `_devAudio` (dev tap-to-play). Script #2 `AudioEngine` owns `ambientAudio` (service audio), `hanAudio`, `denshoAudio`, `wakeupAudio`.
+
+`applyMute()` in script #2 covers all six objects:
+- `ambientAudio`, `hanAudio`, `denshoAudio`, `wakeupAudio` — direct references (same script)
+- `_ambientAudio`, `_devAudio` — via `typeof` guard (cross-script, `let` not on `window`)
+
+New audio creation sets muted state at birth:
+- `_ambientAudio` — reads `localStorage.getItem('gv-muted') === '1'` at line 995 (script #1)
+- `_devAudio` — reads `localStorage.getItem('gv-muted') === '1'` at creation (script #1)
+- `AudioEngine` objects — read `isMuted` at creation (same script)
+- Web Audio scheduled bells — reads `localStorage.getItem('gv-muted') === '1'` at fire time (line 1112, script #1)
+
+`firewatch-clappers.mp3` — placeholder, file still pending. Ambient mute works; nothing to mute until file exists.
 
 ### Meta row reveal
 - **Desktop:** `mouseenter`/`mouseleave` on `.period-row` — sets `data-hover="active"` and `data-hover="neighbor"` on adjacent rows; CSS drives opacity
