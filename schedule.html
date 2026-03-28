@@ -472,7 +472,7 @@ const SCHEDULE = [
   { id: 'work-morning',   time: [9,10],  end: [12,15], name: 'Work Period',           type: 'work',  hasService: false, bell: 'audio/sfzc/railroad-bell.mp3' },
   { id: 'midday-service', time: [12,15], end: [12,30], name: 'Mid-day Service',       type: 'chant', hasService: false },
   { id: 'lunch',          time: [12,30], end: [13,15], name: 'Lunch',                 type: 'meal',  hasService: false },
-  { id: 'work-afternoon', time: [13,15], end: [15,0],  name: 'Afternoon Work',        type: 'work',  hasService: false, bell: 'audio/sfzc/railroad-bell.mp3' },
+  { id: 'work-afternoon', time: [13,15], end: [15,0],  name: 'Afternoon Work',        type: 'work',  hasService: false, bell: 'audio/sfzc/railroad-bell.mp3', bellEnd: { src: 'audio/sfzc/railroad-bell.mp3', offsetMs: -300000 } },
   { id: 'personal',       time: [15,0],  end: [17,15], name: 'Personal Time',type: 'rest',  hasService: false },
   { id: 'zazen-evening',  time: [17,15], end: [17,50], name: 'Zazen',                 type: 'zazen', hasService: false, bell: 'audio/sfzc/3_Floor_Bells.mp3' },
   { id: 'evening-service',time: [17,50], end: [18,0],  name: 'Evening Service',       type: 'chant', hasService: true  },
@@ -1264,16 +1264,6 @@ function scheduleUpcomingBells() {
     if (firesAt <= now) continue;
     console.log('[WebAudio] scheduling bellEnd for', period.id, 'at', firesAt.toLocaleTimeString());
     scheduleAudioEvent(src, firesAt);
-  }
-
-  // Work-afternoon end bell — 14:55, fires before period end (15:00) — not expressible as bellEnd:
-  // Future: consider sub-period offset field if this pattern recurs.
-  if (SCHEDULE.some(p => p.id === 'work-afternoon')) {
-    const firesAt = todayAt(14, 55);
-    if (firesAt > now) {
-      console.log('[WebAudio] scheduling railroad-bell work-afternoon end at', firesAt.toLocaleTimeString());
-      scheduleAudioEvent('audio/sfzc/railroad-bell.mp3', firesAt);
-    }
   }
 
   // Mid-window bellEnd playback — handles time-travel into an active bellEnd window

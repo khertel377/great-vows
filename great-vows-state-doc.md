@@ -1,5 +1,5 @@
 # Great Vows — Project State Document
-*Updated after schedule canonization, three-mode system, bell taxonomy, iOS fixes, file hygiene, all three mode arrays formalized, Safari 18+ cross jitter fix, sticky now-row architecture, konsho evening bell loop, ambient audio engine, audio dot, git case-sensitivity fix, audio files committed to repo, ambient audio retry logic fix, audio dot alignment fix, Web Audio overnight bell scheduling, midnight reschedule, ambient audio stop bug fix, firewatch split, tick mark full-height fix, Web Audio wall-clock setTimeout fix, period transition polish, time-travel debug tool, mute covers Web Audio path, iOS keepalive, entry overlay z-index fix, ghost hover suppression, meta row tap-only on mobile, full mute system architecture (March 2026).*
+*Updated after schedule canonization, three-mode system, bell taxonomy, iOS fixes, file hygiene, all three mode arrays formalized, Safari 18+ cross jitter fix, sticky now-row architecture, konsho evening bell loop, ambient audio engine, audio dot, git case-sensitivity fix, audio files committed to repo, ambient audio retry logic fix, audio dot alignment fix, Web Audio overnight bell scheduling, midnight reschedule, ambient audio stop bug fix, firewatch split, tick mark full-height fix, Web Audio wall-clock setTimeout fix, period transition polish, time-travel debug tool, mute covers Web Audio path, iOS keepalive, entry overlay z-index fix, ghost hover suppression, meta row tap-only on mobile, full mute system architecture, bell:/bellEnd:/service: field taxonomy, zazen bells, morning service day-keyed playback, elapsed seek, time-travel audio stop/restart, work-afternoon bellEnd migration (March 2026).*
 
 ---
 
@@ -172,7 +172,7 @@ const SCHEDULE_STANDARD = [
   { id: 'work-morning',    time: [9,10],  end: [12,15], name: 'Work Period',            type: 'work',  hasService: false, bell: 'audio/sfzc/railroad-bell.mp3' },
   { id: 'midday-service',  time: [12,15], end: [12,30], name: 'Mid-day Service',        type: 'chant', hasService: false },
   { id: 'lunch',           time: [12,30], end: [13,15], name: 'Lunch',                  type: 'meal',  hasService: false },
-  { id: 'work-afternoon',  time: [13,15], end: [15,0],  name: 'Afternoon Work',         type: 'work',  hasService: false, bell: 'audio/sfzc/railroad-bell.mp3' },
+  { id: 'work-afternoon',  time: [13,15], end: [15,0],  name: 'Afternoon Work',         type: 'work',  hasService: false, bell: 'audio/sfzc/railroad-bell.mp3', bellEnd: { src: 'audio/sfzc/railroad-bell.mp3', offsetMs: -300000 } },
   { id: 'personal',        time: [15,0],  end: [17,15], name: 'Personal Time',          type: 'rest',  hasService: false },
   { id: 'zazen-evening',   time: [17,15], end: [17,50], name: 'Zazen',                  type: 'zazen', hasService: false, bell: 'audio/sfzc/3_Floor_Bells.mp3' },
   { id: 'evening-service', time: [17,50], end: [18,0],  name: 'Evening Service',        type: 'chant', hasService: true  },
@@ -262,7 +262,7 @@ Future: generate correct koten pattern programmatically for any schedule time.
 - 🔍 Meal bell — may need field recording
 - ✅ 3 Floor Bells — `audio/sfzc/3_Floor_Bells.mp3`; `bell:` on all zazen periods (start); Standard, Casual, Intensive
 - ✅ Morning zazen end — `audio/sfzc/morning_zazen_end.mp3`; `bellEnd:` on `zazen-morning` (Standard, Casual) and `zazen-1` (Intensive)
-- ✅ Railroad bell — `audio/sfzc/railroad-bell.mp3`; array-driven via `bell:` on `work-morning` (9:10) and `work-afternoon` (13:15); end-of-afternoon at 14:55 hardcoded (fires before period end, not expressible as `bellEnd:`); Standard only
+- ✅ Railroad bell — `audio/sfzc/railroad-bell.mp3`; `bell:` on `work-morning` (9:10) and `work-afternoon` (13:15); `bellEnd: { offsetMs: -300000 }` on `work-afternoon` fires at 14:55; fully array-driven; Standard only
 - ✅ Study bell — `audio/sfzc/study-bell.mp3`; array-driven via `bell:` (8:10 open) and `bellEnd:` (9:10 close) on `study-hall`; Standard only. Sequence: 8:10 bell → english opening chant (future); 9:10 bell → japanese closing chant (future); 9:10 railroad bell also fires (work begins)
 - 🔍 Work meeting drum — unique pattern, worth recording; watch haptic candidate
 - 🎙 Hyoshigi clappers — needs dedicated edit/recording for `firewatch-clappers.mp3` (wired in schedule, file pending)
@@ -595,11 +595,10 @@ background flips synchronously; body background transitions asynchronously.
 Would need transition-delay on now-row to fix. Not worth the complexity.
 
 ### Dev tap-to-play tool — working
-Click any `.period-row[data-audio]` row to play/pause that period's audio.
+Click any `.period-row[data-audio]`, `[data-bell]`, or `[data-service]` row to play/pause.
 Whole row is the tap target; `.audio-dot` is visual only.
 `_devAudio` is always a fresh `Audio()` object — no reuse, no play/pause race.
-Morning/evening service rows not wired (no `data-audio`, `hasService` lookup
-removed — those dots are visual-only until service audio dev tool is built).
+`data-service` resolves day src at `buildTrack()` time — stores resolved string, not the map object.
 Console unlock step removed — tap itself sets `sessionStorage`.
 
 ### Web Audio scheduling — working
@@ -614,9 +613,11 @@ Console unlock step removed — tap itself sets `sessionStorage`.
 ### Time-travel debug tool — working
 `#time-travel-btn` — clock icon, `position: fixed`, bottom-left, mirroring mute button bottom-right. Both use `calc(Npx + env(safe-area-inset-bottom, 0px))`.
 
-Tap opens `#tt-panel` — small floating panel with hour/minute number inputs, AM/PM toggle (`#tt-ampm`), and Go button (`#tt-go`). No `<input type="time">` — unreliable cross-platform. Panel pre-fills with current `getNow()` time. On Go: computes `_debugOffset = target - Date.now()`, rebuilds track, reschedules bells.
+Tap opens `#tt-panel` — floating panel with hour/minute/second inputs, AM/PM toggle (`#tt-ampm`), and Go button (`#tt-go`). No `<input type="time">` — unreliable cross-platform. Panel pre-fills with current `getNow()` time including seconds. On Go: calls `unlockAudioContext()` (creates `_webAudioCtx` on desktop where no entry overlay exists), computes `_debugOffset = target - Date.now()`, rebuilds track, reschedules bells.
 
-`#time-travel-dot` (reuses `.audio-dot` class) pulses gold on the button while debug mode is active. Tap button again while active to clear `_debugOffset` and return to real time.
+On cancel (tap button while active): stops `_serviceAudio` and `_bellEndAudio` immediately, nulls `_servicePeriodId` so next tick re-evaluates against real time, clears `_debugOffset`, rebuilds track and reschedules.
+
+`#time-travel-dot` (reuses `.audio-dot` class) pulses gold on the button while debug mode is active.
 
 `getNow()` shim: returns `new Date(Date.now() + _debugOffset)` when offset is set, plain `new Date()` otherwise. All bare `new Date()` call sites use `getNow()`. Bell scheduling uses `Date.now() + _debugOffset` for `msUntil` math. Tick progress uses `(Date.now() + _debugOffset) / 1000` for the now-seconds value.
 
@@ -624,11 +625,16 @@ Tap opens `#tt-panel` — small floating panel with hour/minute number inputs, A
 - Mode switcher UI: drop in `SCHEDULE_CASUAL` or `SCHEDULE_INTENSIVE` from this doc
 - Weekly schedule layer: day-off on 4th & 9th days
 - Sesshin calendar layer: 1, 2, 3, 5, 7-day (Rohatsu)
-- Sound side quest: meal bell, railroad bell, work meeting drum, hyoshigi confirmation
+- Sound side quest: meal bell, work meeting drum, hyoshigi confirmation
 - Work meeting drum as watch haptic pattern
+- Study hall chant sequencing — `temple_sounds-opening_chant.mp3` ("An unsurpassed...") fires after study bell at 8:10; Japanese closing chant ("Shu jo, mu hen...") fires after study bell at 9:05. Both as offset from bell duration, not independent clock times.
+- Confirm `tickBellEndAudio()` on real-time passive passage (page load mid-window) — expected to work via `scheduleUpcomingBells()` on entry overlay tap
+- Time-travel scrub mode — scroll gesture on TT panel scrubs time without committing; scrim drops over schedule; Go confirms jump
+- Inkin single strike — highest-leverage unacquired sound; covers zazen starting bells, lecture bells, study hall
+- Service audio modular architecture — `sanghas/sfzc.json` declares rotating chant slot setlist; schedule page assembles playlist at render time; Wed/Thu files present, unaligned for index.html
+- Morning zazen end audio clarification — re-listen with bonsho/densho/han distinction to confirm the GGF recording identity
 
 ### Later
-- Complete Wednesday and Thursday morning services
 - Full Moon Ceremony and One Day Sitting alignment
 - Watch as han — haptic bell on wrist
 - Landscape placed mode
@@ -636,6 +642,11 @@ Tap opens `#tt-panel` — small floating panel with hour/minute number inputs, A
 - ZCD chant book
 - Pull schedule from JSON
 - Generative koten: programmatic drum+bell pattern for any schedule time
+
+### Untracked audio files — pending triage
+- `audio/sfzc/Great_Vows.mp3` — never tracked, not in git history; local only; triage before committing
+- `audio/sfzc/temple_sounds-opening_chant.mp3` — "An unsurpassed..." chant; slot reserved at 8:10 study bell offset
+- `audio/sfzc/temple_sounds-the_densho_bell.mp3` — renamed from `_denshp_` typo; untracked, stage when ready
 
 ---
 
@@ -664,3 +675,7 @@ Tap opens `#tt-panel` — small floating panel with hour/minute number inputs, A
 21. Consecutive periods with the same `name` render as one visual label — `buildTrack` detects `isContinuation` (prev period same name) and skips the name text node. Proportional height and audio dot still render. Used by the firewatch-bell / firewatch-clappers split.
 22. Use `getNow()` everywhere "give me the current time" is needed — never bare `new Date()`. Use `new Date(someValue)` only for parsing/constructing from a known value. `_debugOffset` is the single source of truth for synthetic time; `msUntil` and tick progress both derive from `Date.now() + _debugOffset`.
 23. z-index stack: grain texture overlay = 999 (CSS, line ~61). Entry overlay = 1000 (inline JS). Nothing should sit between these. New fixed elements (mute button, time-travel panel, etc.) belong below 999 or above 1000 intentionally — no values in the 999–1000 gap.
+24. `todayAt()` must use `getNow()` as its date basis — never bare `new Date()` inside `todayAt()`. All elapsed math (`elapsedSecs = getNow() - todayAt(...)`) must share the same time basis. Wall-clock `new Date()` breaks elapsed math when `_debugOffset` is active.
+25. `loadedmetadata` before seek, `.load()` after constructing `Audio()`. Set `currentTime` inside the `loadedmetadata` event handler — never before. `audio.duration` is NaN until metadata is loaded. `.load()` triggers the metadata fetch on browsers that defer it. This is the required pattern for all seekable audio (`_serviceAudio`, `_bellEndAudio`).
+26. Any new audio-triggering UI on desktop must call `unlockAudioContext()` as a first step. Desktop has no entry overlay — `_webAudioCtx` is null until a gesture. `unlockAudioContext()` is idempotent (guards on `if (_webAudioCtx) return`).
+27. `bell:` / `bellEnd:` / `service:` is the complete field taxonomy for schedule audio. Before adding a hardcoded entry to `scheduleUpcomingBells()`, ask whether the audio belongs to one of these three types. The only acceptable hardcode is audio that fires at a sub-period offset not expressible as period start or end (currently: none).
