@@ -258,7 +258,7 @@ Future: generate correct koten pattern programmatically for any schedule time.
 - ✅ Densho — in app
 - ✅ Koten + shinrei wake-up — `audio/sfzc/koten-and-shinrei-wakeup.mp3` (polished, ready)
 - 🔍 Meal bell — may need field recording
-- 🔍 Railroad bell — Freesound likely
+- ✅ Railroad bell — `audio/sfzc/railroad-bell.mp3`; scheduled at 9:10 AM (work-morning start) and 2:55 PM (end of work-afternoon); Standard schedule only
 - 🔍 Work meeting drum — unique pattern, worth recording; watch haptic candidate
 - 🎙 Hyoshigi clappers — needs dedicated edit/recording for `firewatch-clappers.mp3` (wired in schedule, file pending)
 

@@ -1138,6 +1138,23 @@ function scheduleUpcomingBells() {
     console.log('[WebAudio] scheduling', period.id, 'at', firesAt.toLocaleTimeString());
     scheduleAudioEvent(period.audio, firesAt);
   }
+
+  // Railroad bell — Standard schedule only (Casual and Intensive have no work periods)
+  // Guard: SCHEDULE_STANDARD contains work-morning; Casual/Intensive do not.
+  if (SCHEDULE.some(p => p.id === 'work-morning')) {
+    const RAILROAD_BELL = 'audio/sfzc/railroad-bell.mp3';
+    const railroadTimes = [
+      [9, 10],   // work-morning start
+      [14, 55],  // end of work-afternoon, before personal at 15:00
+    ];
+    for (const [h, m] of railroadTimes) {
+      const firesAt = new Date(now);
+      firesAt.setHours(h, m, 0, 0);
+      if (firesAt <= now) continue;
+      console.log('[WebAudio] scheduling railroad-bell at', firesAt.toLocaleTimeString());
+      scheduleAudioEvent(RAILROAD_BELL, firesAt);
+    }
+  }
 }
 
 document.addEventListener('visibilitychange', () => {
