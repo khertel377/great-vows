@@ -940,6 +940,7 @@ let _ambientAudio       = null;
 let _ambientPeriodId    = null;
 let _serviceAudio       = null;
 let _servicePeriodId    = null;
+let _bellEndAudio       = null;
 let _pendingAmbientPlay = false;
 window.addEventListener('scroll', () => {
   document.getElementById('track').classList.add('scrolling');
@@ -1044,6 +1045,8 @@ function tickServiceAudio(currentPeriod) {
   const periodStart  = todayAt(currentPeriod.time[0], currentPeriod.time[1]);
   const elapsedMs    = getNow().getTime() - periodStart.getTime();
   const elapsedSecs  = Math.max(0, elapsedMs / 1000);
+  // TEMP DEBUG
+  console.log('[Service] periodStart=', periodStart.toLocaleTimeString(), 'getNow()=', getNow().toLocaleTimeString(), 'elapsedSecs=', elapsedSecs.toFixed(1));
 
   _serviceAudio = new Audio(src);
   _serviceAudio.muted = localStorage.getItem('gv-muted') === '1';
@@ -1057,6 +1060,42 @@ function tickServiceAudio(currentPeriod) {
   });
 
   _serviceAudio.load();
+}
+
+// ══════════════════════════════
+// BELL-END MID-WINDOW PLAYBACK
+// Called from scheduleUpcomingBells() on time-travel or page load.
+// The scheduler skips already-past events; this catches the case where
+// getNow() lands inside a bellEnd window that has already started.
+// ══════════════════════════════
+function tickBellEndAudio() {
+  const now = getNow();
+
+  for (const period of SCHEDULE) {
+    if (!period.bellEnd) continue;
+    const entry     = typeof period.bellEnd === 'string' ? { src: period.bellEnd, offsetMs: 0 } : period.bellEnd;
+    const firesAt   = new Date(todayAt(period.end[0], period.end[1]).getTime() + entry.offsetMs);
+    const expiresAt = todayAt(period.end[0], period.end[1]);
+
+    if (now < firesAt || now >= expiresAt) continue; // not inside this window
+
+    const elapsedSecs = Math.max(0, (now.getTime() - firesAt.getTime()) / 1000);
+    console.log('[BellEnd] mid-window for', period.id, '— elapsedSecs=', elapsedSecs.toFixed(1));
+
+    if (_bellEndAudio) { _bellEndAudio.pause(); _bellEndAudio = null; }
+
+    _bellEndAudio = new Audio(entry.src);
+    _bellEndAudio.muted = localStorage.getItem('gv-muted') === '1';
+    _bellEndAudio.addEventListener('loadedmetadata', () => {
+      console.log('[BellEnd] seeked to', elapsedSecs.toFixed(1), 's of', _bellEndAudio.duration.toFixed(1), 's');
+      if (elapsedSecs < _bellEndAudio.duration) {
+        _bellEndAudio.currentTime = elapsedSecs;
+      }
+      _bellEndAudio.play().catch(e => console.warn('[BellEnd] play() blocked:', e));
+    });
+    _bellEndAudio.load();
+    break; // at most one bellEnd playing at a time
+  }
 }
 
 // ══════════════════════════════
@@ -1183,9 +1222,9 @@ function scheduleAudioEvent(url, firesAt) {
 }
 
 // Builds a Date for today at h:m in debug time — single source for all bell scheduling.
-function todayAt(h, m) {
+function todayAt(h, m, s = 0) {
   const d = new Date(getNow());
-  d.setHours(h, m, 0, 0);
+  d.setHours(h, m, s, 0);
   return d;
 }
 
@@ -1236,6 +1275,9 @@ function scheduleUpcomingBells() {
       scheduleAudioEvent('audio/sfzc/railroad-bell.mp3', firesAt);
     }
   }
+
+  // Mid-window bellEnd playback — handles time-travel into an active bellEnd window
+  tickBellEndAudio();
 }
 
 document.addEventListener('visibilitychange', () => {
@@ -1580,7 +1622,8 @@ const AudioEngine = (() => {
     } else {
       console.log('[mute] _ambientAudio not reachable');
     }
-    if (typeof _serviceAudio !== 'undefined' && _serviceAudio) _serviceAudio.muted = isMuted;
+    if (typeof _serviceAudio !== 'undefined' && _serviceAudio) _serviceAudio.muted  = isMuted;
+    if (typeof _bellEndAudio !== 'undefined' && _bellEndAudio) _bellEndAudio.muted  = isMuted;
     if (typeof _devAudio !== 'undefined' && _devAudio) _devAudio.muted = isMuted;
   }
 
