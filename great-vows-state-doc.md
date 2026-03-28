@@ -397,6 +397,8 @@ great-vows/
 ### Two script blocks
 `schedule.html` has two `<script>` tags. Script #1 contains `tickAmbientAudio`, `scheduleAudioEvent`, and the core tick/audio engine. Script #2 contains the mute button, `isMuted`, and UI controls. `let`/`const` in script #2 are not visible in script #1. Even `var` doesn't help — script #2 hasn't executed yet when script #1's `tick()` fires on page load. **Rule: script #1 must never reference variables declared in script #2.** For mute state, script #1 reads `localStorage.getItem('gv-muted') === '1'` directly at call sites (lines 995, 1112). Script #2's `isMuted` variable owns the button state and `applyMute()` as before.
 
+**Mute system — two audio paths:** Script #1 owns `_ambientAudio` (looping ambient periods — firewatch bell etc.). Script #2's `AudioEngine` owns `ambientAudio` (service audio), `hanAudio`, `denshoAudio`, `wakeupAudio`. `applyMute()` must cover both. `_ambientAudio` is accessed from script #2 via `typeof _ambientAudio !== 'undefined'` guard — necessary because it's a `let` in script #1, not on `window`. New ambient loops read mute state directly from `localStorage.getItem('gv-muted') === '1'` at creation (line 995) — no cross-script variable dependency.
+
 ### Meta row reveal
 - **Desktop:** `mouseenter`/`mouseleave` on `.period-row` — sets `data-hover="active"` and `data-hover="neighbor"` on adjacent rows; CSS drives opacity
 - **Mobile:** tap-to-toggle, single open — `_showMeta(row)` / `_clearMeta(row)` toggle `meta-visible` class; `_showMeta` closes any previously open row before opening the new one; no auto-dismiss
