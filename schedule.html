@@ -1041,11 +1041,22 @@ function tickServiceAudio(currentPeriod) {
   console.log('[Service] src resolved=', src, 'dayKey=', getDayKey());
   if (!src) { console.warn('[Service] no file for day:', getDayKey()); return; }
 
-  // TEMP DEBUG
-  console.log('[Service] playing src=', src);
+  const periodStart  = todayAt(currentPeriod.time[0], currentPeriod.time[1]);
+  const elapsedMs    = getNow().getTime() - periodStart.getTime();
+  const elapsedSecs  = Math.max(0, elapsedMs / 1000);
+
   _serviceAudio = new Audio(src);
   _serviceAudio.muted = localStorage.getItem('gv-muted') === '1';
-  _serviceAudio.play().catch(e => console.warn('[Service] play() blocked:', e));
+
+  _serviceAudio.addEventListener('loadedmetadata', () => {
+    console.log('[Service] seeked to', elapsedSecs.toFixed(1), 's of', _serviceAudio.duration.toFixed(1), 's');
+    if (elapsedSecs < _serviceAudio.duration) {
+      _serviceAudio.currentTime = elapsedSecs;
+    }
+    _serviceAudio.play().catch(e => console.warn('[Service] play() blocked:', e));
+  });
+
+  _serviceAudio.load();
 }
 
 // ══════════════════════════════
