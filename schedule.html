@@ -848,6 +848,7 @@ function wireAudioDevTool() {
       // Fresh Audio object each time — eliminates pause/play race
       _devAudio = new Audio();
       _devAudio.src = src;
+      _devAudio.muted = localStorage.getItem('gv-muted') === '1'; // respect mute
       _devAudio.onended = () => {
         row.classList.remove('playing');
         _devPlayingRow = null;
