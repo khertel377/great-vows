@@ -848,12 +848,14 @@ function wireAudioDevTool() {
       // Fresh Audio object each time — eliminates pause/play race
       _devAudio = new Audio();
       _devAudio.src = src;
-      _devAudio.muted = localStorage.getItem('gv-muted') === '1'; // respect mute
+      _devAudio.muted = localStorage.getItem('gv-muted') === '1';
       _devAudio.onended = () => {
         row.classList.remove('playing');
         _devPlayingRow = null;
       };
-      _devAudio.play().catch(err => console.warn('[DevTool] play() failed:', err.message));
+      _devAudio.play().then(() => {
+        _devAudio.muted = localStorage.getItem('gv-muted') === '1'; // set again after play resolves
+      }).catch(err => console.warn('[DevTool] play() failed:', err.message));
       row.classList.add('playing');
       _devPlayingRow = row;
     });
@@ -1475,6 +1477,7 @@ const AudioEngine = (() => {
     } else {
       console.log('[mute] _ambientAudio not reachable');
     }
+    if (typeof _devAudio !== 'undefined' && _devAudio) _devAudio.muted = isMuted;
   }
 
   /* ── Han ── */
