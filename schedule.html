@@ -1472,6 +1472,10 @@ ttBtn.addEventListener('click', () => {
     _debugOffset = 0;
     ttDot.style.display = 'none';
     ttPanel.style.display = 'none';
+    // Stop any in-progress time-travel audio
+    if (_serviceAudio) { _serviceAudio.pause(); _serviceAudio = null; }
+    _servicePeriodId = null; // forces tickServiceAudio to re-evaluate on next tick
+    if (_bellEndAudio) { _bellEndAudio.pause(); _bellEndAudio = null; }
     buildTrack(getScheduleState(getNow()));
     scheduleUpcomingBells();
     console.log('[debug] time travel cleared — returning to real time');
