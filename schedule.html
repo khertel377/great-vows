@@ -1103,7 +1103,12 @@ async function resumeAudioContext() {
 function scheduleAudioEvent(url, firesAt) {
   if (!_webAudioCtx) return;
   const msUntil = firesAt.getTime() - (Date.now() + _debugOffset);
-  if (msUntil < 0) return; // already past — skip silently
+  // TEMP DEBUG — remove after time-travel bell testing
+  console.log('[WebAudio] scheduleAudioEvent', url.split('/').pop(),
+    '| firesAt=', firesAt.toLocaleTimeString(),
+    '| msUntil=', Math.round(msUntil / 1000) + 's',
+    '| debugOffset=', Math.round(_debugOffset / 60000) + 'min');
+  if (msUntil < 0) { console.log('[WebAudio] → SKIPPED (past)'); return; } // already past — skip silently
 
   setTimeout(async () => {
     try {
