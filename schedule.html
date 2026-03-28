@@ -1018,6 +1018,8 @@ function getDayKey() {
 }
 
 function tickServiceAudio(currentPeriod) {
+  // TEMP DEBUG
+  console.log('[Service] tick | id=', currentPeriod?.id, 'service=', currentPeriod?.service, 'dayKey=', getDayKey(), '_servicePeriodId=', _servicePeriodId);
   const id = currentPeriod?.id ?? null;
   if (id === _servicePeriodId) return;
   _servicePeriodId = id;
@@ -1031,6 +1033,8 @@ function tickServiceAudio(currentPeriod) {
   const src = currentPeriod.service[getDayKey()];
   if (!src) return; // no file for this day — silent
 
+  // TEMP DEBUG
+  console.log('[Service] playing src=', src);
   _serviceAudio = new Audio(src);
   _serviceAudio.muted = localStorage.getItem('gv-muted') === '1';
   _serviceAudio.play().catch(e => console.warn('[Service] play() blocked:', e));
