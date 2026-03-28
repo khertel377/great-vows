@@ -1129,6 +1129,8 @@ function scheduleAudioEvent(url, firesAt) {
 }
 
 function scheduleUpcomingBells() {
+  // TEMP DEBUG
+  console.log('[scheduleUpcomingBells] called | getNow()=', getNow().toLocaleTimeString(), '| _webAudioCtx=', !!_webAudioCtx);
   if (!_webAudioCtx) return;
   const now = getNow();
 
