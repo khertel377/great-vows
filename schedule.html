@@ -1139,6 +1139,25 @@ function scheduleUpcomingBells() {
     scheduleAudioEvent(period.audio, firesAt);
   }
 
+  // Study bell — Standard schedule only
+  // 8:10 open (+ future: english opening chant offset from bell duration)
+  // 9:05 close (+ future: japanese closing chant offset from bell duration)
+  // 9:10 railroad bell then signals work — study bell is the soft interior close 5 min prior
+  if (SCHEDULE.some(p => p.id === 'study-hall')) {
+    const STUDY_BELL = 'audio/sfzc/study-bell.mp3';
+    const studyTimes = [
+      [8, 10],  // study hall open
+      [9,  5],  // study hall close (railroad bell at 9:10 is the exterior end-of-study signal)
+    ];
+    for (const [h, m] of studyTimes) {
+      const firesAt = new Date(now);
+      firesAt.setHours(h, m, 0, 0);
+      if (firesAt <= now) continue;
+      console.log('[WebAudio] scheduling study-bell at', firesAt.toLocaleTimeString());
+      scheduleAudioEvent(STUDY_BELL, firesAt);
+    }
+  }
+
   // Railroad bell — Standard schedule only (Casual and Intensive have no work periods)
   // Guard: SCHEDULE_STANDARD contains work-morning; Casual/Intensive do not.
   if (SCHEDULE.some(p => p.id === 'work-morning')) {

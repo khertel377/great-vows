@@ -259,6 +259,7 @@ Future: generate correct koten pattern programmatically for any schedule time.
 - ✅ Koten + shinrei wake-up — `audio/sfzc/koten-and-shinrei-wakeup.mp3` (polished, ready)
 - 🔍 Meal bell — may need field recording
 - ✅ Railroad bell — `audio/sfzc/railroad-bell.mp3`; scheduled at 9:10 AM (work-morning start) and 2:55 PM (end of work-afternoon); Standard schedule only
+- ✅ Study bell — `audio/sfzc/study-bell.mp3`; scheduled at 8:10 AM (study hall open) and 9:05 AM (study hall close); Standard schedule only. Sequence: 8:10 bell → english opening chant (future, offset from bell duration); 9:05 bell → japanese closing chant (future, offset from bell duration); 9:10 railroad bell signals work begins
 - 🔍 Work meeting drum — unique pattern, worth recording; watch haptic candidate
 - 🎙 Hyoshigi clappers — needs dedicated edit/recording for `firewatch-clappers.mp3` (wired in schedule, file pending)
 
