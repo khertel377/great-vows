@@ -461,7 +461,7 @@ const SCHEDULE = [
   { id: 'quiet-morning',  time: [0,0],   end: [4,30],  name: 'Quiet',                 type: 'quiet', hasService: false },
   { id: 'wake-up-bell',   time: [4,30],  end: [4,45],  name: 'Wake-up Bell',          type: 'bell',  hasService: false, audio: 'audio/sfzc/koten-and-shinrei-wakeup.mp3' },
   { id: 'han',            time: [4,45],  end: [5,0],   name: 'Han',                   type: 'bell',  hasService: false, audio: 'audio/sfzc/temple_sounds-the_han.mp3' },
-  { id: 'zazen-morning',  time: [5,0],   end: [6,30],  name: 'Zazen',                 type: 'zazen', hasService: false, bell: 'audio/sfzc/3_Floor_Bells.mp3', bellEnd: 'audio/sfzc/morning_zazen_end.mp3' },
+  { id: 'zazen-morning',  time: [5,0],   end: [6,30],  name: 'Zazen',                 type: 'zazen', hasService: false, bell: 'audio/sfzc/3_Floor_Bells.mp3', bellEnd: { src: 'audio/sfzc/morning_zazen_end.mp3', offsetMs: -211000 } },
   { id: 'morning-service',time: [6,30],  end: [7,0],   name: 'Morning Service',       type: 'chant', hasService: true  },
   { id: 'soji',           time: [7,0],   end: [7,20],  name: 'Soji',                  type: 'work',  hasService: false },
   { id: 'breakfast',      time: [7,20],  end: [8,10],  name: 'Breakfast',             type: 'meal',  hasService: false },
@@ -1161,13 +1161,17 @@ function scheduleUpcomingBells() {
     scheduleAudioEvent(period.bell, firesAt);
   }
 
-  // bellEnd: — one-shot bell at period end
+  // bellEnd: — one-shot bell at (or before) period end
+  // bellEnd: can be a string (fires at period.end) or { src, offsetMs } (fires at period.end + offsetMs)
   for (const period of SCHEDULE) {
     if (!period.bellEnd) continue;
-    const firesAt = todayAt(period.end[0], period.end[1]);
+    const entry = period.bellEnd;
+    const src      = typeof entry === 'string' ? entry : entry.src;
+    const offsetMs = typeof entry === 'string' ? 0 : (entry.offsetMs || 0);
+    const firesAt  = new Date(todayAt(period.end[0], period.end[1]).getTime() + offsetMs);
     if (firesAt <= now) continue;
     console.log('[WebAudio] scheduling bellEnd for', period.id, 'at', firesAt.toLocaleTimeString());
-    scheduleAudioEvent(period.bellEnd, firesAt);
+    scheduleAudioEvent(src, firesAt);
   }
 
   // Work-afternoon end bell — 14:55, fires before period end (15:00) — not expressible as bellEnd:

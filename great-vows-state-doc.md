@@ -136,7 +136,7 @@ The practitioner who sits in the morning, moves through their day, and comes hom
 const SCHEDULE_CASUAL = [
   { id: 'quiet-morning',   time: [0,0],   end: [5,10],  name: 'Quiet',               type: 'quiet', hasService: false },
   { id: 'han',             time: [5,10],  end: [5,20],  name: 'Han',                  type: 'bell',  hasService: false, audio: 'audio/sfzc/temple_sounds-the_han.mp3' },
-  { id: 'zazen-morning',   time: [5,20],  end: [6,20],  name: 'Zazen',                type: 'zazen', hasService: false, bell: 'audio/sfzc/3_Floor_Bells.mp3', bellEnd: 'audio/sfzc/morning_zazen_end.mp3' },
+  { id: 'zazen-morning',   time: [5,20],  end: [6,20],  name: 'Zazen',                type: 'zazen', hasService: false, bell: 'audio/sfzc/3_Floor_Bells.mp3', bellEnd: { src: 'audio/sfzc/morning_zazen_end.mp3', offsetMs: -211000 } },
   { id: 'morning-service', time: [6,20],  end: [6,50],  name: 'Morning Service',      type: 'chant', hasService: true  },
   { id: 'breakfast',       time: [6,50],  end: [8,0],   name: 'Breakfast',            type: 'meal',  hasService: false },
   { id: 'your-day',        time: [8,0],   end: [12,0],  name: 'Your Day',             type: 'rest',  hasService: false },
@@ -162,7 +162,7 @@ const SCHEDULE_STANDARD = [
   { id: 'quiet-morning',   time: [0,0],   end: [4,30],  name: 'Quiet',                 type: 'quiet', hasService: false },
   { id: 'wake-up-bell',    time: [4,30],  end: [4,45],  name: 'Wake-up Bell',           type: 'bell',  hasService: false, audio: 'audio/sfzc/koten-and-shinrei-wakeup.mp3' },
   { id: 'han',             time: [4,45],  end: [5,0],   name: 'Han',                    type: 'bell',  hasService: false, audio: 'audio/sfzc/temple_sounds-the_han.mp3' },
-  { id: 'zazen-morning',   time: [5,0],   end: [6,30],  name: 'Zazen',                  type: 'zazen', hasService: false, bell: 'audio/sfzc/3_Floor_Bells.mp3', bellEnd: 'audio/sfzc/morning_zazen_end.mp3' },
+  { id: 'zazen-morning',   time: [5,0],   end: [6,30],  name: 'Zazen',                  type: 'zazen', hasService: false, bell: 'audio/sfzc/3_Floor_Bells.mp3', bellEnd: { src: 'audio/sfzc/morning_zazen_end.mp3', offsetMs: -211000 } },
   { id: 'morning-service', time: [6,30],  end: [7,0],   name: 'Morning Service',        type: 'chant', hasService: true  },
   { id: 'soji',            time: [7,0],   end: [7,20],  name: 'Soji',                   type: 'work',  hasService: false },
   { id: 'breakfast',       time: [7,20],  end: [8,10],  name: 'Breakfast',              type: 'meal',  hasService: false },
@@ -202,7 +202,7 @@ const SCHEDULE_INTENSIVE = [
   { id: 'quiet-morning',    time: [0,0],   end: [4,25],  name: 'Quiet',            type: 'quiet', hasService: false },
   { id: 'wake-up-bell',     time: [4,25],  end: [4,50],  name: 'Wake-up Bell',     type: 'bell',  hasService: false, audio: 'audio/sfzc/koten-and-shinrei-wakeup.mp3' },
   { id: 'han',              time: [4,50],  end: [5,0],   name: 'Han',              type: 'bell',  hasService: false, audio: 'audio/sfzc/temple_sounds-the_han.mp3' },
-  { id: 'zazen-1',          time: [5,0],   end: [6,30],  name: 'Zazen',            type: 'zazen', hasService: false, bell: 'audio/sfzc/3_Floor_Bells.mp3', bellEnd: 'audio/sfzc/morning_zazen_end.mp3' },
+  { id: 'zazen-1',          time: [5,0],   end: [6,30],  name: 'Zazen',            type: 'zazen', hasService: false, bell: 'audio/sfzc/3_Floor_Bells.mp3', bellEnd: { src: 'audio/sfzc/morning_zazen_end.mp3', offsetMs: -211000 } },
   { id: 'morning-service',  time: [6,30],  end: [7,0],   name: 'Morning Service',  type: 'chant', hasService: true  },
   { id: 'soji',             time: [7,0],   end: [7,20],  name: 'Soji',             type: 'work',  hasService: false },
   { id: 'breakfast',        time: [7,20],  end: [8,20],  name: 'Breakfast',        type: 'meal',  hasService: false },
@@ -388,7 +388,7 @@ great-vows/
 | `hasService` | bool | Whether Enter button should appear |
 | `audio` | string | Ambient loop — plays for duration of period, shown as track dot |
 | `bell` | string | One-shot bell — fires once at period start via Web Audio, shown as track dot |
-| `bellEnd` | string | One-shot bell at period end (`period.end[0], period.end[1]`) — array-driven, shown as track dot |
+| `bellEnd` | string \| `{ src, offsetMs }` | One-shot bell at period end — or before it when offsetMs is negative. String form: fires at `period.end`. Object form: fires at `period.end + offsetMs`. `-211000` = 3m31s before end (morning zazen end recording). Array-driven, shown as track dot. |
 
 `audio:` and `bell:` can coexist on a period (e.g., a period that both loops ambient sound and fires a start bell). Both render a dot; dot pulses when ambient is playing.
 
@@ -653,7 +653,7 @@ Tap opens `#tt-panel` — small floating panel with hour/minute number inputs, A
 14. One canonical state doc — `great-vows-state-doc.md`, kebab-case, overwrite in place, never duplicate
 15. The frame is constant, the content varies — all modes open and close the same way
 16. Three Refuges is universal — every mode, every night, not a Practice Period exclusive
-17. Any period with `audio:` or `bell:` in the schedule array auto-gets a track dot — no hardcoding in `buildTrack()`. `audio:` drives ambient looping; `bell:` drives one-shot Web Audio scheduling via `scheduleUpcomingBells()`. Adding either field is sufficient.
+17. Any period with `audio:`, `bell:`, or `bellEnd:` auto-gets a track dot — no hardcoding in `buildTrack()`. `audio:` drives ambient looping; `bell:` fires at period start; `bellEnd:` fires at period end. `bellEnd:` accepts a string (fires at `period.end`) or `{ src, offsetMs }` (fires at `period.end + offsetMs`). Use `offsetMs: -N` for recordings that must begin before the period ends — `morning_zazen_end.mp3` uses `-211000` (3m31s before 6:30 = fires at 6:26:29).
 18. `core.ignorecase=true` is macOS git default — always use `git -c core.ignorecase=false add audio/sfzc/` when adding audio files. GitHub Pages is case-sensitive and will 404 silently otherwise.
 19. Ambient audio retry: use a persistent click listener with a `_pendingAmbientPlay` flag — never `{ once: true }`. The entry screen tap will consume a one-time listener before the play block occurs.
 20. `tickAmbientAudio` tracks `_ambientPeriodId` by `currentPeriod?.id` (not by whether the period has audio). This ensures stop logic fires on every period transition, not just audio→no-audio changes. `_pendingAmbientPlay` is cleared on every transition.
