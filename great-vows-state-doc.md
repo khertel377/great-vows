@@ -1,5 +1,5 @@
 # Great Vows — Project State Document
-*Updated after schedule canonization, three-mode system, bell taxonomy, iOS fixes, file hygiene, all three mode arrays formalized, Safari 18+ cross jitter fix, sticky now-row architecture, konsho evening bell loop, ambient audio engine, audio dot, git case-sensitivity fix, audio files committed to repo, ambient audio retry logic fix, audio dot alignment fix, Web Audio overnight bell scheduling, midnight reschedule, ambient audio stop bug fix, firewatch split, tick mark full-height fix, Web Audio wall-clock setTimeout fix, period transition polish, time-travel debug tool, mute covers Web Audio path, iOS keepalive, entry overlay z-index fix, ghost hover suppression, meta row tap-only on mobile (March 2026).*
+*Updated after schedule canonization, three-mode system, bell taxonomy, iOS fixes, file hygiene, all three mode arrays formalized, Safari 18+ cross jitter fix, sticky now-row architecture, konsho evening bell loop, ambient audio engine, audio dot, git case-sensitivity fix, audio files committed to repo, ambient audio retry logic fix, audio dot alignment fix, Web Audio overnight bell scheduling, midnight reschedule, ambient audio stop bug fix, firewatch split, tick mark full-height fix, Web Audio wall-clock setTimeout fix, period transition polish, time-travel debug tool, mute covers Web Audio path, iOS keepalive, entry overlay z-index fix, ghost hover suppression, meta row tap-only on mobile, two-script-block mute fix (March 2026).*
 
 ---
 
@@ -393,6 +393,9 @@ great-vows/
 - Scroll bounce guard: skip if `window.scrollY < 0`
 - Mute button: `position: fixed; bottom-right` — `calc(24px + env(safe-area-inset-bottom, 0px))`
 - Time-travel button: `position: fixed; bottom-left` — same safe-area formula, mirrored side
+
+### Two script blocks
+`schedule.html` has two `<script>` tags. Script #1 contains `tickAmbientAudio`, `scheduleAudioEvent`, and the core tick/audio engine. Script #2 contains the mute button, `isMuted`, and UI controls. `let`/`const` in script #2 are not visible in script #1. Even `var` doesn't help — script #2 hasn't executed yet when script #1's `tick()` fires on page load. **Rule: script #1 must never reference variables declared in script #2.** For mute state, script #1 reads `localStorage.getItem('gv-muted') === '1'` directly at call sites (lines 995, 1112). Script #2's `isMuted` variable owns the button state and `applyMute()` as before.
 
 ### Meta row reveal
 - **Desktop:** `mouseenter`/`mouseleave` on `.period-row` — sets `data-hover="active"` and `data-hover="neighbor"` on adjacent rows; CSS drives opacity
