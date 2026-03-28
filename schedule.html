@@ -1460,11 +1460,19 @@ const AudioEngine = (() => {
   }
 
   function applyMute() {
+    console.log('[mute] applyMute called, isMuted=', isMuted);
+    console.log('[mute] ambientAudio=', ambientAudio, 'muted=', ambientAudio?.muted);
+    console.log('[mute] _ambientAudio exists=', typeof _ambientAudio !== 'undefined', _ambientAudio);
     if (ambientAudio) ambientAudio.muted = isMuted;
     if (hanAudio)     hanAudio.muted     = isMuted;
     if (denshoAudio)  denshoAudio.muted  = isMuted;
     if (wakeupAudio)  wakeupAudio.muted  = isMuted;
-    if (typeof _ambientAudio !== 'undefined' && _ambientAudio) _ambientAudio.muted = isMuted;
+    if (typeof _ambientAudio !== 'undefined' && _ambientAudio) {
+      console.log('[mute] setting _ambientAudio.muted =', isMuted);
+      _ambientAudio.muted = isMuted;
+    } else {
+      console.log('[mute] _ambientAudio not reachable');
+    }
   }
 
   /* ── Han ── */
