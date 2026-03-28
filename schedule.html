@@ -337,7 +337,8 @@ body.is-scrolling .period-row:not(.now):hover .period-row-meta { opacity: 0; }
 
 /* Dev tool: whole row is the click target */
 .period-row[data-audio],
-.period-row[data-bell]  { cursor: pointer; }
+.period-row[data-bell],
+.period-row[data-service] { cursor: pointer; }
 @keyframes audioDotPulse {
   0%, 100% { opacity: 0.3; transform: scale(1); }
   50%       { opacity: 0.9; transform: scale(1.8); }
@@ -700,6 +701,10 @@ function buildTrack(state) {
     if (p.audio)   row.dataset.audio   = p.audio;
     if (p.bell)    row.dataset.bell    = p.bell;
     if (p.bellEnd) row.dataset.bellEnd = p.bellEnd;
+    if (p.service) {
+      const svcSrc = p.service[getDayKey()] || p.service.default;
+      if (svcSrc) row.dataset.service = svcSrc;
+    }
     row.style.minHeight  = rowHeight(durMins) + 'px';
 
     let classes = 'period-row ' + rowClass;
@@ -827,14 +832,14 @@ function buildTrack(state) {
 // or via AudioEngine.unlock() after a user gesture).
 // ══════════════════════════════
 function wireAudioDevTool() {
-  document.querySelectorAll('.period-row[data-audio], .period-row[data-bell]').forEach(row => {
+  document.querySelectorAll('.period-row[data-audio], .period-row[data-bell], .period-row[data-service]').forEach(row => {
     row.addEventListener('click', (e) => {
       e.stopPropagation();
 
       // The tap itself is a user gesture — satisfy iOS unlock requirement
       sessionStorage.setItem('gv-audio-unlocked', '1');
 
-      const src = row.dataset.audio || row.dataset.bell;
+      const src = row.dataset.audio || row.dataset.bell || row.dataset.service;
       if (!src) return;
 
       // Toggle: stop if this row is already playing
@@ -1032,6 +1037,8 @@ function tickServiceAudio(currentPeriod) {
 
   if (!currentPeriod?.service) return;
   const src = currentPeriod.service[getDayKey()] || currentPeriod.service.default;
+  // TEMP DEBUG
+  console.log('[Service] src resolved=', src, 'dayKey=', getDayKey());
   if (!src) { console.warn('[Service] no file for day:', getDayKey()); return; }
 
   // TEMP DEBUG
