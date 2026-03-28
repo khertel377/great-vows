@@ -1398,6 +1398,8 @@ ttPanel.innerHTML = `
   <input id="tt-hour" type="number" min="1" max="12" placeholder="12">
   <span style="font-size:18px;color:var(--ink)">:</span>
   <input id="tt-min"  type="number" min="0" max="59" placeholder="00">
+  <span style="font-size:18px;color:var(--ink)">:</span>
+  <input id="tt-sec"  type="number" min="0" max="59" value="0" style="width:3em">
   <button id="tt-ampm">PM</button>
   <button id="tt-go">Go</button>
 `;
@@ -1420,6 +1422,7 @@ ttBtn.addEventListener('click', () => {
     h = h % 12 || 12;
     document.getElementById('tt-hour').value = h;
     document.getElementById('tt-min').value = String(n.getMinutes()).padStart(2, '0');
+    document.getElementById('tt-sec').value = String(n.getSeconds()).padStart(2, '0');
     document.getElementById('tt-ampm').textContent = ampm;
     ttPanel.style.display = 'flex';
   }
@@ -1437,7 +1440,8 @@ document.getElementById('tt-go').addEventListener('click', () => {
   if (isPM && h !== 12) h += 12;
   if (!isPM && h === 12) h = 0;
   unlockAudioContext(); // creates _webAudioCtx if not already exists — idempotent
-  const target = new Date(); target.setHours(h, m, 0, 0);
+  const sec = parseInt(document.getElementById('tt-sec').value) || 0;
+  const target = new Date(); target.setHours(h, m, sec, 0);
   _debugOffset = target - Date.now();
   ttDot.style.display = '';
   ttPanel.style.display = 'none';
