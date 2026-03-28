@@ -992,7 +992,7 @@ function tickAmbientAudio(currentPeriod) {
 
   _ambientAudio = new Audio(currentPeriod.audio);
   _ambientAudio.loop = true;
-  _ambientAudio.muted = false;
+  _ambientAudio.muted = isMuted;
   _ambientAudio.play().catch(e => {
     console.warn('[ambient] play blocked, queuing for next gesture:', e);
     _pendingAmbientPlay = true;
