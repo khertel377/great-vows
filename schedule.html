@@ -461,20 +461,20 @@ const SCHEDULE = [
   { id: 'quiet-morning',  time: [0,0],   end: [4,30],  name: 'Quiet',                 type: 'quiet', hasService: false },
   { id: 'wake-up-bell',   time: [4,30],  end: [4,45],  name: 'Wake-up Bell',          type: 'bell',  hasService: false, audio: 'audio/sfzc/koten-and-shinrei-wakeup.mp3' },
   { id: 'han',            time: [4,45],  end: [5,0],   name: 'Han',                   type: 'bell',  hasService: false, audio: 'audio/sfzc/temple_sounds-the_han.mp3' },
-  { id: 'zazen-morning',  time: [5,0],   end: [6,30],  name: 'Zazen',                 type: 'zazen', hasService: false },
+  { id: 'zazen-morning',  time: [5,0],   end: [6,30],  name: 'Zazen',                 type: 'zazen', hasService: false, bell: 'audio/sfzc/3_Floor_Bells.mp3', bellEnd: 'audio/sfzc/morning_zazen_end.mp3' },
   { id: 'morning-service',time: [6,30],  end: [7,0],   name: 'Morning Service',       type: 'chant', hasService: true  },
   { id: 'soji',           time: [7,0],   end: [7,20],  name: 'Soji',                  type: 'work',  hasService: false },
   { id: 'breakfast',      time: [7,20],  end: [8,10],  name: 'Breakfast',             type: 'meal',  hasService: false },
-  { id: 'study-hall',     time: [8,10],  end: [9,10],  name: 'Study Hall',            type: 'study', hasService: false, bell: 'audio/sfzc/study-bell.mp3' },
+  { id: 'study-hall',     time: [8,10],  end: [9,10],  name: 'Study Hall',            type: 'study', hasService: false, bell: 'audio/sfzc/study-bell.mp3', bellEnd: 'audio/sfzc/study-bell.mp3' },
   { id: 'work-morning',   time: [9,10],  end: [12,15], name: 'Work Period',           type: 'work',  hasService: false, bell: 'audio/sfzc/railroad-bell.mp3' },
   { id: 'midday-service', time: [12,15], end: [12,30], name: 'Mid-day Service',       type: 'chant', hasService: false },
   { id: 'lunch',          time: [12,30], end: [13,15], name: 'Lunch',                 type: 'meal',  hasService: false },
   { id: 'work-afternoon', time: [13,15], end: [15,0],  name: 'Afternoon Work',        type: 'work',  hasService: false, bell: 'audio/sfzc/railroad-bell.mp3' },
   { id: 'personal',       time: [15,0],  end: [17,15], name: 'Personal Time',type: 'rest',  hasService: false },
-  { id: 'zazen-evening',  time: [17,15], end: [17,50], name: 'Zazen',                 type: 'zazen', hasService: false },
+  { id: 'zazen-evening',  time: [17,15], end: [17,50], name: 'Zazen',                 type: 'zazen', hasService: false, bell: 'audio/sfzc/3_Floor_Bells.mp3' },
   { id: 'evening-service',time: [17,50], end: [18,0],  name: 'Evening Service',       type: 'chant', hasService: true  },
   { id: 'dinner',         time: [18,0],  end: [19,30], name: 'Dinner',                type: 'meal',  hasService: false },
-  { id: 'zazen-night',    time: [19,30], end: [20,50], name: 'Zazen',                 type: 'zazen', hasService: false },
+  { id: 'zazen-night',    time: [19,30], end: [20,50], name: 'Zazen',                 type: 'zazen', hasService: false, bell: 'audio/sfzc/3_Floor_Bells.mp3' },
   { id: 'three-refuges',  time: [20,50], end: [21,0],  name: 'Three Refuges',         type: 'chant', hasService: false },
   { id: 'firewatch-bell',     time: [21,0],  end: [21,30], name: 'Firewatch',             type: 'quiet', hasService: false, audio: 'audio/sfzc/konsho-evening-bell.mp3' },
   { id: 'firewatch-clappers', time: [21,30], end: [22,0],  name: 'Firewatch',             type: 'quiet', hasService: false, audio: 'audio/sfzc/firewatch-clappers.mp3' },
@@ -695,8 +695,9 @@ function buildTrack(state) {
     const row = document.createElement('div');
     row.dataset.periodId = p.id; // enables [data-period-id] selector
     row.dataset.idx      = i;
-    if (p.audio) row.dataset.audio = p.audio;
-    if (p.bell)  row.dataset.bell  = p.bell;
+    if (p.audio)   row.dataset.audio   = p.audio;
+    if (p.bell)    row.dataset.bell    = p.bell;
+    if (p.bellEnd) row.dataset.bellEnd = p.bellEnd;
     row.style.minHeight  = rowHeight(durMins) + 'px';
 
     let classes = 'period-row ' + rowClass;
@@ -713,7 +714,7 @@ function buildTrack(state) {
     const nameEl = document.createElement('div');
     nameEl.className = 'period-name';
 
-    if (p.audio || p.bell) {
+    if (p.audio || p.bell || p.bellEnd) {
       const dot = document.createElement('span');
       dot.className = 'audio-dot';
       nameEl.appendChild(dot);
@@ -1128,57 +1129,51 @@ function scheduleAudioEvent(url, firesAt) {
   }, msUntil);
 }
 
+// Builds a Date for today at h:m in debug time — single source for all bell scheduling.
+function todayAt(h, m) {
+  const d = new Date(getNow());
+  d.setHours(h, m, 0, 0);
+  return d;
+}
+
 function scheduleUpcomingBells() {
   // TEMP DEBUG
   console.log('[scheduleUpcomingBells] called | getNow()=', getNow().toLocaleTimeString(), '| _webAudioCtx=', !!_webAudioCtx);
   if (!_webAudioCtx) return;
   const now = getNow();
 
+  // audio: — type:'bell' periods scheduled via Web Audio (wake-up, han)
   for (const period of SCHEDULE) {
     if (!period.audio) continue;
     if (period.type !== 'bell') continue; // skip ambient loops (type:'quiet' firewatch etc.)
-
-    const [h, m] = period.time;
-    const firesAt = new Date(now);
-    firesAt.setHours(h, m, 0, 0);
-
-    if (firesAt <= now) continue; // already past today
-
+    const firesAt = todayAt(period.time[0], period.time[1]);
+    if (firesAt <= now) continue;
     console.log('[WebAudio] scheduling', period.id, 'at', firesAt.toLocaleTimeString());
     scheduleAudioEvent(period.audio, firesAt);
   }
 
-  // bell: field — one-shot period-start bells, array-driven
-  // Any period with a bell: field in the schedule array is automatically scheduled here.
-  // No per-bell hardcoding needed — add bell: to the array entry and it fires.
+  // bell: — one-shot bell at period start
   for (const period of SCHEDULE) {
     if (!period.bell) continue;
-    const [h, m] = period.time;
-    const firesAt = new Date(now);
-    firesAt.setHours(h, m, 0, 0);
+    const firesAt = todayAt(period.time[0], period.time[1]);
     if (firesAt <= now) continue;
     console.log('[WebAudio] scheduling bell for', period.id, 'at', firesAt.toLocaleTimeString());
     scheduleAudioEvent(period.bell, firesAt);
   }
 
-  // Study hall closing bell — 9:05, fires inside the study-hall period (not at period start)
-  // Cannot be expressed as bell: on the array entry (which fires at period.time = 8:10).
-  // Future: bellEnd: field if this pattern recurs. For now: one explicit entry.
-  if (SCHEDULE.some(p => p.id === 'study-hall')) {
-    const firesAt = new Date(now);
-    firesAt.setHours(9, 5, 0, 0);
-    if (firesAt > now) {
-      console.log('[WebAudio] scheduling study-bell close at', firesAt.toLocaleTimeString());
-      scheduleAudioEvent('audio/sfzc/study-bell.mp3', firesAt);
-    }
+  // bellEnd: — one-shot bell at period end
+  for (const period of SCHEDULE) {
+    if (!period.bellEnd) continue;
+    const firesAt = todayAt(period.end[0], period.end[1]);
+    if (firesAt <= now) continue;
+    console.log('[WebAudio] scheduling bellEnd for', period.id, 'at', firesAt.toLocaleTimeString());
+    scheduleAudioEvent(period.bellEnd, firesAt);
   }
 
-  // Work-afternoon end bell — 14:55, fires inside work-afternoon (not at period start 13:15)
-  // Same case as above: fires before the period ends, not at its start.
-  // Future: bellEnd: field. For now: one explicit entry.
+  // Work-afternoon end bell — 14:55, fires before period end (15:00) — not expressible as bellEnd:
+  // Future: consider sub-period offset field if this pattern recurs.
   if (SCHEDULE.some(p => p.id === 'work-afternoon')) {
-    const firesAt = new Date(now);
-    firesAt.setHours(14, 55, 0, 0);
+    const firesAt = todayAt(14, 55);
     if (firesAt > now) {
       console.log('[WebAudio] scheduling railroad-bell work-afternoon end at', firesAt.toLocaleTimeString());
       scheduleAudioEvent('audio/sfzc/railroad-bell.mp3', firesAt);

@@ -136,7 +136,7 @@ The practitioner who sits in the morning, moves through their day, and comes hom
 const SCHEDULE_CASUAL = [
   { id: 'quiet-morning',   time: [0,0],   end: [5,10],  name: 'Quiet',               type: 'quiet', hasService: false },
   { id: 'han',             time: [5,10],  end: [5,20],  name: 'Han',                  type: 'bell',  hasService: false, audio: 'audio/sfzc/temple_sounds-the_han.mp3' },
-  { id: 'zazen-morning',   time: [5,20],  end: [6,20],  name: 'Zazen',                type: 'zazen', hasService: false },
+  { id: 'zazen-morning',   time: [5,20],  end: [6,20],  name: 'Zazen',                type: 'zazen', hasService: false, bell: 'audio/sfzc/3_Floor_Bells.mp3', bellEnd: 'audio/sfzc/morning_zazen_end.mp3' },
   { id: 'morning-service', time: [6,20],  end: [6,50],  name: 'Morning Service',      type: 'chant', hasService: true  },
   { id: 'breakfast',       time: [6,50],  end: [8,0],   name: 'Breakfast',            type: 'meal',  hasService: false },
   { id: 'your-day',        time: [8,0],   end: [12,0],  name: 'Your Day',             type: 'rest',  hasService: false },
@@ -162,20 +162,20 @@ const SCHEDULE_STANDARD = [
   { id: 'quiet-morning',   time: [0,0],   end: [4,30],  name: 'Quiet',                 type: 'quiet', hasService: false },
   { id: 'wake-up-bell',    time: [4,30],  end: [4,45],  name: 'Wake-up Bell',           type: 'bell',  hasService: false, audio: 'audio/sfzc/koten-and-shinrei-wakeup.mp3' },
   { id: 'han',             time: [4,45],  end: [5,0],   name: 'Han',                    type: 'bell',  hasService: false, audio: 'audio/sfzc/temple_sounds-the_han.mp3' },
-  { id: 'zazen-morning',   time: [5,0],   end: [6,30],  name: 'Zazen',                  type: 'zazen', hasService: false },
+  { id: 'zazen-morning',   time: [5,0],   end: [6,30],  name: 'Zazen',                  type: 'zazen', hasService: false, bell: 'audio/sfzc/3_Floor_Bells.mp3', bellEnd: 'audio/sfzc/morning_zazen_end.mp3' },
   { id: 'morning-service', time: [6,30],  end: [7,0],   name: 'Morning Service',        type: 'chant', hasService: true  },
   { id: 'soji',            time: [7,0],   end: [7,20],  name: 'Soji',                   type: 'work',  hasService: false },
   { id: 'breakfast',       time: [7,20],  end: [8,10],  name: 'Breakfast',              type: 'meal',  hasService: false },
-  { id: 'study-hall',      time: [8,10],  end: [9,10],  name: 'Study Hall',             type: 'study', hasService: false },
-  { id: 'work-morning',    time: [9,10],  end: [12,15], name: 'Work Period',            type: 'work',  hasService: false },
+  { id: 'study-hall',      time: [8,10],  end: [9,10],  name: 'Study Hall',             type: 'study', hasService: false, bell: 'audio/sfzc/study-bell.mp3', bellEnd: 'audio/sfzc/study-bell.mp3' },
+  { id: 'work-morning',    time: [9,10],  end: [12,15], name: 'Work Period',            type: 'work',  hasService: false, bell: 'audio/sfzc/railroad-bell.mp3' },
   { id: 'midday-service',  time: [12,15], end: [12,30], name: 'Mid-day Service',        type: 'chant', hasService: false },
   { id: 'lunch',           time: [12,30], end: [13,15], name: 'Lunch',                  type: 'meal',  hasService: false },
-  { id: 'work-afternoon',  time: [13,15], end: [15,0],  name: 'Afternoon Work',         type: 'work',  hasService: false },
+  { id: 'work-afternoon',  time: [13,15], end: [15,0],  name: 'Afternoon Work',         type: 'work',  hasService: false, bell: 'audio/sfzc/railroad-bell.mp3' },
   { id: 'personal',        time: [15,0],  end: [17,15], name: 'Personal Time',          type: 'rest',  hasService: false },
-  { id: 'zazen-evening',   time: [17,15], end: [17,50], name: 'Zazen',                  type: 'zazen', hasService: false },
+  { id: 'zazen-evening',   time: [17,15], end: [17,50], name: 'Zazen',                  type: 'zazen', hasService: false, bell: 'audio/sfzc/3_Floor_Bells.mp3' },
   { id: 'evening-service', time: [17,50], end: [18,0],  name: 'Evening Service',        type: 'chant', hasService: true  },
   { id: 'dinner',          time: [18,0],  end: [19,30], name: 'Dinner',                 type: 'meal',  hasService: false },
-  { id: 'zazen-night',     time: [19,30], end: [20,50], name: 'Zazen',                  type: 'zazen', hasService: false },
+  { id: 'zazen-night',     time: [19,30], end: [20,50], name: 'Zazen',                  type: 'zazen', hasService: false, bell: 'audio/sfzc/3_Floor_Bells.mp3' },
   { id: 'three-refuges',   time: [20,50], end: [21,0],  name: 'Three Refuges',          type: 'chant', hasService: false },
   { id: 'firewatch-bell',     time: [21,0],  end: [21,30], name: 'Firewatch',              type: 'quiet', hasService: false, audio: 'audio/sfzc/konsho-evening-bell.mp3' },
   { id: 'firewatch-clappers', time: [21,30], end: [22,0],  name: 'Firewatch',              type: 'quiet', hasService: false, audio: 'audio/sfzc/firewatch-clappers.mp3' },
@@ -202,23 +202,23 @@ const SCHEDULE_INTENSIVE = [
   { id: 'quiet-morning',    time: [0,0],   end: [4,25],  name: 'Quiet',            type: 'quiet', hasService: false },
   { id: 'wake-up-bell',     time: [4,25],  end: [4,50],  name: 'Wake-up Bell',     type: 'bell',  hasService: false, audio: 'audio/sfzc/koten-and-shinrei-wakeup.mp3' },
   { id: 'han',              time: [4,50],  end: [5,0],   name: 'Han',              type: 'bell',  hasService: false, audio: 'audio/sfzc/temple_sounds-the_han.mp3' },
-  { id: 'zazen-1',          time: [5,0],   end: [6,30],  name: 'Zazen',            type: 'zazen', hasService: false },
+  { id: 'zazen-1',          time: [5,0],   end: [6,30],  name: 'Zazen',            type: 'zazen', hasService: false, bell: 'audio/sfzc/3_Floor_Bells.mp3', bellEnd: 'audio/sfzc/morning_zazen_end.mp3' },
   { id: 'morning-service',  time: [6,30],  end: [7,0],   name: 'Morning Service',  type: 'chant', hasService: true  },
   { id: 'soji',             time: [7,0],   end: [7,20],  name: 'Soji',             type: 'work',  hasService: false },
   { id: 'breakfast',        time: [7,20],  end: [8,20],  name: 'Breakfast',        type: 'meal',  hasService: false },
   { id: 'rest-1',           time: [8,20],  end: [9,20],  name: 'Rest',             type: 'rest',  hasService: false },
-  { id: 'zazen-2',          time: [9,20],  end: [11,20], name: 'Zazen',            type: 'zazen', hasService: false },
+  { id: 'zazen-2',          time: [9,20],  end: [11,20], name: 'Zazen',            type: 'zazen', hasService: false, bell: 'audio/sfzc/3_Floor_Bells.mp3' },
   { id: 'noon-service',     time: [11,20], end: [11,30], name: 'Noon Service',     type: 'chant', hasService: false },
   { id: 'lunch',            time: [11,30], end: [13,30], name: 'Lunch',            type: 'meal',  hasService: false },
   { id: 'rest-2',           time: [13,30], end: [14,40], name: 'Rest',             type: 'rest',  hasService: false },
-  { id: 'zazen-3',          time: [14,40], end: [15,50], name: 'Zazen',            type: 'zazen', hasService: false },
+  { id: 'zazen-3',          time: [14,40], end: [15,50], name: 'Zazen',            type: 'zazen', hasService: false, bell: 'audio/sfzc/3_Floor_Bells.mp3' },
   { id: 'tea',              time: [15,50], end: [16,20], name: 'Tea',              type: 'meal',  hasService: false },
   { id: 'rest-3',           time: [16,20], end: [16,30], name: 'Rest',             type: 'rest',  hasService: false },
-  { id: 'zazen-4',          time: [16,30], end: [17,50], name: 'Zazen',            type: 'zazen', hasService: false },
+  { id: 'zazen-4',          time: [16,30], end: [17,50], name: 'Zazen',            type: 'zazen', hasService: false, bell: 'audio/sfzc/3_Floor_Bells.mp3' },
   { id: 'evening-service',  time: [17,50], end: [18,0],  name: 'Evening Service',  type: 'chant', hasService: true  },
   { id: 'dinner',           time: [18,0],  end: [19,30], name: 'Dinner',           type: 'meal',  hasService: false },
   { id: 'rest-4',           time: [19,30], end: [19,30], name: 'Rest',             type: 'rest',  hasService: false },
-  { id: 'zazen-5',          time: [19,30], end: [20,55], name: 'Zazen',            type: 'zazen', hasService: false },
+  { id: 'zazen-5',          time: [19,30], end: [20,55], name: 'Zazen',            type: 'zazen', hasService: false, bell: 'audio/sfzc/3_Floor_Bells.mp3' },
   { id: 'three-refuges',    time: [20,55], end: [21,0],  name: 'Three Refuges',    type: 'chant', hasService: false },
   { id: 'firewatch-bell',     time: [21,0],  end: [21,30], name: 'Firewatch',        type: 'quiet', hasService: false, audio: 'audio/sfzc/konsho-evening-bell.mp3' },
   { id: 'firewatch-clappers', time: [21,30], end: [22,0],  name: 'Firewatch',        type: 'quiet', hasService: false, audio: 'audio/sfzc/firewatch-clappers.mp3' },
@@ -258,8 +258,10 @@ Future: generate correct koten pattern programmatically for any schedule time.
 - ✅ Densho — in app
 - ✅ Koten + shinrei wake-up — `audio/sfzc/koten-and-shinrei-wakeup.mp3` (polished, ready)
 - 🔍 Meal bell — may need field recording
-- ✅ Railroad bell — `audio/sfzc/railroad-bell.mp3`; array-driven via `bell:` on `work-morning` (9:10) and `work-afternoon` (13:15); end-of-afternoon bell at 14:55 via hardcoded `bellEnd`-pattern entry; Standard schedule only
-- ✅ Study bell — `audio/sfzc/study-bell.mp3`; array-driven via `bell:` on `study-hall` (8:10 open); close at 9:05 via hardcoded `bellEnd`-pattern entry; Standard schedule only. Sequence: 8:10 bell → english opening chant (future, offset from bell duration); 9:05 bell → japanese closing chant (future, offset from bell duration); 9:10 railroad bell signals work begins
+- ✅ 3 Floor Bells — `audio/sfzc/3_Floor_Bells.mp3`; `bell:` on all zazen periods (start); Standard, Casual, Intensive
+- ✅ Morning zazen end — `audio/sfzc/morning_zazen_end.mp3`; `bellEnd:` on `zazen-morning` (Standard, Casual) and `zazen-1` (Intensive)
+- ✅ Railroad bell — `audio/sfzc/railroad-bell.mp3`; array-driven via `bell:` on `work-morning` (9:10) and `work-afternoon` (13:15); end-of-afternoon at 14:55 hardcoded (fires before period end, not expressible as `bellEnd:`); Standard only
+- ✅ Study bell — `audio/sfzc/study-bell.mp3`; array-driven via `bell:` (8:10 open) and `bellEnd:` (9:10 close) on `study-hall`; Standard only. Sequence: 8:10 bell → english opening chant (future); 9:10 bell → japanese closing chant (future); 9:10 railroad bell also fires (work begins)
 - 🔍 Work meeting drum — unique pattern, worth recording; watch haptic candidate
 - 🎙 Hyoshigi clappers — needs dedicated edit/recording for `firewatch-clappers.mp3` (wired in schedule, file pending)
 
@@ -386,7 +388,7 @@ great-vows/
 | `hasService` | bool | Whether Enter button should appear |
 | `audio` | string | Ambient loop — plays for duration of period, shown as track dot |
 | `bell` | string | One-shot bell — fires once at period start via Web Audio, shown as track dot |
-| `bellEnd` | *(future)* | One-shot bell at period end — not yet implemented; pattern used for study-hall close (9:05) and work-afternoon end (14:55) which are currently hardcoded in `scheduleUpcomingBells()` |
+| `bellEnd` | string | One-shot bell at period end (`period.end[0], period.end[1]`) — array-driven, shown as track dot |
 
 `audio:` and `bell:` can coexist on a period (e.g., a period that both loops ambient sound and fires a start bell). Both render a dot; dot pulses when ambient is playing.
 
