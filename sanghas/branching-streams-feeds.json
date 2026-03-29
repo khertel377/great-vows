@@ -1,0 +1,399 @@
+{
+  "meta": {
+    "network": "Branching Streams",
+    "lineage": "Suzuki Roshi / Soto Zen",
+    "description": "Affiliate sanghas of San Francisco Zen Center in the Suzuki Roshi lineage",
+    "source": "https://branchingstreams.sfzc.org/affiliates/directory-of-affiliates/",
+    "feedsConfirmed": 12,
+    "lastUpdated": "2026-03-29"
+  },
+  "sources": [
+    {
+      "name": "San Francisco Zen Center",
+      "location": "San Francisco, CA",
+      "website": "https://sfzc.org",
+      "rss": "https://feeds.feedburner.com/SanFranciscoZenCenterPublicLectures",
+      "status": "confirmed",
+      "platform": "FeedBurner",
+      "notes": ""
+    },
+    {
+      "name": "Ancient Dragon Zen Gate",
+      "location": "Chicago, IL",
+      "website": "https://www.ancientdragon.org",
+      "rss": "https://www.ancientdragon.org/feed/podcast",
+      "status": "confirmed",
+      "platform": "WordPress",
+      "notes": "Apple Podcasts id265133111; Spotify; Amazon Music; Podbean"
+    },
+    {
+      "name": "Austin Zen Center",
+      "location": "Austin, TX",
+      "website": "https://austinzencenter.org",
+      "rss": "http://feeds.feedburner.com/austinzencenterdharmatalks",
+      "status": "confirmed",
+      "platform": "FeedBurner",
+      "notes": "Apple Podcasts id443236145; Spotify; Podbean"
+    },
+    {
+      "name": "Berkeley Zen Center",
+      "location": "Berkeley, CA",
+      "website": "https://berkeleyzencenter.org",
+      "rss": "https://berkeleyzencenter.org/feed/podcast/",
+      "status": "confirmed",
+      "platform": "WordPress",
+      "notes": "Apple Podcasts id992015074"
+    },
+    {
+      "name": "Brooklyn Zen Center",
+      "location": "Brooklyn, NY",
+      "website": "https://brooklynzen.org",
+      "rss": "https://brooklynzen.org/feed/podcast/brooklyn-zen-center/",
+      "status": "confirmed",
+      "platform": "WordPress",
+      "notes": "Apple Podcasts id1478880454"
+    },
+    {
+      "name": "Everyday Zen Foundation",
+      "location": "SF Bay Area / online",
+      "website": "https://everydayzen.org",
+      "rss": "https://everydayzen.org/feed/podcast/",
+      "status": "confirmed",
+      "platform": "WordPress",
+      "notes": "Apple Podcasts id959855329; Spotify; Google Podcasts"
+    },
+    {
+      "name": "Heart of Compassion Zen Sangha",
+      "location": "Point Reyes, CA",
+      "website": "https://www.heartofcompassionzen.org",
+      "rss": "https://feeds.buzzsprout.com/1731807.rss",
+      "status": "confirmed",
+      "platform": "Buzzsprout",
+      "notes": "Apple Podcasts; Spotify; TuneIn; 215+ episodes"
+    },
+    {
+      "name": "Houston Zen Center",
+      "location": "Houston, TX",
+      "website": "https://houstonzen.org",
+      "rss": "https://houstonzen.org/dharma-talks?format=rss",
+      "status": "confirmed",
+      "platform": "Squarespace",
+      "notes": "Apple Podcasts; Overcast; Podbean"
+    },
+    {
+      "name": "Kannon Do Zen Meditation Center",
+      "location": "Mountain View, CA",
+      "website": "https://kannondo.org",
+      "rss": "https://kannondo.org/category/podcast/feed/podcast/",
+      "status": "confirmed",
+      "platform": "WordPress",
+      "notes": "Podcast: Zen Meditation and Work Life Balance; Apple Podcasts id1395678341"
+    },
+    {
+      "name": "Ocean Gate Zen Center",
+      "location": "Capitola, CA",
+      "website": "https://oceangatezen.org",
+      "rss": "https://oceangatezen.org/dharma-talks?format=rss",
+      "status": "unconfirmed",
+      "platform": "",
+      "notes": "Also try /feed/podcast/; Apple Podcasts id971385758; YouTube"
+    },
+    {
+      "name": "San Antonio Zen Center",
+      "location": "San Antonio, TX",
+      "website": "https://www.sanantoniozen.org",
+      "rss": "https://anchor.fm/s/b1342f4/podcast/rss",
+      "status": "confirmed",
+      "platform": "Anchor",
+      "notes": "Apple Podcasts; Spotify; Google Podcasts"
+    },
+    {
+      "name": "Santa Cruz Zen Center",
+      "location": "Santa Cruz, CA",
+      "website": "https://sczc.org",
+      "rss": "https://sczc.org/podcast?format=rss",
+      "status": "confirmed",
+      "platform": "Squarespace",
+      "notes": "Confirmed active 2025-2026; podcast page at /podcast"
+    },
+    {
+      "name": "Seattle Soto Zen",
+      "location": "Seattle, WA",
+      "website": "https://seattlesotozen.org",
+      "rss": "https://seattlesotozen.org/feed/podcast/",
+      "status": "unconfirmed",
+      "platform": "Castos",
+      "notes": "Apple Podcasts id1566803304; podcast page: /series/seattle-soto-zen/"
+    },
+    {
+      "name": "Twining Vines Zen Centre",
+      "location": "Purchase, NY",
+      "website": "https://netiparekh.com",
+      "rss": "",
+      "status": "unconfirmed",
+      "platform": "Anchor",
+      "notes": "Anchor RSS not confirmed; Spotify: https://open.spotify.com/show/7qSaprFRLU509PEZJpZikq; talks at https://netiparekh.com/audio-and-video-talk-recordings/"
+    },
+    {
+      "name": "Zen Center North Shore (Marblehead Zen Center)",
+      "location": "Beverly, MA",
+      "website": "https://www.zencenternorthshore.org",
+      "rss": "https://anchor.fm/s/11927a8c/podcast/rss",
+      "status": "confirmed",
+      "platform": "Anchor",
+      "notes": "Spotify; RadioPublic; Listen Notes"
+    },
+    {
+      "name": "All Beings Zen Sangha",
+      "location": "Washington, DC",
+      "website": "https://www.allbeingszen.org",
+      "rss": "",
+      "status": "talks-only",
+      "platform": "",
+      "notes": "Talks page: /inryus-dharma-talks/; noted as temporarily unavailable"
+    },
+    {
+      "name": "Arcata Zen Group (Forest Heart Temple)",
+      "location": "Arcata, CA",
+      "website": "https://arcatazengroup.org",
+      "rss": "",
+      "status": "talks-only",
+      "platform": "",
+      "notes": "Talks page: /dharma-talks"
+    },
+    {
+      "name": "Ashland Zen Center",
+      "location": "Ashland, OR",
+      "website": "https://www.ashlandzencenter.org",
+      "rss": "",
+      "status": "none",
+      "platform": "",
+      "notes": ""
+    },
+    {
+      "name": "Autsit",
+      "location": "Fairfax, CA",
+      "website": "https://autsit.autismtheory.org",
+      "rss": "",
+      "status": "none",
+      "platform": "",
+      "notes": "Online Zoom meditation group; no talks or podcast"
+    },
+    {
+      "name": "Back Porch Zendo (now Rocks and Clouds Zendo)",
+      "location": "Sebastopol, CA",
+      "website": "https://rocksandcloudszendo.org",
+      "rss": "",
+      "status": "none",
+      "platform": "",
+      "notes": "Rebranded; no talks page identified"
+    },
+    {
+      "name": "Bamboo in the Wind",
+      "location": "Sunnyvale, CA",
+      "website": "https://www.bamboointhewind.org",
+      "rss": "",
+      "status": "talks-only",
+      "platform": "",
+      "notes": "Talks page: /dharma-talks---audio-and-text.html"
+    },
+    {
+      "name": "Beginner's Mind Zen",
+      "location": "Eureka, CA",
+      "website": "https://www.beginnersmindzencenter.org",
+      "rss": "",
+      "status": "none",
+      "platform": "",
+      "notes": "Possibly shares domain with Northridge center; no dedicated audio for Eureka location found"
+    },
+    {
+      "name": "Beginner's Mind Zen Center",
+      "location": "Northridge, CA",
+      "website": "https://www.beginnersmindzencenter.org",
+      "rss": "",
+      "status": "talks-only",
+      "platform": "",
+      "notes": "Talks page: /dharma-talks.html"
+    },
+    {
+      "name": "Bodhi Oak Zen Sangha",
+      "location": "Oakhurst, CA",
+      "website": "https://bodhioakzen.org",
+      "rss": "",
+      "status": "none",
+      "platform": "",
+      "notes": "YouTube only: https://www.youtube.com/@bodhioakzensangha5759; center reportedly closing"
+    },
+    {
+      "name": "Bozeman Zen Group",
+      "location": "Bozeman, MT",
+      "website": "https://bozemanzengroup.org",
+      "rss": "",
+      "status": "none",
+      "platform": "",
+      "notes": ""
+    },
+    {
+      "name": "Brattleboro Zen Center",
+      "location": "Brattleboro, VT",
+      "website": "https://brattleborozencenter.org",
+      "rss": "",
+      "status": "talks-only",
+      "platform": "",
+      "notes": "Talks page: /dharmatalks/"
+    },
+    {
+      "name": "Chapel Hill Zen Center",
+      "location": "Chapel Hill, NC",
+      "website": "https://chzc.org",
+      "rss": "",
+      "status": "talks-only",
+      "platform": "",
+      "notes": "Talks list: https://www.chzc.org/talklist.htm; no podcast syndication"
+    },
+    {
+      "name": "Crestone Mountain Zen Center",
+      "location": "Crestone, CO",
+      "website": "",
+      "rss": "",
+      "status": "none",
+      "platform": "",
+      "notes": "No website in directory; contact 719-256-0285"
+    },
+    {
+      "name": "Dharma Eye Zen Center",
+      "location": "San Rafael, CA",
+      "website": "dezc.org",
+      "rss": "",
+      "status": "none",
+      "platform": "",
+      "notes": "Center appears closed (operated 1995–2013); dezc.org domain for sale"
+    },
+    {
+      "name": "Dharma Heart Zen",
+      "location": "Sebastopol, CA",
+      "website": "https://www.dharmaheartzen.com",
+      "rss": "",
+      "status": "none",
+      "platform": "",
+      "notes": ""
+    },
+    {
+      "name": "Dharma Rain Zen Center",
+      "location": "Portland, OR",
+      "website": "https://dharma-rain.org",
+      "rss": "",
+      "status": "talks-only",
+      "platform": "",
+      "notes": "532+ talks at /recordings/recording_category/dharma-talks/; no RSS feed"
+    },
+    {
+      "name": "Great Tree Zen Women's Temple",
+      "location": "Asheville, NC",
+      "website": "https://www.greattreetemple.org",
+      "rss": "",
+      "status": "none",
+      "platform": "",
+      "notes": "Saturday morning lectures; no public audio archive found"
+    },
+    {
+      "name": "Mid-City Zen",
+      "location": "New Orleans, LA",
+      "website": "https://midcityzen.org",
+      "rss": "",
+      "status": "talks-only",
+      "platform": "",
+      "notes": "Talks page: /dharmatalks"
+    },
+    {
+      "name": "Middle Way Zen",
+      "location": "San Jose, CA",
+      "website": "https://middlewayzen.org",
+      "rss": "",
+      "status": "none",
+      "platform": "",
+      "notes": "Thursday dharma talks; no published audio archive"
+    },
+    {
+      "name": "Milwaukee Zen Center",
+      "location": "Milwaukee, WI",
+      "website": "https://mkzen.org",
+      "rss": "https://mkzen.org/dharma-talks-archive?format=rss",
+      "status": "unconfirmed",
+      "platform": "Squarespace",
+      "notes": "Dharma talks archive at /dharma-talks-archive; RSS endpoint not confirmed"
+    },
+    {
+      "name": "Monterey Bay Zen Center",
+      "location": "Monterey, CA",
+      "website": "https://www.montereybayzencenter.org",
+      "rss": "",
+      "status": "none",
+      "platform": "",
+      "notes": "Tuesday dharma talks; no published audio archive"
+    },
+    {
+      "name": "Occidental Laguna Sangha",
+      "location": "Sebastopol, CA",
+      "website": "https://occidentallagunasangha.org",
+      "rss": "",
+      "status": "talks-only",
+      "platform": "",
+      "notes": "Talks available on site; no formal podcast or RSS"
+    },
+    {
+      "name": "Open Circle Sangha",
+      "location": "Helena, MT",
+      "website": "https://www.montanazen.org",
+      "rss": "",
+      "status": "none",
+      "platform": "",
+      "notes": "Sunday zazen and dharma talks; no podcast"
+    },
+    {
+      "name": "Red Cedar Zen Community",
+      "location": "Bellingham, WA",
+      "website": "https://redcedarzen.org",
+      "rss": "",
+      "status": "talks-only",
+      "platform": "",
+      "notes": "Talks library at /Dharma-Talks-Library; archived talks; no RSS/podcast"
+    },
+    {
+      "name": "Richmond Zen",
+      "location": "Richmond, VA",
+      "website": "https://www.richmondzen.org",
+      "rss": "",
+      "status": "none",
+      "platform": "",
+      "notes": "In-person practice at Ekoji Buddhist Sangha; no podcast"
+    },
+    {
+      "name": "Sonoma Mountain Zen Center (Genjo-ji)",
+      "location": "Santa Rosa, CA",
+      "website": "https://www.smzc.org",
+      "rss": "",
+      "status": "none",
+      "platform": "",
+      "notes": "Founded 1973 by Jakusho Kwong-roshi; no podcast or RSS identified"
+    },
+    {
+      "name": "Tuscaloosa Zen",
+      "location": "Tuscaloosa, AL",
+      "website": "",
+      "rss": "",
+      "status": "none",
+      "platform": "",
+      "notes": "Small informal meditation group; Facebook only; no website or podcast"
+    },
+    {
+      "name": "Zen Heart Sangha",
+      "location": "Woodside / Menlo Park, CA",
+      "website": "https://www.zenheartsangha.org",
+      "rss": "",
+      "status": "none",
+      "platform": "",
+      "notes": ""
+    }
+  ]
+}
