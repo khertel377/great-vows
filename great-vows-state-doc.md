@@ -108,6 +108,17 @@ The placed device is the key insight. Phone on a stand in front of the cushion b
 2. Landscape phone/iPad in stand — placed mode
 3. Ambient/shelf — always-on, glanceable
 
+### Dharma Talk — future period type
+An aggregator model, not a host. Centers already produce audio; Great Vows gives existing teachings a ritual container rather than a podcast-browsing experience. Near-term: `dharmaTalk:` field in the horarium accepting a URL or local path. First concrete source: Kokyo's Santa Cruz Zen Center Google Drive archive.
+
+Two architecturally distinct placements:
+1. **Intensive/sesshin** — a named Dharma Talk period where the talk *is* the period. Fixed duration, fills the slot.
+2. **Study Hall content option** — softer, ambient, supplementing the period rather than defining it. For practitioners without a text in hand.
+
+**Opening sequence (confirm with Kokyo):** Great Vows owns a fixed ritual preamble before any external talk audio begins, restoring the processional context stripped by the podcast model: (1) bell rolldown / densho-style period-open; (2) processional silence — teacher enters, makes offerings, takes seat; (3) seating bells as attendant brings lectern and tea; (4) gassho moment → single click on small mokugyo/inkin — the room's attention hinge; (5) doan announces pre-talk chant — either full *Eihei Koso Hotsuganmon* or short "unsurpassed, penetrating and perfect dharma" verse (two variants, confirm with Kokyo); (6) chant; (7) talk begins into silence. No ambient bed during the talk — only the teacher's voice.
+
+**CC implementation note:** Preamble is a fixed-duration audio sequence (parallel to `service:`). Talk URL seeks with elapsed-position offset accounting for preamble duration — same pattern as `bellEnd: { offsetMs }` but in the forward direction (`offsetMs: +preambleDuration`). Elapsed seek math: `elapsedInTalk = elapsedInPeriod - preambleDurationMs`.
+
 ---
 
 ## The Three Schedule Modes
@@ -392,6 +403,7 @@ great-vows/
 | `bell` | string | One-shot bell — fires once at period start via Web Audio, shown as track dot |
 | `bellEnd` | string \| `{ src, offsetMs }` | One-shot bell at period end — or before it when offsetMs is negative. String form: fires at `period.end`. Object form: fires at `period.end + offsetMs`. `-211000` = 3m31s before end (morning zazen end recording). Array-driven, shown as track dot. |
 | `service` | `{ mon, tue, wed, thu, default }` | Day-keyed map of service audio files. Resolution: `service[dayKey] \|\| service.default`. `default` covers Fri/Sat/Sun until dedicated recordings exist — currently points to Monday. Missing both key and default → `console.warn` + silence. Played by `tickServiceAudio()`. Shown as track dot. |
+| `dharmaTalk` | *(future)* | URL or local path to a dharma talk audio file. Played after a fixed ritual preamble sequence; elapsed seek offsets by preamble duration. Two placements: dedicated talk period (intensive/sesshin) or Study Hall content option. First source: Kokyo / Santa Cruz Zen Center archive. |
 
 `audio:`, `bell:`, `bellEnd:`, and `service:` can coexist on a period. All render a dot; ambient dot pulses when ambient is playing.
 
@@ -633,6 +645,7 @@ On cancel (tap button while active): stops `_serviceAudio` and `_bellEndAudio` i
 - Inkin single strike — highest-leverage unacquired sound; covers zazen starting bells, lecture bells, study hall
 - Service audio modular architecture — `sanghas/sfzc.json` declares rotating chant slot setlist; schedule page assembles playlist at render time; Wed/Thu files present, unaligned for index.html
 - Morning zazen end audio clarification — re-listen with bonsho/densho/han distinction to confirm the GGF recording identity
+- Dharma Talk period type — confirm preamble sequence and chant variant with Kokyo; `dharmaTalk:` field in schedule array; preamble-offset elapsed seek
 
 ### Later
 - Full Moon Ceremony and One Day Sitting alignment
