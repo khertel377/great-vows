@@ -700,7 +700,11 @@ function buildTrack(state) {
     row.dataset.idx      = i;
     if (p.audio)   row.dataset.audio   = p.audio;
     if (p.bell)    row.dataset.bell    = p.bell;
-    if (p.bellEnd) row.dataset.bellEnd = p.bellEnd;
+    if (p.bellEnd) {
+      row.dataset.bellEnd = p.bellEnd;
+      // TEMP DEBUG
+      console.log('[buildTrack] bellEnd period=', p.id, 'bellEnd=', JSON.stringify(p.bellEnd));
+    }
     if (p.service) {
       const svcSrc = p.service[getDayKey()] || p.service.default;
       if (svcSrc) row.dataset.service = svcSrc;
