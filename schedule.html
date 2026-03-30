@@ -1518,10 +1518,15 @@ mobileStyles.textContent = `
   #tt-cue-display { flex: 1; text-align: center; overflow: hidden; }
   #tt-cue-name { font-size: 11px; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   #tt-cue-nav  { font-size: 10px; color: rgba(26,24,20,0.45); }
-  #tt-go-row { display: flex; justify-content: flex-end; }
+  #tt-go-row { display: flex; justify-content: flex-end; gap: 6px; }
   #tt-go {
     font-size: 14px; background: var(--seal); color: #f4f0e8;
     border: none; border-radius: 4px; padding: 4px 14px;
+    cursor: pointer; font-family: inherit;
+  }
+  #tt-cancel {
+    font-size: 14px; background: none; color: rgba(26,24,20,0.5);
+    border: 0.5px solid rgba(26,24,20,0.2); border-radius: 4px; padding: 4px 10px;
     cursor: pointer; font-family: inherit;
   }
   @media (max-width: 600px) {
@@ -1554,7 +1559,7 @@ ttPanel.innerHTML = `
   </div>
   <div id="tt-period-info"></div>
   <div id="tt-scrub-row">
-    <div id="tt-scrub-wrap">
+    <div id="tt-scrub-wrap" tabindex="-1">
       <div id="tt-scrub-track">
         <div id="tt-scrub-fill"></div>
         <div id="tt-scrub-thumb"></div>
@@ -1563,14 +1568,17 @@ ttPanel.innerHTML = `
     <span id="tt-snap-indicator"></span>
   </div>
   <div id="tt-cue-row">
-    <button id="tt-prev-cue">&#8249;</button>
+    <button id="tt-prev-cue" tabindex="-1">&#8249;</button>
     <div id="tt-cue-display">
       <div id="tt-cue-name">—</div>
       <div id="tt-cue-nav"></div>
     </div>
-    <button id="tt-next-cue">&#8250;</button>
+    <button id="tt-next-cue" tabindex="-1">&#8250;</button>
   </div>
-  <div id="tt-go-row"><button id="tt-go">Go</button></div>
+  <div id="tt-go-row">
+    <button id="tt-cancel" tabindex="-1">Cancel</button>
+    <button id="tt-go">Go</button>
+  </div>
 `;
 document.body.appendChild(ttPanel);
 
@@ -1592,6 +1600,8 @@ function closeTTPanel() {
 }
 
 ttScrim.addEventListener('click', () => { closeTTPanel(); });
+
+document.getElementById('tt-cancel').addEventListener('click', () => { closeTTPanel(); });
 
 ttBtn.addEventListener('click', () => {
   if (_debugOffset) {
