@@ -962,6 +962,12 @@ let _serviceAudio       = null;
 let _servicePeriodId    = null;
 let _bellEndAudio       = null;
 let _pendingAmbientPlay = false;
+let _scheduledTimeouts  = []; // ghost bell fix — cleared at top of scheduleUpcomingBells
+let _ttScrubTargetMs    = 0;  // Time Machine 2.0 scrub target
+let _currentCueIdx      = 0;  // current position in _CUE_LIST
+let _isDragging         = false;
+let _lastDragX          = null;
+let _dragVelocity       = 0;
 window.addEventListener('scroll', () => {
   document.getElementById('track').classList.add('scrolling');
   if (_scrollTimer) clearTimeout(_scrollTimer);
@@ -1216,29 +1222,24 @@ async function resumeAudioContext() {
 function scheduleAudioEvent(url, firesAt) {
   if (!_webAudioCtx) return;
   const msUntil = firesAt.getTime() - (Date.now() + _debugOffset);
-  // TEMP DEBUG — remove after time-travel bell testing
-  console.log('[WebAudio] scheduleAudioEvent', url.split('/').pop(),
-    '| firesAt=', firesAt.toLocaleTimeString(),
-    '| msUntil=', Math.round(msUntil / 1000) + 's',
-    '| debugOffset=', Math.round(_debugOffset / 60000) + 'min');
-  if (msUntil < 0) { console.log('[WebAudio] → SKIPPED (past)'); return; } // already past — skip silently
+  if (msUntil < 0) return;
 
-  setTimeout(async () => {
+  const id = setTimeout(async () => {
     try {
       await resumeAudioContext();
-      const response = await fetch(url);
+      const response    = await fetch(url);
       const arrayBuffer = await response.arrayBuffer();
       const audioBuffer = await _webAudioCtx.decodeAudioData(arrayBuffer);
-      const source = _webAudioCtx.createBufferSource();
-      source.buffer = audioBuffer;
+      const source      = _webAudioCtx.createBufferSource();
+      source.buffer     = audioBuffer;
       source.connect(_webAudioCtx.destination);
-      console.log('[WebAudio] fire callback — muted=', localStorage.getItem('gv-muted'));
-      if (localStorage.getItem('gv-muted') === '1') return; // respect mute for Web Audio path
-      source.start(0); // play immediately — wall-clock setTimeout already handled the delay
+      if (localStorage.getItem('gv-muted') === '1') return;
+      source.start(0);
     } catch (e) {
       console.warn('[WebAudio] scheduleAudioEvent failed for', url, ':', e);
     }
   }, msUntil);
+  _scheduledTimeouts.push(id);
 }
 
 // Builds a Date for today at h:m in debug time — single source for all bell scheduling.
@@ -1249,73 +1250,80 @@ function todayAt(h, m, s = 0) {
 }
 
 function scheduleUpcomingBells() {
-  // TEMP DEBUG
-  console.log('[scheduleUpcomingBells] called | getNow()=', getNow().toLocaleTimeString(), '| _webAudioCtx=', !!_webAudioCtx);
-  if (!_webAudioCtx) return;
-  const now = getNow();
+  // Ghost bell fix — clear all pending scheduled timeouts
+  _scheduledTimeouts.forEach(clearTimeout);
+  _scheduledTimeouts = [];
 
-  // audio: — type:'bell' periods scheduled via Web Audio (wake-up, han)
+  const now               = getNow();
+  const KINHIN_DURATION_MS = 5 * 60 * 1000;
+  const KINHIN_CLAPPER_MS  = 990;
+  const studyBellMs        = 8271;
+  const cues               = [];
+
+  // audio: bell-type periods (wake-up, han)
   for (const period of SCHEDULE) {
-    if (!period.audio) continue;
-    if (period.type !== 'bell') continue; // skip ambient loops (type:'quiet' firewatch etc.)
-    const firesAt = todayAt(period.time[0], period.time[1]);
-    if (firesAt <= now) continue;
-    console.log('[WebAudio] scheduling', period.id, 'at', firesAt.toLocaleTimeString());
-    scheduleAudioEvent(period.audio, firesAt);
+    if (!period.audio || period.type !== 'bell') continue;
+    cues.push({ fireMs: todayAt(period.time[0], period.time[1]).getTime(),
+      type: 'bell', src: period.audio, label: period.name.toLowerCase(), periodId: period.id });
   }
 
-  // bell: — one-shot bell at period start
+  // bell: — one-shot at period start
   for (const period of SCHEDULE) {
     if (!period.bell) continue;
-    const firesAt = todayAt(period.time[0], period.time[1]);
-    if (firesAt <= now) continue;
-    console.log('[WebAudio] scheduling bell for', period.id, 'at', firesAt.toLocaleTimeString());
-    scheduleAudioEvent(period.bell, firesAt);
+    cues.push({ fireMs: todayAt(period.time[0], period.time[1]).getTime(),
+      type: 'bell', src: period.bell, label: period.name.toLowerCase() + ' bell', periodId: period.id });
   }
 
-  // bellEnd: — one-shot bell at (or before) period end
-  // bellEnd: can be a string (fires at period.end) or { src, offsetMs } (fires at period.end + offsetMs)
+  // bellEnd: — at (or before) period end
   for (const period of SCHEDULE) {
     if (!period.bellEnd) continue;
-    const entry = period.bellEnd;
+    const entry    = period.bellEnd;
     const src      = typeof entry === 'string' ? entry : entry.src;
     const offsetMs = typeof entry === 'string' ? 0 : (entry.offsetMs || 0);
-    const firesAt  = new Date(todayAt(period.end[0], period.end[1]).getTime() + offsetMs);
-    if (firesAt <= now) continue;
-    console.log('[WebAudio] scheduling bellEnd for', period.id, 'at', firesAt.toLocaleTimeString());
-    scheduleAudioEvent(src, firesAt);
+    cues.push({ fireMs: todayAt(period.end[0], period.end[1]).getTime() + offsetMs,
+      type: 'bellEnd', src, label: period.name.toLowerCase() + ' end', periodId: period.id });
   }
 
-  // Zazen mid-period sequence — densho + kinhin clapper + sitting bells
-  // Only for zazen periods > 42 min (zazen-morning 90 min, zazen-night 80 min; skip zazen-evening 35 min)
-  const KINHIN_DURATION_MS = 5 * 60 * 1000; // 5 minutes
-  const KINHIN_CLAPPER_MS  = 990;
+  // service: — at period start (fired by tickServiceAudio; listed here for scrub navigation)
+  for (const period of SCHEDULE) {
+    if (!period.service) continue;
+    const src = period.service[getDayKey()] || period.service.default;
+    if (!src) continue;
+    cues.push({ fireMs: todayAt(period.time[0], period.time[1]).getTime(),
+      type: 'service', src, label: period.name.toLowerCase() + ' audio', periodId: period.id });
+  }
+
+  // Zazen midpoint sequence — densho + kinhin clapper + sitting bells (periods > 42 min only)
   for (const period of SCHEDULE) {
     if (period.type !== 'zazen') continue;
     const durMins = (period.end[0] * 60 + period.end[1]) - (period.time[0] * 60 + period.time[1]);
     if (durMins <= 42) continue;
-    const periodStartMs = todayAt(period.time[0], period.time[1]).getTime();
-    const durationMs    = durMins * 60 * 1000;
-    const midpointMs    = periodStartMs + Math.floor(durationMs / 2);
-    const denshoAt  = new Date(midpointMs);
-    const clapperAt = new Date(midpointMs + KINHIN_DURATION_MS);
-    const bellsAt   = new Date(midpointMs + KINHIN_DURATION_MS + KINHIN_CLAPPER_MS + 30000);
-    if (denshoAt  > now) scheduleAudioEvent('audio/sfzc/densho-end-zazen-kinhin.mp3', denshoAt);
-    if (clapperAt > now) scheduleAudioEvent('audio/sfzc/kinhin-clapper.mp3', clapperAt);
-    if (bellsAt   > now) scheduleAudioEvent('audio/sfzc/3_Floor_Bells.mp3', bellsAt);
+    const midpointMs = todayAt(period.time[0], period.time[1]).getTime() + Math.floor(durMins * 60 * 1000 / 2);
+    cues.push({ fireMs: midpointMs,                                                         type: 'densho',  src: 'audio/sfzc/densho-end-zazen-kinhin.mp3', label: period.name.toLowerCase() + ' densho',       periodId: period.id });
+    cues.push({ fireMs: midpointMs + KINHIN_DURATION_MS,                                    type: 'kinhin',  src: 'audio/sfzc/kinhin-clapper.mp3',           label: period.name.toLowerCase() + ' kinhin',       periodId: period.id });
+    cues.push({ fireMs: midpointMs + KINHIN_DURATION_MS + KINHIN_CLAPPER_MS + 30000,        type: 'bell',    src: 'audio/sfzc/3_Floor_Bells.mp3',            label: period.name.toLowerCase() + ' sitting bells', periodId: period.id });
   }
 
-  // Study hall chant sequence — hardcoded offsets; candidate for bell: array expansion
+  // Study hall chant sequence — hardcoded offsets; candidate for bellSequence: field
   const studyHall = SCHEDULE.find(p => p.id === 'study-hall');
   if (studyHall) {
-    const studyBellMs   = 8271;
-    const studyStart    = todayAt(studyHall.time[0], studyHall.time[1]);
-    const openingAt     = new Date(studyStart.getTime() + studyBellMs);
-    const closingBellAt = new Date(todayAt(studyHall.end[0], studyHall.end[1]).getTime() - 5 * 60 * 1000);
-    const closingChantAt = new Date(closingBellAt.getTime() + studyBellMs);
-    if (openingAt     > now) scheduleAudioEvent('audio/sfzc/opening_chant.mp3', openingAt);
-    if (closingBellAt > now) scheduleAudioEvent('audio/sfzc/study-bell.mp3', closingBellAt);
-    if (closingChantAt > now) scheduleAudioEvent('audio/sfzc/closing_chant.mp3', closingChantAt);
+    const studyStartMs   = todayAt(studyHall.time[0], studyHall.time[1]).getTime();
+    const closingBellMs  = todayAt(studyHall.end[0], studyHall.end[1]).getTime() - 5 * 60 * 1000;
+    cues.push({ fireMs: studyStartMs  + studyBellMs, type: 'chant-offset', src: 'audio/sfzc/opening_chant.mp3', label: 'opening chant',          periodId: 'study-hall' });
+    cues.push({ fireMs: closingBellMs,               type: 'bell',         src: 'audio/sfzc/study-bell.mp3',    label: 'study hall close bell',   periodId: 'study-hall' });
+    cues.push({ fireMs: closingBellMs + studyBellMs, type: 'chant-offset', src: 'audio/sfzc/closing_chant.mp3', label: 'closing chant',           periodId: 'study-hall' });
+  }
+
+  // Sort and publish — _CUE_LIST is always built, regardless of WebAudio context
+  cues.sort((a, b) => a.fireMs - b.fireMs);
+  window._CUE_LIST = cues;
+
+  // Schedule future events — requires WebAudio context
+  if (!_webAudioCtx) return;
+  for (const cue of cues) {
+    if (cue.type === 'service') continue; // handled by tickServiceAudio
+    if (cue.fireMs <= now.getTime()) continue;
+    scheduleAudioEvent(cue.src, new Date(cue.fireMs));
   }
 
   // Mid-window bellEnd playback — handles time-travel into an active bellEnd window
@@ -1445,41 +1453,58 @@ mobileStyles.textContent = `
   }
   #tt-panel {
     position: fixed;
-    bottom: 128px;
+    bottom: 88px;
     left: 16px;
     right: auto;
+    width: 268px;
     background: rgba(244,240,232,0.96);
-    backdrop-filter: blur(4px);
+    backdrop-filter: blur(8px);
     border: 0.5px solid rgba(26,24,20,0.2);
-    border-radius: 8px;
-    padding: 12px 16px;
+    border-radius: 10px;
+    padding: 14px 16px;
     z-index: 50;
     display: none;
-    align-items: center;
-    gap: 8px;
+    flex-direction: column;
+    gap: 10px;
     font-family: 'IBM Plex Mono', monospace;
   }
-  #tt-panel input[type=number] {
-    width: 36px; font-size: 18px; text-align: center;
-    border: none; background: transparent; color: var(--ink);
-    font-family: inherit;
+  #tt-clock { font-size: 26px; color: var(--ink); letter-spacing: -0.02em; line-height: 1; }
+  #tt-period-info { font-size: 11px; color: rgba(26,24,20,0.5); margin-top: -4px; min-height: 14px; }
+  #tt-scrub-row { display: flex; align-items: center; gap: 8px; }
+  #tt-scrub-track {
+    flex: 1; height: 4px; background: rgba(26,24,20,0.15);
+    border-radius: 2px; position: relative; cursor: pointer; touch-action: none;
   }
-  #tt-panel input[type=number]::-webkit-inner-spin-button,
-  #tt-panel input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; }
-  #tt-panel input[type=number] { -moz-appearance: textfield; }
-  #tt-ampm {
-    font-size: 14px; border: 0.5px solid rgba(26,24,20,0.2);
-    border-radius: 4px; padding: 2px 6px; background: transparent;
-    cursor: pointer; color: var(--ink); font-family: inherit;
+  #tt-scrub-fill {
+    position: absolute; left: 0; top: 0; bottom: 0;
+    background: var(--ink); border-radius: 2px; width: 0%;
+    pointer-events: none;
   }
+  #tt-scrub-thumb {
+    position: absolute; top: 50%; transform: translate(-50%, -50%);
+    width: 12px; height: 12px; border-radius: 50%;
+    background: var(--ink); cursor: grab; left: 0%;
+    pointer-events: none;
+  }
+  #tt-snap-indicator { font-size: 10px; color: rgba(26,24,20,0.4); white-space: nowrap; min-width: 28px; text-align: right; }
+  #tt-cue-row { display: flex; align-items: center; gap: 6px; }
+  #tt-prev-cue, #tt-next-cue {
+    background: transparent; border: 0.5px solid rgba(26,24,20,0.2);
+    border-radius: 4px; padding: 2px 9px; cursor: pointer;
+    font-size: 15px; color: var(--ink); font-family: inherit; line-height: 1.6;
+  }
+  #tt-cue-display { flex: 1; text-align: center; overflow: hidden; }
+  #tt-cue-name { font-size: 11px; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  #tt-cue-nav  { font-size: 10px; color: rgba(26,24,20,0.45); }
+  #tt-go-row { display: flex; justify-content: flex-end; }
   #tt-go {
     font-size: 14px; background: var(--seal); color: #f4f0e8;
-    border: none; border-radius: 4px; padding: 4px 10px;
+    border: none; border-radius: 4px; padding: 4px 14px;
     cursor: pointer; font-family: inherit;
   }
   @media (max-width: 600px) {
     #time-travel-btn { bottom: calc(16px + env(safe-area-inset-bottom, 0px)); left: 16px; right: auto; }
-    #tt-panel        { bottom: calc(120px + env(safe-area-inset-bottom, 0px)); left: 8px; right: auto; }
+    #tt-panel        { bottom: calc(80px + env(safe-area-inset-bottom, 0px)); left: 8px; right: auto; width: calc(100vw - 32px); }
   }
 `;
 document.head.appendChild(mobileStyles);
@@ -1497,13 +1522,24 @@ document.body.appendChild(ttBtn);
 const ttPanel = document.createElement('div');
 ttPanel.id = 'tt-panel';
 ttPanel.innerHTML = `
-  <input id="tt-hour" type="number" min="1" max="12" placeholder="12">
-  <span style="font-size:18px;color:var(--ink)">:</span>
-  <input id="tt-min"  type="number" min="0" max="59" placeholder="00">
-  <span style="font-size:18px;color:var(--ink)">:</span>
-  <input id="tt-sec"  type="number" min="0" max="59" value="0" style="width:3em">
-  <button id="tt-ampm">PM</button>
-  <button id="tt-go">Go</button>
+  <div id="tt-clock">—</div>
+  <div id="tt-period-info"></div>
+  <div id="tt-scrub-row">
+    <div id="tt-scrub-track">
+      <div id="tt-scrub-fill"></div>
+      <div id="tt-scrub-thumb"></div>
+    </div>
+    <span id="tt-snap-indicator"></span>
+  </div>
+  <div id="tt-cue-row">
+    <button id="tt-prev-cue">&#8249;</button>
+    <div id="tt-cue-display">
+      <div id="tt-cue-name">—</div>
+      <div id="tt-cue-nav"></div>
+    </div>
+    <button id="tt-next-cue">&#8250;</button>
+  </div>
+  <div id="tt-go-row"><button id="tt-go">Go</button></div>
 `;
 document.body.appendChild(ttPanel);
 
@@ -1511,52 +1547,145 @@ const ttDot = document.getElementById('time-travel-dot');
 
 ttBtn.addEventListener('click', () => {
   if (_debugOffset) {
+    // Cancel: return to real time
     _debugOffset = 0;
     ttDot.style.display = 'none';
     ttPanel.style.display = 'none';
-    // Stop any in-progress time-travel audio
     if (_serviceAudio) { _serviceAudio.pause(); _serviceAudio = null; }
-    _servicePeriodId = null; // forces tickServiceAudio to re-evaluate on next tick
+    _servicePeriodId = null;
     if (_bellEndAudio) { _bellEndAudio.pause(); _bellEndAudio = null; }
     if (_ambientAudio) { _ambientAudio.pause(); _ambientAudio = null; }
-    _ambientPeriodId = null; // forces tickAmbientAudio to re-evaluate on next tick
+    _ambientPeriodId = null;
     buildTrack(getScheduleState(getNow()));
     scheduleUpcomingBells();
-    console.log('[debug] time travel cleared — returning to real time');
   } else {
-    const n = getNow();
-    let h = n.getHours();
-    const ampm = h >= 12 ? 'PM' : 'AM';
-    h = h % 12 || 12;
-    document.getElementById('tt-hour').value = h;
-    document.getElementById('tt-min').value = String(n.getMinutes()).padStart(2, '0');
-    document.getElementById('tt-sec').value = String(n.getSeconds()).padStart(2, '0');
-    document.getElementById('tt-ampm').textContent = ampm;
+    // Open panel — initialize scrub to now
+    if (!window._CUE_LIST || !window._CUE_LIST.length) scheduleUpcomingBells();
+    _ttScrubTargetMs = getNow().getTime();
     ttPanel.style.display = 'flex';
+    updateTTPanelPreview(_ttScrubTargetMs, false);
   }
 });
 
-document.getElementById('tt-ampm').addEventListener('click', () => {
-  const el = document.getElementById('tt-ampm');
-  el.textContent = el.textContent === 'AM' ? 'PM' : 'AM';
-});
-
 document.getElementById('tt-go').addEventListener('click', () => {
-  let h = parseInt(document.getElementById('tt-hour').value);
-  const m = parseInt(document.getElementById('tt-min').value);
-  const isPM = document.getElementById('tt-ampm').textContent === 'PM';
-  if (isPM && h !== 12) h += 12;
-  if (!isPM && h === 12) h = 0;
-  unlockAudioContext(); // creates _webAudioCtx if not already exists — idempotent
-  const sec = parseInt(document.getElementById('tt-sec').value) || 0;
-  const target = new Date(); target.setHours(h, m, sec, 0);
-  _debugOffset = target - Date.now();
+  unlockAudioContext();
+  _debugOffset = _ttScrubTargetMs - Date.now();
+  if (_serviceAudio) { _serviceAudio.pause(); _serviceAudio = null; }
+  _servicePeriodId = null;
+  if (_bellEndAudio) { _bellEndAudio.pause(); _bellEndAudio = null; }
+  if (_ambientAudio) { _ambientAudio.pause(); _ambientAudio = null; }
+  _ambientPeriodId = null;
   ttDot.style.display = '';
   ttPanel.style.display = 'none';
   buildTrack(getScheduleState(getNow()));
   scheduleUpcomingBells();
-  console.log('[debug] synthetic time active:', getNow().toTimeString());
 });
+
+/* ── Time Machine 2.0 — scrub, snap, cue step ── */
+
+const SNAP_VELOCITY_THRESHOLD = 4;      // px per mousemove event — below this, snap to nearest cue
+const SNAP_CUE_WINDOW_MS      = 15 * 60 * 1000; // snap only when within 15 min of a cue
+
+function formatTime12(d) {
+  let h = d.getHours(), m = d.getMinutes();
+  const ampm = h >= 12 ? 'PM' : 'AM';
+  h = h % 12 || 12;
+  return `${h}:${String(m).padStart(2, '0')} ${ampm}`;
+}
+
+function getNearestCue(targetMs) {
+  const list = window._CUE_LIST;
+  if (!list || !list.length) return null;
+  return list.reduce((best, c) =>
+    Math.abs(c.fireMs - targetMs) < Math.abs(best.fireMs - targetMs) ? c : best);
+}
+
+function updateCueNav() {
+  const list = window._CUE_LIST;
+  if (!list || !list.length) return;
+  const idx = Math.max(0, Math.min(list.length - 1, _currentCueIdx));
+  const cue = list[idx];
+  document.getElementById('tt-cue-name').textContent = cue ? cue.label : '—';
+  document.getElementById('tt-cue-nav').textContent  = cue ? `cue ${idx + 1} of ${list.length}` : '';
+}
+
+function updateTTPanelPreview(targetMs, snapping) {
+  _ttScrubTargetMs = targetMs;
+  const DAY_START_MS    = todayAt(0, 0).getTime();
+  const DAY_DURATION_MS = 24 * 60 * 60 * 1000;
+
+  document.getElementById('tt-clock').textContent = formatTime12(new Date(targetMs));
+
+  const state = getScheduleState(new Date(targetMs));
+  if (state.state === 'during') {
+    const periodStartMs = todayAt(state.period.time[0], state.period.time[1]).getTime();
+    const elapsedMin    = Math.floor((targetMs - periodStartMs) / 60000);
+    document.getElementById('tt-period-info').textContent = `${state.period.name} · ${elapsedMin} min elapsed`;
+  } else if (state.state === 'between') {
+    document.getElementById('tt-period-info').textContent = `between · next: ${state.next.name}`;
+  } else {
+    document.getElementById('tt-period-info').textContent = '';
+  }
+
+  const nearest = getNearestCue(targetMs);
+  if (nearest) {
+    document.getElementById('tt-snap-indicator').textContent = snapping ? '· cue' : '· free';
+    const newIdx = window._CUE_LIST.indexOf(nearest);
+    if (newIdx !== _currentCueIdx) { _currentCueIdx = newIdx; updateCueNav(); }
+  }
+
+  const pct = Math.max(0, Math.min(1, (targetMs - DAY_START_MS) / DAY_DURATION_MS));
+  document.getElementById('tt-scrub-fill').style.width = (pct * 100) + '%';
+  document.getElementById('tt-scrub-thumb').style.left = (pct * 100) + '%';
+}
+
+function handleScrubDrag(clientX) {
+  _dragVelocity = _lastDragX !== null ? Math.abs(clientX - _lastDragX) : 0;
+  _lastDragX    = clientX;
+
+  const rect          = document.getElementById('tt-scrub-track').getBoundingClientRect();
+  const raw           = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+  const DAY_START_MS  = todayAt(0, 0).getTime();
+  const rawMs         = DAY_START_MS + raw * 24 * 60 * 60 * 1000;
+  const snapping      = _dragVelocity < SNAP_VELOCITY_THRESHOLD;
+
+  let targetMs = rawMs;
+  if (snapping) {
+    const nearest = getNearestCue(rawMs);
+    if (nearest && Math.abs(nearest.fireMs - rawMs) < SNAP_CUE_WINDOW_MS) targetMs = nearest.fireMs;
+  }
+  updateTTPanelPreview(targetMs, snapping);
+}
+
+function stepCue(dir) {
+  const list = window._CUE_LIST;
+  if (!list || !list.length) return;
+  _currentCueIdx = Math.max(0, Math.min(list.length - 1, _currentCueIdx + dir));
+  const cue = list[_currentCueIdx];
+  updateTTPanelPreview(cue.fireMs, true);
+  // Fire immediately so the practitioner hears the transition
+  unlockAudioContext();
+  scheduleAudioEvent(cue.src, new Date(getNow().getTime() + 500));
+}
+
+// Scrub track pointer events
+const scrubTrack = document.getElementById('tt-scrub-track');
+scrubTrack.addEventListener('mousedown', (e) => {
+  _isDragging = true; _lastDragX = null; _dragVelocity = 0;
+  handleScrubDrag(e.clientX); e.preventDefault();
+});
+document.addEventListener('mousemove',  (e) => { if (_isDragging) handleScrubDrag(e.clientX); });
+document.addEventListener('mouseup',    ()  => { _isDragging = false; _lastDragX = null; });
+scrubTrack.addEventListener('touchstart', (e) => {
+  _isDragging = true; _lastDragX = null; _dragVelocity = 0;
+  handleScrubDrag(e.touches[0].clientX); e.preventDefault();
+}, { passive: false });
+document.addEventListener('touchmove',  (e) => { if (_isDragging) handleScrubDrag(e.touches[0].clientX); }, { passive: true });
+document.addEventListener('touchend',   ()  => { _isDragging = false; _lastDragX = null; });
+
+// Cue step buttons
+document.getElementById('tt-prev-cue').addEventListener('click', () => stepCue(-1));
+document.getElementById('tt-next-cue').addEventListener('click', () => stepCue(1));
 
 /* ── Mute button ── */
 const speakerOnSVG  = `<svg viewBox="0 0 24 24"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>`;

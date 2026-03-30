@@ -645,12 +645,21 @@ Console unlock step removed — tap itself sets `sessionStorage`.
 
 **Remaining failure mode:** If iOS kills the tab entirely overnight, scheduled bells are lost — no web app can recover from this. setTimeout drift on a foreground, screen-on tab is negligible (well under 1 second). Next solution class if needed: Service Worker + Web Push.
 
-### Time-travel debug tool — working
+### Time-travel debug tool — Time Machine 2.0 — working
 `#time-travel-btn` — clock icon, `position: fixed`, bottom-left, mirroring mute button bottom-right. Both use `calc(Npx + env(safe-area-inset-bottom, 0px))`.
 
-Tap opens `#tt-panel` — floating panel with hour/minute/second inputs, AM/PM toggle (`#tt-ampm`), and Go button (`#tt-go`). No `<input type="time">` — unreliable cross-platform. Panel pre-fills with current `getNow()` time including seconds. On Go: calls `unlockAudioContext()` (creates `_webAudioCtx` on desktop where no entry overlay exists), computes `_debugOffset = target - Date.now()`, rebuilds track, reschedules bells.
+Tap opens `#tt-panel` — 268px floating panel (flex-column). Contains: large clock display (`#tt-clock`), period + elapsed info (`#tt-period-info`), scrub track (`#tt-scrub-track` with fill + thumb), snap indicator (`#tt-snap-indicator`), cue row (`‹ #tt-cue-name / #tt-cue-nav ›`), and Go button.
 
-On cancel (tap button while active): stops `_serviceAudio` and `_bellEndAudio` immediately, nulls `_servicePeriodId` so next tick re-evaluates against real time, clears `_debugOffset`, rebuilds track and reschedules.
+**Scrub track** — drag horizontally to move through the day (00:00–24:00). Velocity-sensitive: slow drag snaps to nearest `_CUE_LIST` entry within 15 min window; fast drag (`dragVelocity ≥ 4px`) moves freely. Snap indicator shows `· cue` or `· free`. Touch events supported.
+
+**Cue step buttons** — `‹ ›` step through `_CUE_LIST` one event at a time. Each step fires the cue immediately (`getNow() + 500ms`) so the practitioner hears the audio at the transition point.
+
+**`_CUE_LIST`** — flat sorted array of every scheduled event for the day, built inside `scheduleUpcomingBells()` unconditionally (even without `_webAudioCtx`). Fields: `{ fireMs, type, src, label, periodId }`. Types: `bell`, `bellEnd`, `service`, `densho`, `kinhin`, `chant-offset`. Published as `window._CUE_LIST`. Service cues appear for navigation but are not scheduled via `scheduleAudioEvent` (still fired by `tickServiceAudio`).
+
+**Ghost bell fix** — `_scheduledTimeouts` array accumulates all `setTimeout` IDs from `scheduleAudioEvent`. Cleared with `_scheduledTimeouts.forEach(clearTimeout)` at the top of `scheduleUpcomingBells()`. Eliminates stale bells firing after time-travel cancel.
+
+On Go: `_debugOffset = _ttScrubTargetMs - Date.now()`, stops all audio, rebuilds track, reschedules bells.
+On cancel (tap button while active): same audio teardown as Go, clears `_debugOffset`, rebuilds/reschedules.
 
 `#time-travel-dot` (reuses `.audio-dot` class) pulses gold on the button while debug mode is active.
 
@@ -664,7 +673,7 @@ On cancel (tap button while active): stops `_serviceAudio` and `_bellEndAudio` i
 - Work meeting drum as watch haptic pattern
 - ~~Study hall chant sequencing~~ ✅ wired: opening chant at 8:10 + bell duration; closing bell at 9:05; closing chant at 9:05 + bell duration. Hardcoded in `scheduleUpcomingBells()`.
 - zazen-night end bell — no `bellEnd:` on `zazen-night` yet; night zazen ends without a send-off audio
-- Time-travel ghost bell cancellation — `scheduleAudioEvent` stores no timeout handles; stale bells from cancelled time-travel sessions can fire. Fix: accumulate IDs in `_scheduledTimeouts = []`, call `_scheduledTimeouts.forEach(clearTimeout)` at the top of `scheduleUpcomingBells()`. Mute is the current manual escape hatch. Not urgent — narrow exposure in practice — but a clean one-pass fix.
+- ~~Time-travel ghost bell cancellation~~ ✅ fixed: `_scheduledTimeouts` array accumulates all setTimeout IDs; cleared at top of `scheduleUpcomingBells()`.
 - Kinhin duration (5 min) is a schedule-config candidate — currently hardcoded as `KINHIN_DURATION_MS` in `scheduleUpcomingBells()`; could become a period field or top-level constant
 - `bellSequence:` field concept — for chained events (opening chant after study bell, closing chant after closing bell); currently hardcoded in `scheduleUpcomingBells()`
 - Confirm `tickBellEndAudio()` on real-time passive passage (page load mid-window) — expected to work via `scheduleUpcomingBells()` on entry overlay tap
