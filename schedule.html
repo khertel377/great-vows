@@ -455,9 +455,94 @@ body.placed .clock-hm,
 body.placed .clock-sep,
 body.placed .clock-sec  { font-size: 52px; }
 body.placed .period-row.now .period-name { font-size: 52px; }
+
+/* ══════════════════════════════
+   ENTRY OVERLAY
+══════════════════════════════ */
+#entry-overlay {
+  position: fixed; inset: 0; z-index: 1000;
+  background: rgba(6,6,5,0.93);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  transition: opacity 0.5s ease;
+}
+#entry-overlay.hidden { opacity: 0; pointer-events: none; }
+.entry-torii { width: 80px; height: 52px; display: block; }
+.entry-rule-top  { width: 1px; height: 20px; background: #B03A2E; margin: 0 auto; }
+.entry-rule-bottom { width: 1px; height: 20px; background: #2a2820; margin: 0 auto; }
+.entry-gate-mark { display: flex; flex-direction: column; align-items: center; margin-bottom: 28px; }
+.entry-title {
+  font-family: 'Cormorant Garamond', serif; font-size: 36px; font-weight: 300;
+  color: #c8c4b0; letter-spacing: 0.04em; margin-bottom: 6px;
+}
+.entry-sub {
+  font-family: 'IBM Plex Mono', monospace; font-size: 9px;
+  color: #3a3830; letter-spacing: 0.14em; text-transform: uppercase;
+  margin-bottom: 32px;
+}
+.entry-period {
+  font-family: 'Cormorant Garamond', serif; font-size: 13px; font-style: italic;
+  color: #4a4638; letter-spacing: 0.06em; margin-bottom: 32px; min-height: 1em;
+}
+.entry-buttons {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 10px; width: 100%; padding: 0 40px;
+}
+#entry-sound-btn, #entry-silence-btn {
+  width: 100%; max-width: 240px; height: 46px; border-radius: 4px; cursor: pointer;
+  font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.1em;
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+}
+#entry-sound-btn   { background: #1e1a0e; border: 0.5px solid #B8860B55; color: #B8860B; }
+#entry-silence-btn { background: transparent; border: 0.5px solid #2a2820; color: #4a4638; }
+.entry-note {
+  font-family: 'IBM Plex Mono', monospace; font-size: 8px;
+  color: #2a2820; letter-spacing: 0.08em; margin-top: 24px;
+}
+@media (min-width: 600px) {
+  .entry-gate-mark { flex-direction: row; gap: 28px; margin-bottom: 20px; align-items: center; }
+  .entry-rule-top, .entry-rule-bottom { display: none; }
+  .entry-title { font-size: 42px; }
+  .entry-buttons { flex-direction: row; justify-content: center; padding: 0 40px; gap: 12px; }
+  #entry-sound-btn, #entry-silence-btn { max-width: 200px; }
+}
 </style>
 </head>
 <body>
+
+<div id="entry-overlay">
+  <div class="entry-gate-mark">
+    <div class="entry-rule-top"></div>
+    <svg class="entry-torii" viewBox="0 0 80 52" fill="none">
+      <rect x="4"  y="18" width="72" height="3"  fill="#B03A2E" opacity="0.9"/>
+      <rect x="16" y="6"  width="4"  height="46" fill="#2a2820"/>
+      <rect x="60" y="6"  width="4"  height="46" fill="#2a2820"/>
+      <rect x="10" y="4"  width="60" height="3"  fill="#2a2820"/>
+      <rect x="14" y="2"  width="4"  height="6"  fill="#1e1c16"/>
+      <rect x="62" y="2"  width="4"  height="6"  fill="#1e1c16"/>
+      <rect x="20" y="21" width="16" height="31" fill="#0a0a08"/>
+      <rect x="44" y="21" width="16" height="31" fill="#0a0a08"/>
+    </svg>
+    <div class="entry-rule-bottom"></div>
+  </div>
+
+  <div class="entry-title">Great Vows</div>
+  <div class="entry-sub">a home practice companion</div>
+  <div class="entry-period" id="entry-period-label"></div>
+
+  <div class="entry-buttons">
+    <button id="entry-sound-btn">
+      <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+      enter with sound
+    </button>
+    <button id="entry-silence-btn">
+      <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H2v6h4l5 4V5z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
+      enter in silence
+    </button>
+  </div>
+
+  <div class="entry-note">the schedule is already running</div>
+</div>
 
 <div class="sidebar-header">San Francisco<br>Zen Center</div>
 
@@ -1872,6 +1957,58 @@ muteBtn.addEventListener('click', () => {
   AudioEngine.applyMute();
 });
 
+function updateMuteButton() {
+  localStorage.setItem('gv-muted', isMuted ? '1' : '0');
+  muteBtn.innerHTML = isMuted ? speakerOffSVG : speakerOnSVG;
+  AudioEngine.applyMute();
+}
+
+/* ── Entry overlay ── */
+(function () {
+  const overlay = document.getElementById('entry-overlay');
+  const periodLabel = document.getElementById('entry-period-label');
+
+  // Populate current period label
+  function updateEntryPeriodLabel() {
+    const state = getScheduleState(getNow());
+    if (state && state.state === 'during' && state.period) {
+      const elapsed = Math.floor((getNow() - todayAt(...state.period.time)) / 60000);
+      periodLabel.textContent = `${state.period.name.toLowerCase()} · ${elapsed} min elapsed`;
+    }
+  }
+  updateEntryPeriodLabel();
+
+  // Skip overlay if already unlocked this session
+  if (sessionStorage.getItem('gv-audio-unlocked')) {
+    overlay.classList.add('hidden');
+    return;
+  }
+
+  function enter(withSound) {
+    unlockAudioContext();
+    AudioEngine.unlock();
+    startIOSKeepalive();
+    WakeLock.request();
+    sessionStorage.setItem('gv-audio-unlocked', '1');
+    isMuted = !withSound;
+    updateMuteButton();
+    scheduleUpcomingBells();
+    scheduleMidnightReschedule();
+    if (withSound && _pendingAmbientPlay && _ambientAudio) {
+      _ambientAudio.play()
+        .then(() => {
+          _pendingAmbientPlay = false;
+          const dot = document.getElementById('ambient-dot');
+          if (dot) dot.classList.add('playing');
+        })
+        .catch(() => {});
+    }
+    overlay.classList.add('hidden');
+  }
+
+  document.getElementById('entry-sound-btn').addEventListener('click',   () => enter(true));
+  document.getElementById('entry-silence-btn').addEventListener('click', () => enter(false));
+}());
 
 /* ══════════════════════════════════════════════════════════
    AUDIO ENGINE
@@ -2225,61 +2362,7 @@ const WakeLock = (() => {
 
 document.addEventListener('visibilitychange', WakeLock.onVisibilityChange);
 
-/* ── iOS first-visit audio activation overlay ──
-   Touch devices only. sessionStorage prevents repeat on refresh.
-   Tap unlocks the iOS audio context, then dismisses. ── */
-(function () {
-  const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
-  if (!isTouchDevice) return;
-  if (sessionStorage.getItem('gv-audio-unlocked')) return;
-
-  const overlay = document.createElement('div');
-  overlay.id = 'audio-unlock-overlay';
-  overlay.style.cssText = [
-    'position:fixed', 'top:0', 'left:0', 'right:0', 'bottom:0', 'z-index:1000',
-    'background:#f4f0e8',   /* --paper */
-    'display:flex', 'flex-direction:column',
-    'align-items:center', 'justify-content:center',
-    'cursor:pointer',
-    'transition:opacity 0.4s ease',
-  ].join(';');
-
-  overlay.innerHTML = `
-    <span style="
-      font-family:'Cormorant',serif;
-      font-size:24px;
-      font-weight:400;
-      color:#1a1814;
-      letter-spacing:-0.01em;
-      opacity:0.82;
-      pointer-events:none;
-    ">Tap to enter</span>
-    <span style="
-      font-family:'IBM Plex Mono',monospace;
-      font-size:9px;
-      letter-spacing:0.12em;
-      text-transform:uppercase;
-      color:#1a1814;
-      opacity:0.3;
-      margin-top:14px;
-      pointer-events:none;
-    ">Great Vows · SFZC</span>
-  `;
-
-  overlay.addEventListener('click', function () {
-    AudioEngine.unlock();
-    unlockAudioContext();       // create Web Audio context on first gesture
-    startIOSKeepalive();        // silent loop keeps iOS audio session alive overnight
-    scheduleUpcomingBells();   // schedule all remaining bell events for today
-    scheduleMidnightReschedule(); // queue reschedule at midnight for next day
-    WakeLock.request(); // user gesture — same tap acquires wake lock
-    sessionStorage.setItem('gv-audio-unlocked', '1');
-    overlay.style.opacity = '0';
-    setTimeout(function () { overlay.remove(); }, 420);
-  }, { once: true });
-
-  document.body.appendChild(overlay);
-}());
+/* Entry overlay wired above, near mute button — replaces old iOS-only IIFE. */
 </script>
 </body>
 </html>
