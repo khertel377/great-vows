@@ -1863,9 +1863,21 @@ function updateTTPanelPreview(targetMs, snapping) {
 
   const cross = document.getElementById('tt-preview-cross');
   if (cross) {
-    cross.style.top = pctToScheduleTop(targetMs) + 'px';
+    const crossTop = pctToScheduleTop(targetMs);
+    cross.style.top = crossTop + 'px';
     const timeEl = document.getElementById('tt-preview-time');
     if (timeEl) timeEl.textContent = formatTimeShort(new Date(targetMs));
+
+    // Keep cross visible while scrubbing — scroll document to follow it
+    const track       = document.getElementById('track');
+    const trackRect   = track.getBoundingClientRect();
+    const crossInView = trackRect.top + crossTop; // viewport-relative position of cross
+    const MARGIN      = 80;
+    if (crossInView < MARGIN) {
+      window.scrollBy({ top: crossInView - MARGIN });
+    } else if (crossInView > window.innerHeight - MARGIN) {
+      window.scrollBy({ top: crossInView - window.innerHeight + MARGIN });
+    }
   }
 }
 
