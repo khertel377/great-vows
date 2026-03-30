@@ -158,13 +158,14 @@ const SCHEDULE_CASUAL = [
   { id: 'han',             time: [5,10],  end: [5,20],  name: 'Han',                  type: 'bell',  hasService: false, audio: 'audio/sfzc/temple_sounds-the_han.mp3' },
   { id: 'zazen-morning',   time: [5,20],  end: [6,20],  name: 'Zazen',                type: 'zazen', hasService: false, bell: 'audio/sfzc/3_Floor_Bells.mp3', bellEnd: { src: 'audio/sfzc/morning_zazen_end.mp3', offsetMs: -211000 } },
   { id: 'morning-service', time: [6,20],  end: [6,50],  name: 'Morning Service',      type: 'chant', hasService: true  },
-  { id: 'breakfast',       time: [6,50],  end: [8,0],   name: 'Breakfast',            type: 'meal',  hasService: false },
+  { id: 'breakfast',       time: [6,50],  end: [8,0],   name: 'Breakfast',            type: 'meal',  hasService: false, bell: 'audio/sfzc/eiheiji-breakfast-instruments.mp3' },
   { id: 'your-day',        time: [8,0],   end: [12,0],  name: 'Your Day',             type: 'rest',  hasService: false },
-  { id: 'noon-meal',       time: [12,0],  end: [13,0],  name: 'Noon Meal',            type: 'meal',  hasService: false },
+  { id: 'noon-meal',       time: [12,0],  end: [13,0],  name: 'Noon Meal',            type: 'meal',  hasService: false, bell: 'audio/sfzc/eiheiji-breakfast-instruments.mp3' },
   { id: 'your-day-pm',     time: [13,0],  end: [17,50], name: 'Your Day',             type: 'rest',  hasService: false },
-  { id: 'evening-service', time: [17,50], end: [18,10], name: 'Evening Service',      type: 'chant', hasService: true  },
-  { id: 'dinner',          time: [18,10], end: [20,50], name: 'Dinner',               type: 'meal',  hasService: false },
-  { id: 'three-refuges',   time: [20,50], end: [21,0],  name: 'Three Refuges',        type: 'chant', hasService: false },
+  { id: 'evening-service', time: [17,50], end: [18,10], name: 'Evening Service',      type: 'chant', hasService: true,
+    service: { default: 'audio/sfzc/evening-service-A.mp3' } },
+  { id: 'dinner',          time: [18,10], end: [20,50], name: 'Dinner',               type: 'meal',  hasService: false, bell: 'audio/sfzc/eiheiji-breakfast-instruments.mp3' },
+  { id: 'three-refuges',   time: [20,50], end: [21,0],  name: 'Three Refuges',        type: 'chant', hasService: false, bell: 'audio/sfzc/3-refuges.mp3' },
   { id: 'firewatch-bell',     time: [21,0],  end: [21,30], name: 'Firewatch',            type: 'quiet', hasService: false, audio: 'audio/sfzc/konsho-evening-bell.mp3' },
   { id: 'firewatch-clappers', time: [21,30], end: [22,0],  name: 'Firewatch',            type: 'quiet', hasService: false, audio: 'audio/sfzc/firewatch-clappers.mp3' },
   { id: 'quiet-night',     time: [22,0],  end: [24,0],  name: 'Quiet',                type: 'quiet', hasService: false },
@@ -187,19 +188,21 @@ const SCHEDULE_STANDARD = [
     service: { mon: 'audio/sfzc/MorningService_Monday.mp4', tue: 'audio/sfzc/MorningService_Tuesday.mp4', wed: 'audio/sfzc/MorningService_Wednesday.mp4', thu: 'audio/sfzc/MorningService_Thursday.mp4',
                default: 'audio/sfzc/MorningService_Monday.mp4' } },
   { id: 'soji',            time: [7,0],   end: [7,20],  name: 'Soji',                   type: 'work',  hasService: false, bellEnd: { src: 'audio/sfzc/han-opening.mp3', offsetMs: -8000 } },
-  { id: 'breakfast',       time: [7,20],  end: [8,10],  name: 'Breakfast',              type: 'meal',  hasService: false },
+  { id: 'breakfast',       time: [7,20],  end: [8,10],  name: 'Breakfast',              type: 'meal',  hasService: false, bell: 'audio/sfzc/eiheiji-breakfast-instruments.mp3' },
   { id: 'study-hall',      time: [8,10],  end: [9,10],  name: 'Study Hall',             type: 'study', hasService: false, bell: 'audio/sfzc/study-bell.mp3', bellEnd: 'audio/sfzc/study-bell.mp3' },
   { id: 'work-morning',    time: [9,10],  end: [12,15], name: 'Work Period',            type: 'work',  hasService: false, bell: 'audio/sfzc/railroad-bell.mp3', bellEnd: { src: 'audio/sfzc/temple_sounds-the_densho_bell.mp3', offsetMs: -622000 } },
-  { id: 'midday-service',  time: [12,15], end: [12,30], name: 'Mid-day Service',        type: 'chant', hasService: false },
-  { id: 'lunch',           time: [12,30], end: [13,15], name: 'Lunch',                  type: 'meal',  hasService: false },
+  { id: 'midday-service',  time: [12,15], end: [12,30], name: 'Mid-day Service',        type: 'chant', hasService: false,
+    bell: 'audio/sfzc/midday-service-start.mp3',
+    service: { default: 'audio/sfzc/midday-service.mp3' } },
+  { id: 'lunch',           time: [12,30], end: [13,15], name: 'Lunch',                  type: 'meal',  hasService: false, bell: 'audio/sfzc/eiheiji-breakfast-instruments.mp3' },
   { id: 'work-afternoon',  time: [13,15], end: [15,0],  name: 'Afternoon Work',         type: 'work',  hasService: false, bell: 'audio/sfzc/railroad-bell.mp3', bellEnd: { src: 'audio/sfzc/railroad-bell.mp3', offsetMs: -300000 } },
   { id: 'personal',        time: [15,0],  end: [17,15], name: 'Personal Time',          type: 'rest',  hasService: false, bellEnd: { src: 'audio/sfzc/temple_sounds-the_han.mp3', offsetMs: -847000 } },
-  { id: 'zazen-evening',   time: [17,15], end: [17,50], name: 'Zazen',                  type: 'zazen', hasService: false, bell: 'audio/sfzc/3_Floor_Bells.mp3' },
+  { id: 'zazen-evening',   time: [17,15], end: [17,50], name: 'Zazen',                  type: 'zazen', hasService: false, bell: 'audio/sfzc/3_Floor_Bells.mp3', bellEnd: { src: 'audio/sfzc/end-of-zazen-before-service.mp3', offsetMs: -15816 } },
   { id: 'evening-service', time: [17,50], end: [18,0],  name: 'Evening Service',        type: 'chant', hasService: true,
     service: { default: 'audio/sfzc/evening-service-A.mp3' } },
-  { id: 'dinner',          time: [18,0],  end: [19,30], name: 'Dinner',                 type: 'meal',  hasService: false, bellEnd: { src: 'audio/sfzc/temple_sounds-the_han.mp3', offsetMs: -847000 } },
+  { id: 'dinner',          time: [18,0],  end: [19,30], name: 'Dinner',                 type: 'meal',  hasService: false, bell: 'audio/sfzc/eiheiji-breakfast-instruments.mp3', bellEnd: { src: 'audio/sfzc/temple_sounds-the_han.mp3', offsetMs: -847000 } },
   { id: 'zazen-night',     time: [19,30], end: [20,50], name: 'Zazen',                  type: 'zazen', hasService: false, bell: 'audio/sfzc/3_Floor_Bells.mp3' },
-  { id: 'three-refuges',   time: [20,50], end: [21,0],  name: 'Three Refuges',          type: 'chant', hasService: false },
+  { id: 'three-refuges',   time: [20,50], end: [21,0],  name: 'Three Refuges',          type: 'chant', hasService: false, bell: 'audio/sfzc/3-refuges.mp3' },
   { id: 'firewatch-bell',     time: [21,0],  end: [21,30], name: 'Firewatch',              type: 'quiet', hasService: false, audio: 'audio/sfzc/konsho-evening-bell.mp3' },
   { id: 'firewatch-clappers', time: [21,30], end: [22,0],  name: 'Firewatch',              type: 'quiet', hasService: false, audio: 'audio/sfzc/firewatch-clappers.mp3' },
   { id: 'quiet-night',     time: [22,0],  end: [24,0],  name: 'Quiet',                  type: 'quiet', hasService: false },
@@ -228,11 +231,11 @@ const SCHEDULE_INTENSIVE = [
   { id: 'zazen-1',          time: [5,0],   end: [6,30],  name: 'Zazen',            type: 'zazen', hasService: false, bell: 'audio/sfzc/3_Floor_Bells.mp3', bellEnd: { src: 'audio/sfzc/morning_zazen_end.mp3', offsetMs: -211000 } },
   { id: 'morning-service',  time: [6,30],  end: [7,0],   name: 'Morning Service',  type: 'chant', hasService: true  },
   { id: 'soji',             time: [7,0],   end: [7,20],  name: 'Soji',             type: 'work',  hasService: false, bellEnd: { src: 'audio/sfzc/han-opening.mp3', offsetMs: -8000 } },
-  { id: 'breakfast',        time: [7,20],  end: [8,20],  name: 'Breakfast',        type: 'meal',  hasService: false },
+  { id: 'breakfast',        time: [7,20],  end: [8,20],  name: 'Breakfast',        type: 'meal',  hasService: false, bell: 'audio/sfzc/eiheiji-breakfast-instruments.mp3' },
   { id: 'rest-1',           time: [8,20],  end: [9,20],  name: 'Rest',             type: 'rest',  hasService: false },
   { id: 'zazen-2',          time: [9,20],  end: [11,20], name: 'Zazen',            type: 'zazen', hasService: false, bell: 'audio/sfzc/3_Floor_Bells.mp3' },
   { id: 'noon-service',     time: [11,20], end: [11,30], name: 'Noon Service',     type: 'chant', hasService: false },
-  { id: 'lunch',            time: [11,30], end: [13,30], name: 'Lunch',            type: 'meal',  hasService: false },
+  { id: 'lunch',            time: [11,30], end: [13,30], name: 'Lunch',            type: 'meal',  hasService: false, bell: 'audio/sfzc/eiheiji-breakfast-instruments.mp3' },
   { id: 'rest-2',           time: [13,30], end: [14,40], name: 'Rest',             type: 'rest',  hasService: false },
   { id: 'zazen-3',          time: [14,40], end: [15,50], name: 'Zazen',            type: 'zazen', hasService: false, bell: 'audio/sfzc/3_Floor_Bells.mp3' },
   { id: 'tea',              time: [15,50], end: [16,20], name: 'Tea',              type: 'meal',  hasService: false },
@@ -240,10 +243,10 @@ const SCHEDULE_INTENSIVE = [
   { id: 'zazen-4',          time: [16,30], end: [17,50], name: 'Zazen',            type: 'zazen', hasService: false, bell: 'audio/sfzc/3_Floor_Bells.mp3' },
   { id: 'evening-service',  time: [17,50], end: [18,0],  name: 'Evening Service',  type: 'chant', hasService: true,
     service: { default: 'audio/sfzc/evening-service-A.mp3' } },
-  { id: 'dinner',           time: [18,0],  end: [19,30], name: 'Dinner',           type: 'meal',  hasService: false, bellEnd: { src: 'audio/sfzc/temple_sounds-the_han.mp3', offsetMs: -847000 } },
+  { id: 'dinner',           time: [18,0],  end: [19,30], name: 'Dinner',           type: 'meal',  hasService: false, bell: 'audio/sfzc/eiheiji-breakfast-instruments.mp3', bellEnd: { src: 'audio/sfzc/temple_sounds-the_han.mp3', offsetMs: -847000 } },
   { id: 'rest-4',           time: [19,30], end: [19,30], name: 'Rest',             type: 'rest',  hasService: false },
   { id: 'zazen-5',          time: [19,30], end: [20,55], name: 'Zazen',            type: 'zazen', hasService: false, bell: 'audio/sfzc/3_Floor_Bells.mp3' },
-  { id: 'three-refuges',    time: [20,55], end: [21,0],  name: 'Three Refuges',    type: 'chant', hasService: false },
+  { id: 'three-refuges',    time: [20,55], end: [21,0],  name: 'Three Refuges',    type: 'chant', hasService: false, bell: 'audio/sfzc/3-refuges.mp3' },
   { id: 'firewatch-bell',     time: [21,0],  end: [21,30], name: 'Firewatch',        type: 'quiet', hasService: false, audio: 'audio/sfzc/konsho-evening-bell.mp3' },
   { id: 'firewatch-clappers', time: [21,30], end: [22,0],  name: 'Firewatch',        type: 'quiet', hasService: false, audio: 'audio/sfzc/firewatch-clappers.mp3' },
   { id: 'quiet-night',      time: [22,0],  end: [24,0],  name: 'Quiet',            type: 'quiet', hasService: false },
@@ -281,11 +284,16 @@ Future: generate correct koten pattern programmatically for any schedule time.
 - ✅ Han — in app (`temple_sounds-the_han.mp3`)
 - ✅ Densho — in app
 - ✅ Koten + shinrei wake-up — `audio/sfzc/koten-and-shinrei-wakeup.mp3` (polished, ready)
-- 🔍 Meal bell — may need field recording
-- ✅ 3 Floor Bells — `audio/sfzc/3_Floor_Bells.mp3`; `bell:` on all zazen periods (start); Standard, Casual, Intensive
+- ✅ Meal bell — `audio/sfzc/eiheiji-breakfast-instruments.mp3`; `bell:` on breakfast, lunch, dinner (Standard, Casual, Intensive)
+- ✅ 3 Floor Bells — `audio/sfzc/3_Floor_Bells.mp3`; `bell:` on all zazen periods (start); Standard, Casual, Intensive. Also fires as third event in zazen midpoint sequence (after kinhin).
 - ✅ Morning zazen end — `audio/sfzc/morning_zazen_end.mp3`; `bellEnd:` on `zazen-morning` (Standard, Casual) and `zazen-1` (Intensive)
+- ✅ End of zazen before service — `audio/sfzc/end-of-zazen-before-service.mp3`; `bellEnd: { offsetMs: -15816 }` on `zazen-evening`; fires at 17:49:44 leading into evening service
 - ✅ Railroad bell — `audio/sfzc/railroad-bell.mp3`; `bell:` on `work-morning` (9:10) and `work-afternoon` (13:15); `bellEnd: { offsetMs: -300000 }` on `work-afternoon` fires at 14:55; fully array-driven; Standard only
-- ✅ Study bell — `audio/sfzc/study-bell.mp3`; array-driven via `bell:` (8:10 open) and `bellEnd:` (9:10 close) on `study-hall`; Standard only. Sequence: 8:10 bell → english opening chant (future); 9:10 bell → japanese closing chant (future); 9:10 railroad bell also fires (work begins)
+- ✅ Study bell — `audio/sfzc/study-bell.mp3`; `bell:` (8:10 open) and `bellEnd:` (9:10 close) on `study-hall`. Chant sequence wired: opening chant at 8:10 + 8271ms; closing bell at 9:05; closing chant at 9:05 + 8271ms. Hardcoded offsets in `scheduleUpcomingBells()`.
+- ✅ Three Refuges — `audio/sfzc/3-refuges.mp3`; `bell:` on `three-refuges` period; Standard, Casual, Intensive
+- ✅ Zazen midpoint sequence — densho at period midpoint, kinhin clapper at midpoint + 5min, floor bells at midpoint + 5min + 990ms + 30s. Fires for zazen periods > 42 min (`zazen-morning` 90 min, `zazen-night` 80 min; `zazen-evening` 35 min skipped). Scheduled via `scheduleUpcomingBells()`.
+- ✅ Midday service — `bell: midday-service-start.mp3` + `service: { default: midday-service.mp3 }` on `midday-service`; Standard only
+- ✅ Evening service — `service: { default: evening-service-A.mp3 }` on `evening-service`; Standard, Casual, Intensive. No day-keyed variants yet.
 - 🔍 Work meeting drum — unique pattern, worth recording; watch haptic candidate
 - 🎙 Hyoshigi clappers — needs dedicated edit/recording for `firewatch-clappers.mp3` (wired in schedule, file pending)
 
@@ -652,9 +660,12 @@ On cancel (tap button while active): stops `_serviceAudio` and `_bellEndAudio` i
 - Mode switcher UI: drop in `SCHEDULE_CASUAL` or `SCHEDULE_INTENSIVE` from this doc
 - Weekly schedule layer: day-off on 4th & 9th days
 - Sesshin calendar layer: 1, 2, 3, 5, 7-day (Rohatsu)
-- Sound side quest: meal bell, work meeting drum, hyoshigi confirmation
+- Sound side quest: work meeting drum, hyoshigi confirmation
 - Work meeting drum as watch haptic pattern
-- Study hall chant sequencing — `temple_sounds-opening_chant.mp3` ("An unsurpassed...") fires after study bell at 8:10; Japanese closing chant ("Shu jo, mu hen...") fires after study bell at 9:05. Both as offset from bell duration, not independent clock times.
+- ~~Study hall chant sequencing~~ ✅ wired: opening chant at 8:10 + bell duration; closing bell at 9:05; closing chant at 9:05 + bell duration. Hardcoded in `scheduleUpcomingBells()`.
+- zazen-night end bell — no `bellEnd:` on `zazen-night` yet; night zazen ends without a send-off audio
+- Kinhin duration (5 min) is a schedule-config candidate — currently hardcoded as `KINHIN_DURATION_MS` in `scheduleUpcomingBells()`; could become a period field or top-level constant
+- `bellSequence:` field concept — for chained events (opening chant after study bell, closing chant after closing bell); currently hardcoded in `scheduleUpcomingBells()`
 - Confirm `tickBellEndAudio()` on real-time passive passage (page load mid-window) — expected to work via `scheduleUpcomingBells()` on entry overlay tap
 - Time-travel scrub mode — scroll gesture on TT panel scrubs time without committing; scrim drops over schedule; Go confirms jump
 - Inkin single strike — highest-leverage unacquired sound; covers zazen starting bells, lecture bells, study hall
@@ -676,8 +687,17 @@ On cancel (tap button while active): stops `_serviceAudio` and `_bellEndAudio` i
 - `audio/sfzc/temple_sounds-opening_chant.mp3` — "An unsurpassed..." chant; slot reserved at 8:10 study bell offset
 - `audio/sfzc/temple_sounds-the_densho_bell.mp3` — renamed from `_denshp_` typo; untracked, stage when ready
 
-### Tracked audio files — service:
-- `audio/sfzc/evening-service-A.mp3` — evening service; `service: { default: ... }` on evening-service period. No day-keyed variants yet (morning service has Mon–Thu variants; evening is single default for now).
+### Tracked audio files — new batch (March 2026)
+- `audio/sfzc/3-refuges.mp3` — Three Refuges chant; `bell:` on `three-refuges` (Standard, Casual, Intensive)
+- `audio/sfzc/opening_chant.mp3` — "An unsurpassed..." English verse; fires at study hall start + 8271ms
+- `audio/sfzc/closing_chant.mp3` — "Shu jo, mu hen..." Japanese verse; fires at 9:05 + 8271ms
+- `audio/sfzc/eiheiji-breakfast-instruments.mp3` — meal bell (123s); `bell:` on breakfast, lunch, dinner
+- `audio/sfzc/end-of-zazen-before-service.mp3` — 15.8s send-off; `bellEnd: { offsetMs: -15816 }` on `zazen-evening`
+- `audio/sfzc/midday-service-start.mp3` — 117s; `bell:` on `midday-service`
+- `audio/sfzc/midday-service.mp3` — 666s full service; `service: { default: ... }` on `midday-service`
+- `audio/sfzc/densho-end-zazen-kinhin.mp3` — 8.4s densho rolldown; fires at zazen midpoint
+- `audio/sfzc/kinhin-clapper.mp3` — 1s clapper; fires at midpoint + 5min
+- `audio/sfzc/evening-service-A.mp3` — evening service; `service: { default: ... }` on `evening-service` (Standard, Casual, Intensive). No day-keyed variants yet.
 
 ---
 
@@ -712,3 +732,4 @@ On cancel (tap button while active): stops `_serviceAudio` and `_bellEndAudio` i
 27. `bell:` / `bellEnd:` / `service:` is the complete field taxonomy for schedule audio. Before adding a hardcoded entry to `scheduleUpcomingBells()`, ask whether the audio belongs to one of these three types. The only acceptable hardcode is audio that fires at a sub-period offset not expressible as period start or end (currently: none).
 28. `bellEnd`-only periods are fully supported throughout the stack — scheduling, dev tool dot, pointer cursor, and tap-to-play. No `bell:` field required. `data-bell-end` stores the resolved src string (same pattern as `data-bell` and `data-service`). `personal` is the canonical example: han fires at −847s, no bell at period open.
 29. Any period with both `bell:` and `bellEnd:` automatically gets cycle behavior in the dev tool (bell → bellEnd → off). No per-period handling required — the `cycleState` Map and `hasBoth` check in `wireAudioDevTool()` handle it generically.
+30. Kinhin bisects the zazen period. Densho fires at the exact midpoint (`periodStart + floor(duration / 2)`); kinhin clapper at midpoint + 5min; floor bells at midpoint + 5min + 990ms + 30s settle. Fires only for zazen periods > 42 min. Midpoint math means the sequence self-adjusts to any zazen duration — no hardcoded clock times.
