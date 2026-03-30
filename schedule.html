@@ -182,6 +182,24 @@ body::before {
 #track {
   flex: 1;
   padding: 20px 0 80px 0;
+  position: relative;
+}
+#tt-preview-cross {
+  position: absolute;
+  left: 0; right: 0;
+  display: flex;
+  align-items: center;
+  pointer-events: none;
+  z-index: 5;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+#tt-preview-cross.visible { opacity: 1; }
+#tt-preview-cross .preview-bar { flex: 1; height: 0.5px; background: #B8860B; }
+#tt-preview-cross .preview-time {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px; color: #B8860B;
+  padding: 0 5px; letter-spacing: 0.05em;
 }
 
 /* ── PERIOD ROWS ── */
@@ -809,6 +827,14 @@ function buildTrack(state) {
     rule.id = 'closing-rule';
     track.appendChild(rule);
   }
+
+  // Preview cross — re-inserted every rebuild since track.innerHTML = '' wipes it
+  const prevCross = document.createElement('div');
+  prevCross.id = 'tt-preview-cross';
+  prevCross.className = 'preview-cross';
+  prevCross.innerHTML = '<div class="preview-bar"></div><div class="preview-time" id="tt-preview-time">—</div><div class="preview-bar"></div>';
+  if (ttPanel && ttPanel.style.display === 'flex') prevCross.classList.add('visible');
+  track.appendChild(prevCross);
 
   _attachHoverHandlers();
 
@@ -1591,12 +1617,16 @@ const ttDot = document.getElementById('time-travel-dot');
 function openTTPanel() {
   ttPanel.style.display = 'flex';
   ttScrim.classList.add('on');
+  const cross = document.getElementById('tt-preview-cross');
+  if (cross) cross.classList.add('visible');
   setTimeout(() => document.getElementById('tt-hr').focus(), 50);
 }
 
 function closeTTPanel() {
   ttPanel.style.display = 'none';
   ttScrim.classList.remove('on');
+  const cross = document.getElementById('tt-preview-cross');
+  if (cross) cross.classList.remove('visible');
 }
 
 ttScrim.addEventListener('click', () => { closeTTPanel(); });
@@ -1649,6 +1679,34 @@ function formatTime12(d) {
   const ampm = h >= 12 ? 'PM' : 'AM';
   h = h % 12 || 12;
   return `${h}:${String(m).padStart(2, '0')} ${ampm}`;
+}
+
+function formatTimeShort(d) {
+  const h = d.getHours() % 12 || 12;
+  const m = d.getMinutes();
+  return `${h}:${String(m).padStart(2, '0')}`;
+}
+
+function pctToScheduleTop(targetMs) {
+  const track     = document.getElementById('track');
+  const trackRect = track.getBoundingClientRect();
+  const state     = getScheduleState(new Date(targetMs));
+  if (state.state === 'during') {
+    const p      = state.period;
+    const rowEl  = track.querySelector(`[data-period-id="${p.id}"]`);
+    if (!rowEl) return 0;
+    const rowRect       = rowEl.getBoundingClientRect();
+    const periodStartMs = todayAt(p.time[0], p.time[1]).getTime();
+    const periodEndMs   = todayAt(p.end[0],  p.end[1]).getTime();
+    const progress      = Math.max(0, Math.min(1, (targetMs - periodStartMs) / (periodEndMs - periodStartMs)));
+    return (rowRect.top - trackRect.top) + progress * rowRect.height;
+  }
+  if (state.state === 'between') {
+    const nextEl = track.querySelector(`[data-period-id="${state.next.id}"]`);
+    if (!nextEl) return 0;
+    return nextEl.getBoundingClientRect().top - trackRect.top;
+  }
+  return 0;
 }
 
 function fieldsFromMs(ms) {
@@ -1718,6 +1776,13 @@ function updateTTPanelPreview(targetMs, snapping) {
   const pct = Math.max(0, Math.min(1, (targetMs - DAY_START_MS) / DAY_DURATION_MS));
   document.getElementById('tt-scrub-fill').style.width = (pct * 100) + '%';
   document.getElementById('tt-scrub-thumb').style.left = (pct * 100) + '%';
+
+  const cross = document.getElementById('tt-preview-cross');
+  if (cross) {
+    cross.style.top = pctToScheduleTop(targetMs) + 'px';
+    const timeEl = document.getElementById('tt-preview-time');
+    if (timeEl) timeEl.textContent = formatTimeShort(new Date(targetMs));
+  }
 }
 
 function handleScrubDrag(clientX) {
