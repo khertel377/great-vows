@@ -119,6 +119,15 @@ Two architecturally distinct placements:
 
 **CC implementation note:** Preamble is a fixed-duration audio sequence (parallel to `service:`). Talk URL seeks with elapsed-position offset accounting for preamble duration — same pattern as `bellEnd: { offsetMs }` but in the forward direction (`offsetMs: +preambleDuration`). Elapsed seek math: `elapsedInTalk = elapsedInPeriod - preambleDurationMs`.
 
+### Dharma Talk content engine — Branching Streams feed network
+Great Vows will aggregate dharma talk audio across the Branching Streams affiliate network — ~60 sanghas in the Suzuki Roshi lineage. Two content modes identified: (1) **General/Cross-cutting** — a curated rotation across teachers and centers, functioning like public radio programming for the lineage; (2) **Focused Teacher Mode** — a practitioner follows a single teacher chronologically through their full body of work, potentially across multiple institutions (e.g. Kokyo Henkel across SCZC, SFZC, and his own site). The zoom-level framing: Branching Streams network → single center → single teacher → full archive. Each level is a valid configuration. Focused Teacher Mode is the natural pairing with Intensive schedule mode.
+
+**Infrastructure findings:** SFZC RSS feed (feeds.feedburner.com/SanFranciscoZenCenterPublicLectures) confirmed working — direct AAC URLs on content.jwplatform.com, streams cleanly from GitHub Pages `<audio>` tag, Creative Commons licensed. Google Drive direct links are not viable for `<audio>` streaming (interstitial wall). Squarespace podcast RSS pattern: `[page-url]?format=rss`.
+
+**Files committed:** `sanghas/branching-streams-feeds.csv` (research output), `sanghas/branching-streams-feeds.json` (43 entries: 12 confirmed RSS, 4 unconfirmed, 11 talks-only, 16 none).
+
+**Next steps for this workstream:** Verify 4 unconfirmed feeds (Ocean Gate, Seattle Soto, Twining Vines, Milwaukee). Wire a study hall period in the standard schedule to fetch the SFZC feed, filter by teacher, and play chronologically with elapsed-position seeking — proof of concept for the whole content engine.
+
 ---
 
 ## The Three Schedule Modes
@@ -177,17 +186,17 @@ const SCHEDULE_STANDARD = [
   { id: 'morning-service', time: [6,30],  end: [7,0],   name: 'Morning Service',        type: 'chant', hasService: true,
     service: { mon: 'audio/sfzc/MorningService_Monday.mp4', tue: 'audio/sfzc/MorningService_Tuesday.mp4', wed: 'audio/sfzc/MorningService_Wednesday.mp4', thu: 'audio/sfzc/MorningService_Thursday.mp4',
                default: 'audio/sfzc/MorningService_Monday.mp4' } },
-  { id: 'soji',            time: [7,0],   end: [7,20],  name: 'Soji',                   type: 'work',  hasService: false },
+  { id: 'soji',            time: [7,0],   end: [7,20],  name: 'Soji',                   type: 'work',  hasService: false, bellEnd: { src: 'audio/sfzc/han-opening.mp3', offsetMs: -8000 } },
   { id: 'breakfast',       time: [7,20],  end: [8,10],  name: 'Breakfast',              type: 'meal',  hasService: false },
   { id: 'study-hall',      time: [8,10],  end: [9,10],  name: 'Study Hall',             type: 'study', hasService: false, bell: 'audio/sfzc/study-bell.mp3', bellEnd: 'audio/sfzc/study-bell.mp3' },
-  { id: 'work-morning',    time: [9,10],  end: [12,15], name: 'Work Period',            type: 'work',  hasService: false, bell: 'audio/sfzc/railroad-bell.mp3' },
+  { id: 'work-morning',    time: [9,10],  end: [12,15], name: 'Work Period',            type: 'work',  hasService: false, bell: 'audio/sfzc/railroad-bell.mp3', bellEnd: { src: 'audio/sfzc/temple_sounds-the_densho_bell.mp3', offsetMs: -622000 } },
   { id: 'midday-service',  time: [12,15], end: [12,30], name: 'Mid-day Service',        type: 'chant', hasService: false },
   { id: 'lunch',           time: [12,30], end: [13,15], name: 'Lunch',                  type: 'meal',  hasService: false },
   { id: 'work-afternoon',  time: [13,15], end: [15,0],  name: 'Afternoon Work',         type: 'work',  hasService: false, bell: 'audio/sfzc/railroad-bell.mp3', bellEnd: { src: 'audio/sfzc/railroad-bell.mp3', offsetMs: -300000 } },
   { id: 'personal',        time: [15,0],  end: [17,15], name: 'Personal Time',          type: 'rest',  hasService: false, bellEnd: { src: 'audio/sfzc/temple_sounds-the_han.mp3', offsetMs: -847000 } },
   { id: 'zazen-evening',   time: [17,15], end: [17,50], name: 'Zazen',                  type: 'zazen', hasService: false, bell: 'audio/sfzc/3_Floor_Bells.mp3' },
   { id: 'evening-service', time: [17,50], end: [18,0],  name: 'Evening Service',        type: 'chant', hasService: true  },
-  { id: 'dinner',          time: [18,0],  end: [19,30], name: 'Dinner',                 type: 'meal',  hasService: false },
+  { id: 'dinner',          time: [18,0],  end: [19,30], name: 'Dinner',                 type: 'meal',  hasService: false, bellEnd: { src: 'audio/sfzc/temple_sounds-the_han.mp3', offsetMs: -847000 } },
   { id: 'zazen-night',     time: [19,30], end: [20,50], name: 'Zazen',                  type: 'zazen', hasService: false, bell: 'audio/sfzc/3_Floor_Bells.mp3' },
   { id: 'three-refuges',   time: [20,50], end: [21,0],  name: 'Three Refuges',          type: 'chant', hasService: false },
   { id: 'firewatch-bell',     time: [21,0],  end: [21,30], name: 'Firewatch',              type: 'quiet', hasService: false, audio: 'audio/sfzc/konsho-evening-bell.mp3' },
@@ -217,7 +226,7 @@ const SCHEDULE_INTENSIVE = [
   { id: 'han',              time: [4,50],  end: [5,0],   name: 'Han',              type: 'bell',  hasService: false, audio: 'audio/sfzc/temple_sounds-the_han.mp3' },
   { id: 'zazen-1',          time: [5,0],   end: [6,30],  name: 'Zazen',            type: 'zazen', hasService: false, bell: 'audio/sfzc/3_Floor_Bells.mp3', bellEnd: { src: 'audio/sfzc/morning_zazen_end.mp3', offsetMs: -211000 } },
   { id: 'morning-service',  time: [6,30],  end: [7,0],   name: 'Morning Service',  type: 'chant', hasService: true  },
-  { id: 'soji',             time: [7,0],   end: [7,20],  name: 'Soji',             type: 'work',  hasService: false },
+  { id: 'soji',             time: [7,0],   end: [7,20],  name: 'Soji',             type: 'work',  hasService: false, bellEnd: { src: 'audio/sfzc/han-opening.mp3', offsetMs: -8000 } },
   { id: 'breakfast',        time: [7,20],  end: [8,20],  name: 'Breakfast',        type: 'meal',  hasService: false },
   { id: 'rest-1',           time: [8,20],  end: [9,20],  name: 'Rest',             type: 'rest',  hasService: false },
   { id: 'zazen-2',          time: [9,20],  end: [11,20], name: 'Zazen',            type: 'zazen', hasService: false, bell: 'audio/sfzc/3_Floor_Bells.mp3' },
@@ -229,7 +238,7 @@ const SCHEDULE_INTENSIVE = [
   { id: 'rest-3',           time: [16,20], end: [16,30], name: 'Rest',             type: 'rest',  hasService: false },
   { id: 'zazen-4',          time: [16,30], end: [17,50], name: 'Zazen',            type: 'zazen', hasService: false, bell: 'audio/sfzc/3_Floor_Bells.mp3' },
   { id: 'evening-service',  time: [17,50], end: [18,0],  name: 'Evening Service',  type: 'chant', hasService: true  },
-  { id: 'dinner',           time: [18,0],  end: [19,30], name: 'Dinner',           type: 'meal',  hasService: false },
+  { id: 'dinner',           time: [18,0],  end: [19,30], name: 'Dinner',           type: 'meal',  hasService: false, bellEnd: { src: 'audio/sfzc/temple_sounds-the_han.mp3', offsetMs: -847000 } },
   { id: 'rest-4',           time: [19,30], end: [19,30], name: 'Rest',             type: 'rest',  hasService: false },
   { id: 'zazen-5',          time: [19,30], end: [20,55], name: 'Zazen',            type: 'zazen', hasService: false, bell: 'audio/sfzc/3_Floor_Bells.mp3' },
   { id: 'three-refuges',    time: [20,55], end: [21,0],  name: 'Three Refuges',    type: 'chant', hasService: false },
@@ -607,11 +616,15 @@ background flips synchronously; body background transitions asynchronously.
 Would need transition-delay on now-row to fix. Not worth the complexity.
 
 ### Dev tap-to-play tool — working
-Click any `.period-row[data-audio]`, `[data-bell]`, or `[data-service]` row to play/pause.
+Click any `.period-row[data-bell]`, `[data-bell-end]`, or `[data-service]` row to play/pause (or cycle).
 Whole row is the tap target; `.audio-dot` is visual only.
 `_devAudio` is always a fresh `Audio()` object — no reuse, no play/pause race.
 `data-service` resolves day src at `buildTrack()` time — stores resolved string, not the map object.
+`data-bell-end` also stores a resolved src string (`p.bellEnd.src` for objects, `p.bellEnd` for plain strings) — same pattern. `bellEnd`-only periods (no `bell:` or `audio:`) get full dot, cursor, and tap support.
 Console unlock step removed — tap itself sets `sessionStorage`.
+`data-audio` removed from selector — ambient loops (`audio:` field) are not dev-tool tap targets.
+
+**Cycle behavior (bell + bellEnd rows):** `wireAudioDevTool()` uses a `cycleState` Map keyed by `data-period-id` (values: 0 = off, 1 = bell playing, 2 = bellEnd playing). Rows with both `data-bell` and `data-bell-end` cycle bell → bellEnd → off on successive taps. Single-src rows (bell-only, bellEnd-only, service) toggle on/off as before. `onended` resets `cycleState` to 0 — a naturally-finished audio doesn't leave the row stuck mid-cycle. `.playing` class and `_devPlayingRow` dot pulse preserved throughout.
 
 ### Web Audio scheduling — working
 `unlockAudioContext()` creates `_webAudioCtx` on first user gesture. `scheduleAudioEvent(url, firesAt)` computes `msUntil = firesAt.getTime() - (Date.now() + _debugOffset)` and calls `setTimeout(msUntil)`. At fire time, the callback calls `resumeAudioContext()` (new helper — resumes `_webAudioCtx` if suspended), then fetches, decodes, and plays the buffer immediately via `src.start(0)`. No future AudioContext offset is computed at scheduling time. Immune to AudioContext clock drift over long sessions and overnight context suspension on foreground tabs. `visibilitychange` calls `resumeAudioContext()` via the same helper.
@@ -692,3 +705,5 @@ On cancel (tap button while active): stops `_serviceAudio` and `_bellEndAudio` i
 25. `loadedmetadata` before seek, `.load()` after constructing `Audio()`. Set `currentTime` inside the `loadedmetadata` event handler — never before. `audio.duration` is NaN until metadata is loaded. `.load()` triggers the metadata fetch on browsers that defer it. This is the required pattern for all seekable audio (`_serviceAudio`, `_bellEndAudio`).
 26. Any new audio-triggering UI on desktop must call `unlockAudioContext()` as a first step. Desktop has no entry overlay — `_webAudioCtx` is null until a gesture. `unlockAudioContext()` is idempotent (guards on `if (_webAudioCtx) return`).
 27. `bell:` / `bellEnd:` / `service:` is the complete field taxonomy for schedule audio. Before adding a hardcoded entry to `scheduleUpcomingBells()`, ask whether the audio belongs to one of these three types. The only acceptable hardcode is audio that fires at a sub-period offset not expressible as period start or end (currently: none).
+28. `bellEnd`-only periods are fully supported throughout the stack — scheduling, dev tool dot, pointer cursor, and tap-to-play. No `bell:` field required. `data-bell-end` stores the resolved src string (same pattern as `data-bell` and `data-service`). `personal` is the canonical example: han fires at −847s, no bell at period open.
+29. Any period with both `bell:` and `bellEnd:` automatically gets cycle behavior in the dev tool (bell → bellEnd → off). No per-period handling required — the `cycleState` Map and `hasBoth` check in `wireAudioDevTool()` handle it generically.
