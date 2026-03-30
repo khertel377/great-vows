@@ -1468,12 +1468,34 @@ mobileStyles.textContent = `
     gap: 10px;
     font-family: 'IBM Plex Mono', monospace;
   }
-  #tt-clock { font-size: 26px; color: var(--ink); letter-spacing: -0.02em; line-height: 1; }
+  #tt-scrim {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0); pointer-events: none;
+    z-index: 49; transition: background 0.2s;
+  }
+  #tt-scrim.on { background: rgba(0,0,0,0.56); pointer-events: auto; }
+  #tt-fields { display: flex; align-items: baseline; gap: 0; line-height: 1; }
+  .tt-field {
+    width: 2ch; text-align: center; background: none; border: none;
+    border-bottom: 1px solid transparent;
+    font-size: 26px; font-family: 'IBM Plex Mono', monospace;
+    color: var(--ink); padding: 0; letter-spacing: -0.02em;
+    -moz-appearance: textfield;
+  }
+  .tt-field::-webkit-inner-spin-button, .tt-field::-webkit-outer-spin-button { display: none; }
+  .tt-field:focus { outline: none; border-bottom-color: var(--ink); }
+  .tt-sep { font-size: 26px; font-family: 'IBM Plex Mono', monospace; color: var(--ink); padding: 0 1px; letter-spacing: -0.02em; }
+  #tt-ampm {
+    background: none; border: 0.5px solid rgba(26,24,20,0.3); border-radius: 4px;
+    font-size: 12px; font-family: 'IBM Plex Mono', monospace; color: var(--ink);
+    padding: 2px 5px; cursor: pointer; margin-left: 6px; line-height: 1.4;
+  }
   #tt-period-info { font-size: 11px; color: rgba(26,24,20,0.5); margin-top: -4px; min-height: 14px; }
   #tt-scrub-row { display: flex; align-items: center; gap: 8px; }
+  #tt-scrub-wrap { flex: 1; padding: 8px 0; margin: -8px 0; cursor: ew-resize; }
   #tt-scrub-track {
-    flex: 1; height: 4px; background: rgba(26,24,20,0.15);
-    border-radius: 2px; position: relative; cursor: pointer; touch-action: none;
+    height: 4px; background: rgba(26,24,20,0.15);
+    border-radius: 2px; position: relative; touch-action: none;
   }
   #tt-scrub-fill {
     position: absolute; left: 0; top: 0; bottom: 0;
@@ -1522,12 +1544,21 @@ document.body.appendChild(ttBtn);
 const ttPanel = document.createElement('div');
 ttPanel.id = 'tt-panel';
 ttPanel.innerHTML = `
-  <div id="tt-clock">—</div>
+  <div id="tt-fields">
+    <input id="tt-hr"  class="tt-field" type="number" min="1"  max="12" value="12">
+    <span class="tt-sep">:</span>
+    <input id="tt-min" class="tt-field" type="number" min="0"  max="59" value="00">
+    <span class="tt-sep">:</span>
+    <input id="tt-sec" class="tt-field" type="number" min="0"  max="59" value="00">
+    <button id="tt-ampm">AM</button>
+  </div>
   <div id="tt-period-info"></div>
   <div id="tt-scrub-row">
-    <div id="tt-scrub-track">
-      <div id="tt-scrub-fill"></div>
-      <div id="tt-scrub-thumb"></div>
+    <div id="tt-scrub-wrap">
+      <div id="tt-scrub-track">
+        <div id="tt-scrub-fill"></div>
+        <div id="tt-scrub-thumb"></div>
+      </div>
     </div>
     <span id="tt-snap-indicator"></span>
   </div>
@@ -1543,14 +1574,31 @@ ttPanel.innerHTML = `
 `;
 document.body.appendChild(ttPanel);
 
+const ttScrim = document.createElement('div');
+ttScrim.id = 'tt-scrim';
+document.body.appendChild(ttScrim);
+
 const ttDot = document.getElementById('time-travel-dot');
+
+function openTTPanel() {
+  ttPanel.style.display = 'flex';
+  ttScrim.classList.add('on');
+  setTimeout(() => document.getElementById('tt-hr').focus(), 50);
+}
+
+function closeTTPanel() {
+  ttPanel.style.display = 'none';
+  ttScrim.classList.remove('on');
+}
+
+ttScrim.addEventListener('click', () => { closeTTPanel(); });
 
 ttBtn.addEventListener('click', () => {
   if (_debugOffset) {
     // Cancel: return to real time
     _debugOffset = 0;
     ttDot.style.display = 'none';
-    ttPanel.style.display = 'none';
+    closeTTPanel();
     if (_serviceAudio) { _serviceAudio.pause(); _serviceAudio = null; }
     _servicePeriodId = null;
     if (_bellEndAudio) { _bellEndAudio.pause(); _bellEndAudio = null; }
@@ -1562,7 +1610,7 @@ ttBtn.addEventListener('click', () => {
     // Open panel — initialize scrub to now
     if (!window._CUE_LIST || !window._CUE_LIST.length) scheduleUpcomingBells();
     _ttScrubTargetMs = getNow().getTime();
-    ttPanel.style.display = 'flex';
+    openTTPanel();
     updateTTPanelPreview(_ttScrubTargetMs, false);
   }
 });
@@ -1576,7 +1624,7 @@ document.getElementById('tt-go').addEventListener('click', () => {
   if (_ambientAudio) { _ambientAudio.pause(); _ambientAudio = null; }
   _ambientPeriodId = null;
   ttDot.style.display = '';
-  ttPanel.style.display = 'none';
+  closeTTPanel();
   buildTrack(getScheduleState(getNow()));
   scheduleUpcomingBells();
 });
@@ -1591,6 +1639,29 @@ function formatTime12(d) {
   const ampm = h >= 12 ? 'PM' : 'AM';
   h = h % 12 || 12;
   return `${h}:${String(m).padStart(2, '0')} ${ampm}`;
+}
+
+function fieldsFromMs(ms) {
+  const d    = new Date(ms);
+  let h      = d.getHours();
+  const min  = d.getMinutes();
+  const sec  = d.getSeconds();
+  const ampm = h >= 12 ? 'PM' : 'AM';
+  h = h % 12 || 12;
+  document.getElementById('tt-hr').value   = h;
+  document.getElementById('tt-min').value  = String(min).padStart(2, '0');
+  document.getElementById('tt-sec').value  = String(sec).padStart(2, '0');
+  document.getElementById('tt-ampm').textContent = ampm;
+}
+
+function totalMsFromFields() {
+  const hr   = parseInt(document.getElementById('tt-hr').value,  10) || 0;
+  const min  = parseInt(document.getElementById('tt-min').value, 10) || 0;
+  const sec  = parseInt(document.getElementById('tt-sec').value, 10) || 0;
+  const ampm = document.getElementById('tt-ampm').textContent;
+  let h24    = hr % 12;
+  if (ampm === 'PM') h24 += 12;
+  return todayAt(h24, min, sec).getTime();
 }
 
 function getNearestCue(targetMs) {
@@ -1614,7 +1685,7 @@ function updateTTPanelPreview(targetMs, snapping) {
   const DAY_START_MS    = todayAt(0, 0).getTime();
   const DAY_DURATION_MS = 24 * 60 * 60 * 1000;
 
-  document.getElementById('tt-clock').textContent = formatTime12(new Date(targetMs));
+  fieldsFromMs(targetMs);
 
   const state = getScheduleState(new Date(targetMs));
   if (state.state === 'during') {
@@ -1643,7 +1714,7 @@ function handleScrubDrag(clientX) {
   _dragVelocity = _lastDragX !== null ? Math.abs(clientX - _lastDragX) : 0;
   _lastDragX    = clientX;
 
-  const rect          = document.getElementById('tt-scrub-track').getBoundingClientRect();
+  const rect          = document.getElementById('tt-scrub-wrap').getBoundingClientRect();
   const raw           = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
   const DAY_START_MS  = todayAt(0, 0).getTime();
   const rawMs         = DAY_START_MS + raw * 24 * 60 * 60 * 1000;
@@ -1668,15 +1739,15 @@ function stepCue(dir) {
   scheduleAudioEvent(cue.src, new Date(getNow().getTime() + 500));
 }
 
-// Scrub track pointer events
-const scrubTrack = document.getElementById('tt-scrub-track');
-scrubTrack.addEventListener('mousedown', (e) => {
+// Scrub pointer events — listeners on wrapper for larger hit target
+const scrubWrap = document.getElementById('tt-scrub-wrap');
+scrubWrap.addEventListener('mousedown', (e) => {
   _isDragging = true; _lastDragX = null; _dragVelocity = 0;
   handleScrubDrag(e.clientX); e.preventDefault();
 });
 document.addEventListener('mousemove',  (e) => { if (_isDragging) handleScrubDrag(e.clientX); });
 document.addEventListener('mouseup',    ()  => { _isDragging = false; _lastDragX = null; });
-scrubTrack.addEventListener('touchstart', (e) => {
+scrubWrap.addEventListener('touchstart', (e) => {
   _isDragging = true; _lastDragX = null; _dragVelocity = 0;
   handleScrubDrag(e.touches[0].clientX); e.preventDefault();
 }, { passive: false });
@@ -1686,6 +1757,27 @@ document.addEventListener('touchend',   ()  => { _isDragging = false; _lastDragX
 // Cue step buttons
 document.getElementById('tt-prev-cue').addEventListener('click', () => stepCue(-1));
 document.getElementById('tt-next-cue').addEventListener('click', () => stepCue(1));
+
+// Time fields
+['tt-hr', 'tt-min', 'tt-sec'].forEach(id => {
+  const el = document.getElementById(id);
+  el.addEventListener('focus', () => el.select());
+  el.addEventListener('input', () => {
+    updateTTPanelPreview(totalMsFromFields(), false);
+  });
+  el.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter')  { document.getElementById('tt-go').click(); e.preventDefault(); }
+    if (e.key === 'Escape') { closeTTPanel(); e.preventDefault(); }
+    if (e.key === 'ArrowUp')   { e.preventDefault(); el.value = (parseInt(el.value, 10) || 0) + 1; el.dispatchEvent(new Event('input')); }
+    if (e.key === 'ArrowDown') { e.preventDefault(); el.value = (parseInt(el.value, 10) || 0) - 1; el.dispatchEvent(new Event('input')); }
+  });
+});
+
+document.getElementById('tt-ampm').addEventListener('click', () => {
+  const btn = document.getElementById('tt-ampm');
+  btn.textContent = btn.textContent === 'AM' ? 'PM' : 'AM';
+  updateTTPanelPreview(totalMsFromFields(), false);
+});
 
 /* ── Mute button ── */
 const speakerOnSVG  = `<svg viewBox="0 0 24 24"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>`;
