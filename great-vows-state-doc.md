@@ -195,7 +195,8 @@ const SCHEDULE_STANDARD = [
   { id: 'work-afternoon',  time: [13,15], end: [15,0],  name: 'Afternoon Work',         type: 'work',  hasService: false, bell: 'audio/sfzc/railroad-bell.mp3', bellEnd: { src: 'audio/sfzc/railroad-bell.mp3', offsetMs: -300000 } },
   { id: 'personal',        time: [15,0],  end: [17,15], name: 'Personal Time',          type: 'rest',  hasService: false, bellEnd: { src: 'audio/sfzc/temple_sounds-the_han.mp3', offsetMs: -847000 } },
   { id: 'zazen-evening',   time: [17,15], end: [17,50], name: 'Zazen',                  type: 'zazen', hasService: false, bell: 'audio/sfzc/3_Floor_Bells.mp3' },
-  { id: 'evening-service', time: [17,50], end: [18,0],  name: 'Evening Service',        type: 'chant', hasService: true  },
+  { id: 'evening-service', time: [17,50], end: [18,0],  name: 'Evening Service',        type: 'chant', hasService: true,
+    service: { default: 'audio/sfzc/evening-service-A.mp3' } },
   { id: 'dinner',          time: [18,0],  end: [19,30], name: 'Dinner',                 type: 'meal',  hasService: false, bellEnd: { src: 'audio/sfzc/temple_sounds-the_han.mp3', offsetMs: -847000 } },
   { id: 'zazen-night',     time: [19,30], end: [20,50], name: 'Zazen',                  type: 'zazen', hasService: false, bell: 'audio/sfzc/3_Floor_Bells.mp3' },
   { id: 'three-refuges',   time: [20,50], end: [21,0],  name: 'Three Refuges',          type: 'chant', hasService: false },
@@ -237,7 +238,8 @@ const SCHEDULE_INTENSIVE = [
   { id: 'tea',              time: [15,50], end: [16,20], name: 'Tea',              type: 'meal',  hasService: false },
   { id: 'rest-3',           time: [16,20], end: [16,30], name: 'Rest',             type: 'rest',  hasService: false },
   { id: 'zazen-4',          time: [16,30], end: [17,50], name: 'Zazen',            type: 'zazen', hasService: false, bell: 'audio/sfzc/3_Floor_Bells.mp3' },
-  { id: 'evening-service',  time: [17,50], end: [18,0],  name: 'Evening Service',  type: 'chant', hasService: true  },
+  { id: 'evening-service',  time: [17,50], end: [18,0],  name: 'Evening Service',  type: 'chant', hasService: true,
+    service: { default: 'audio/sfzc/evening-service-A.mp3' } },
   { id: 'dinner',           time: [18,0],  end: [19,30], name: 'Dinner',           type: 'meal',  hasService: false, bellEnd: { src: 'audio/sfzc/temple_sounds-the_han.mp3', offsetMs: -847000 } },
   { id: 'rest-4',           time: [19,30], end: [19,30], name: 'Rest',             type: 'rest',  hasService: false },
   { id: 'zazen-5',          time: [19,30], end: [20,55], name: 'Zazen',            type: 'zazen', hasService: false, bell: 'audio/sfzc/3_Floor_Bells.mp3' },
@@ -673,6 +675,9 @@ On cancel (tap button while active): stops `_serviceAudio` and `_bellEndAudio` i
 - `audio/sfzc/Great_Vows.mp3` — never tracked, not in git history; local only; triage before committing
 - `audio/sfzc/temple_sounds-opening_chant.mp3` — "An unsurpassed..." chant; slot reserved at 8:10 study bell offset
 - `audio/sfzc/temple_sounds-the_densho_bell.mp3` — renamed from `_denshp_` typo; untracked, stage when ready
+
+### Tracked audio files — service:
+- `audio/sfzc/evening-service-A.mp3` — evening service; `service: { default: ... }` on evening-service period. No day-keyed variants yet (morning service has Mon–Thu variants; evening is single default for now).
 
 ---
 
