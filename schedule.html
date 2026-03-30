@@ -1518,6 +1518,8 @@ ttBtn.addEventListener('click', () => {
     if (_serviceAudio) { _serviceAudio.pause(); _serviceAudio = null; }
     _servicePeriodId = null; // forces tickServiceAudio to re-evaluate on next tick
     if (_bellEndAudio) { _bellEndAudio.pause(); _bellEndAudio = null; }
+    if (_ambientAudio) { _ambientAudio.pause(); _ambientAudio = null; }
+    _ambientPeriodId = null; // forces tickAmbientAudio to re-evaluate on next tick
     buildTrack(getScheduleState(getNow()));
     scheduleUpcomingBells();
     console.log('[debug] time travel cleared — returning to real time');
