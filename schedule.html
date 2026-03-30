@@ -1980,8 +1980,7 @@ function updateMuteButton() {
   }
   updateEntryPeriodLabel();
 
-  // Show overlay only on first visit this session — start hidden to prevent flash on return
-  if (sessionStorage.getItem('gv-audio-unlocked')) return;
+  // Always show — overlay is the required audio-context unlock gesture, not a one-time tutorial
   requestAnimationFrame(() => overlay.classList.remove('hidden'));
 
   function enter(withSound) {
