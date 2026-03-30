@@ -833,7 +833,6 @@ function buildTrack(state) {
   prevCross.id = 'tt-preview-cross';
   prevCross.className = 'preview-cross';
   prevCross.innerHTML = '<div class="preview-bar"></div><div class="preview-time" id="tt-preview-time">—</div><div class="preview-bar"></div>';
-  if (ttPanel && ttPanel.style.display === 'flex') prevCross.classList.add('visible');
   track.appendChild(prevCross);
 
   _attachHoverHandlers();
