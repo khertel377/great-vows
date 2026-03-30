@@ -1335,6 +1335,7 @@ function scheduleAudioEvent(url, firesAt) {
   if (msUntil < 0) return;
 
   const id = setTimeout(async () => {
+    if (isMuted) return;
     try {
       await resumeAudioContext();
       const response    = await fetch(url);
@@ -1343,7 +1344,6 @@ function scheduleAudioEvent(url, firesAt) {
       const source      = _webAudioCtx.createBufferSource();
       source.buffer     = audioBuffer;
       source.connect(_webAudioCtx.destination);
-      if (localStorage.getItem('gv-muted') === '1') return;
       source.start(0);
     } catch (e) {
       console.warn('[WebAudio] scheduleAudioEvent failed for', url, ':', e);
@@ -1894,8 +1894,10 @@ function stepCue(dir) {
   const cue = list[_currentCueIdx];
   updateTTPanelPreview(cue.fireMs, true);
   // Fire immediately so the practitioner hears the transition
-  unlockAudioContext();
-  scheduleAudioEvent(cue.src, new Date(getNow().getTime() + 500));
+  if (!isMuted) {
+    unlockAudioContext();
+    scheduleAudioEvent(cue.src, new Date(getNow().getTime() + 500));
+  }
 }
 
 // Scrub pointer events — listeners on wrapper for larger hit target
