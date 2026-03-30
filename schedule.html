@@ -510,7 +510,7 @@ body.placed .period-row.now .period-name { font-size: 52px; }
 </head>
 <body>
 
-<div id="entry-overlay">
+<div id="entry-overlay" class="hidden">
   <div class="entry-gate-mark">
     <div class="entry-rule-top"></div>
     <svg class="entry-torii" viewBox="0 0 80 52" fill="none">
@@ -1978,11 +1978,9 @@ function updateMuteButton() {
   }
   updateEntryPeriodLabel();
 
-  // Skip overlay if already unlocked this session
-  if (sessionStorage.getItem('gv-audio-unlocked')) {
-    overlay.classList.add('hidden');
-    return;
-  }
+  // Show overlay only on first visit this session — start hidden to prevent flash on return
+  if (sessionStorage.getItem('gv-audio-unlocked')) return;
+  requestAnimationFrame(() => overlay.classList.remove('hidden'));
 
   function enter(withSound) {
     unlockAudioContext();
