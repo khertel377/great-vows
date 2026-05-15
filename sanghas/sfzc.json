@@ -6718,85 +6718,94 @@
       "items": [
         {
           "type": "ceremonial",
-          "id": "han",
-          "label": "Han — assembly called to zendo"
+          "label": "Opening bows",
+          "cues": []
         },
         {
-          "type": "silence",
-          "label": "Zazen",
-          "durationMinutes": 40
-        },
-        {
-          "type": "chant",
-          "id": "purification"
+          "type": "doshi",
+          "label": "Heart Sutra announcement"
         },
         {
           "type": "chant",
-          "id": "heart-sutra"
+          "id": "heart-sutra",
+          "noAnnouncement": true
+        },
+        {
+          "type": "doshi",
+          "label": "Hymn to the Perfection of Wisdom"
         },
         {
           "type": "chant",
-          "id": "maka-hannya"
+          "id": "hymn-perfection-wisdom"
+        },
+        {
+          "type": "doshi",
+          "label": "Shōsaimyō Kichijō Darani"
         },
         {
           "type": "chant",
-          "id": "enmei-jukku"
+          "id": "shosaimyo-x3"
+        },
+        {
+          "type": "doshi",
+          "label": "Eko"
         },
         {
           "type": "chant",
-          "id": "great-vows"
+          "id": "after-dedication-english",
+          "noAnnouncement": true
+        },
+        {
+          "type": "doshi",
+          "label": "Sandōkai announcement"
+        },
+        {
+          "type": "chant",
+          "id": "sandokai-japanese"
+        },
+        {
+          "type": "doshi",
+          "label": "Eko — closing dedication"
+        },
+        {
+          "type": "chant",
+          "id": "after-dedication-japanese",
+          "noAnnouncement": true
+        },
+        {
+          "type": "ceremonial",
+          "label": "Closing bows",
+          "cues": []
         }
       ],
       "timestampMap": [
         {
-          "chantId": "purification",
-          "startTime": 220.98,
-          "lines": [
-            {
-              "lineIndex": 0,
-              "cueIn": 220.98
-            },
-            {
-              "lineIndex": 1,
-              "cueIn": 227.32
-            },
-            {
-              "lineIndex": 2,
-              "cueIn": 231.6
-            },
-            {
-              "lineIndex": 3,
-              "cueIn": 231.6
-            }
-          ]
-        },
-        {
           "chantId": "heart-sutra",
-          "startTime": 231.6,
+          "startTime": 225.17,
           "lines": [
             {
               "lineIndex": 0,
-              "cueIn": 231.6
+              "cueIn": 225.17
             },
             {
               "lineIndex": 1,
-              "cueIn": 231.6
+              "cueIn": 227.4
             },
             {
               "lineIndex": 2,
-              "cueIn": 232.8
+              "cueIn": 233.12
             },
             {
               "lineIndex": 3,
-              "cueIn": 237.42
+              "cueIn": 237.5
             },
             {
               "lineIndex": 5,
-              "cueIn": 241.12
+              "cueIn": 240.94
             },
             {
               "lineIndex": 6,
-              "cueIn": 244.86
+              "cueIn": 245.02
             },
             {
               "lineIndex": 7,
@@ -6804,51 +6813,51 @@
             },
             {
               "lineIndex": 8,
-              "cueIn": 251.5
+              "cueIn": 251.52
             },
             {
               "lineIndex": 9,
-              "cueIn": 255.24
+              "cueIn": 255.54
             },
             {
               "lineIndex": 10,
-              "cueIn": 259.46
+              "cueIn": 259.6
             },
             {
               "lineIndex": 12,
-              "cueIn": 262.48
+              "cueIn": 262.52
             },
             {
               "lineIndex": 13,
-              "cueIn": 267.68
+              "cueIn": 267.7
             },
             {
               "lineIndex": 14,
-              "cueIn": 270.7
+              "cueIn": 270.66
             },
             {
               "lineIndex": 15,
-              "cueIn": 270.7
+              "cueIn": 270.68
             },
             {
               "lineIndex": 17,
-              "cueIn": 277.03
+              "cueIn": 276.78
             },
             {
               "lineIndex": 18,
-              "cueIn": 279.46
+              "cueIn": 279.44
             },
             {
               "lineIndex": 19,
-              "cueIn": 280.8
+              "cueIn": 280.72
             },
             {
               "lineIndex": 20,
-              "cueIn": 281.86
+              "cueIn": 282.08
             },
             {
               "lineIndex": 21,
-              "cueIn": 283.52
+              "cueIn": 283.06
             },
             {
               "lineIndex": 22,
@@ -6860,63 +6869,63 @@
             },
             {
               "lineIndex": 24,
-              "cueIn": 287.64
+              "cueIn": 287.6
             },
             {
               "lineIndex": 25,
-              "cueIn": 288.56
+              "cueIn": 288.54
             },
             {
               "lineIndex": 27,
-              "cueIn": 304.46
+              "cueIn": 304.54
             },
             {
               "lineIndex": 28,
-              "cueIn": 306.2
+              "cueIn": 306.24
             },
             {
               "lineIndex": 29,
-              "cueIn": 309.46
+              "cueIn": 309.44
             },
             {
               "lineIndex": 30,
-              "cueIn": 311.88
+              "cueIn": 312.76
             },
             {
               "lineIndex": 31,
-              "cueIn": 315.22
+              "cueIn": 315.24
             },
             {
               "lineIndex": 32,
-              "cueIn": 316.68
+              "cueIn": 316.78
             },
             {
               "lineIndex": 34,
-              "cueIn": 323.06
+              "cueIn": 323.16
             },
             {
               "lineIndex": 35,
-              "cueIn": 325.36
+              "cueIn": 325.24
             },
             {
               "lineIndex": 36,
-              "cueIn": 331.28
+              "cueIn": 331.36
             },
             {
               "lineIndex": 37,
-              "cueIn": 333.2
+              "cueIn": 333.1
             },
             {
               "lineIndex": 38,
-              "cueIn": 338.6
+              "cueIn": 338.32
             },
             {
               "lineIndex": 39,
-              "cueIn": 341.78
+              "cueIn": 342.74
             },
             {
               "lineIndex": 41,
-              "cueIn": 344.82
+              "cueIn": 344.7
             },
             {
               "lineIndex": 42,
@@ -6924,7 +6933,7 @@
             },
             {
               "lineIndex": 43,
-              "cueIn": 352.06
+              "cueIn": 352.16
             },
             {
               "lineIndex": 44,
@@ -6936,27 +6945,27 @@
             },
             {
               "lineIndex": 47,
-              "cueIn": 362.72
+              "cueIn": 362.74
             },
             {
               "lineIndex": 48,
-              "cueIn": 363.68
+              "cueIn": 363.76
             },
             {
               "lineIndex": 49,
-              "cueIn": 367.5
+              "cueIn": 367.02
             },
             {
               "lineIndex": 50,
-              "cueIn": 369.48
+              "cueIn": 369.5
             },
             {
               "lineIndex": 51,
-              "cueIn": 374.44
+              "cueIn": 374.4
             },
             {
               "lineIndex": 52,
-              "cueIn": 376.38
+              "cueIn": 376.36
             },
             {
               "lineIndex": 54,
@@ -6964,273 +6973,509 @@
             },
             {
               "lineIndex": 55,
-              "cueIn": 381.04
+              "cueIn": 381.1
             },
             {
               "lineIndex": 57,
-              "cueIn": 389.36
+              "cueIn": 389.24
             },
             {
               "lineIndex": 58,
-              "cueIn": 392.92
+              "cueIn": 393.46
             }
           ]
         },
         {
-          "chantId": "maka-hannya",
-          "startTime": 396.0,
+          "chantId": "hymn-perfection-wisdom",
+          "startTime": 407.72,
           "lines": [
             {
               "lineIndex": 0,
-              "cueIn": 396.0
+              "cueIn": 407.72
             },
             {
               "lineIndex": 1,
+              "cueIn": 409.46
+            },
+            {
+              "lineIndex": 2,
+              "cueIn": 412.64
+            },
+            {
+              "lineIndex": 3,
+              "cueIn": 419.62
+            },
+            {
+              "lineIndex": 5,
               "cueIn": 424.42
             },
             {
-              "lineIndex": 2,
-              "cueIn": 429.74
-            },
-            {
-              "lineIndex": 3,
-              "cueIn": 436.68
-            },
-            {
-              "lineIndex": 5,
-              "cueIn": 441.56
-            },
-            {
               "lineIndex": 6,
-              "cueIn": 446.72
+              "cueIn": 426.6
             },
             {
               "lineIndex": 7,
-              "cueIn": 447.02
+              "cueIn": 429.78
             },
             {
               "lineIndex": 8,
-              "cueIn": 450.1
+              "cueIn": 432.32
             },
             {
-              "lineIndex": 9,
-              "cueIn": 453.02
+              "lineIndex": 10,
+              "cueIn": 435.36
             },
             {
               "lineIndex": 11,
-              "cueIn": 453.94
+              "cueIn": 438.76
             },
             {
               "lineIndex": 12,
-              "cueIn": 453.94
+              "cueIn": 441.32
             },
             {
               "lineIndex": 13,
-              "cueIn": 453.94
-            },
-            {
-              "lineIndex": 14,
-              "cueIn": 453.94
-            },
-            {
-              "lineIndex": 16,
-              "cueIn": 454.2
-            },
-            {
-              "lineIndex": 17,
-              "cueIn": 454.2
-            },
-            {
-              "lineIndex": 18,
-              "cueIn": 454.26
-            },
-            {
-              "lineIndex": 19,
-              "cueIn": 469.74
-            },
-            {
-              "lineIndex": 20,
-              "cueIn": 473.76
-            },
-            {
-              "lineIndex": 22,
-              "cueIn": 475.66
-            },
-            {
-              "lineIndex": 23,
-              "cueIn": 477.14
-            },
-            {
-              "lineIndex": 24,
-              "cueIn": 477.14
-            },
-            {
-              "lineIndex": 25,
-              "cueIn": 477.14
-            },
-            {
-              "lineIndex": 27,
-              "cueIn": 513.7
-            },
-            {
-              "lineIndex": 28,
-              "cueIn": 513.7
-            },
-            {
-              "lineIndex": 29,
-              "cueIn": 515.44
-            },
-            {
-              "lineIndex": 30,
-              "cueIn": 515.44
-            },
-            {
-              "lineIndex": 31,
-              "cueIn": 517.14
-            },
-            {
-              "lineIndex": 33,
-              "cueIn": 519.12
-            },
-            {
-              "lineIndex": 34,
-              "cueIn": 521.56
-            },
-            {
-              "lineIndex": 36,
-              "cueIn": 521.56
-            },
-            {
-              "lineIndex": 37,
-              "cueIn": 522.74
-            },
-            {
-              "lineIndex": 38,
-              "cueIn": 522.9
-            },
-            {
-              "lineIndex": 39,
-              "cueIn": 529.38
-            },
-            {
-              "lineIndex": 41,
-              "cueIn": 531.52
-            },
-            {
-              "lineIndex": 42,
-              "cueIn": 537.18
-            },
-            {
-              "lineIndex": 44,
-              "cueIn": 537.18
-            },
-            {
-              "lineIndex": 45,
-              "cueIn": 537.18
-            },
-            {
-              "lineIndex": 46,
-              "cueIn": 537.52
-            }
-          ]
-        },
-        {
-          "chantId": "enmei-jukku",
-          "startTime": 537.52,
-          "lines": [
-            {
-              "lineIndex": 0,
-              "cueIn": 537.52
-            },
-            {
-              "lineIndex": 1,
-              "cueIn": 538.7
-            },
-            {
-              "lineIndex": 2,
-              "cueIn": 540.2
-            },
-            {
-              "lineIndex": 3,
-              "cueIn": 540.76
-            },
-            {
-              "lineIndex": 4,
-              "cueIn": 540.76
-            },
-            {
-              "lineIndex": 5,
-              "cueIn": 541.3
-            },
-            {
-              "lineIndex": 6,
-              "cueIn": 543.14
-            },
-            {
-              "lineIndex": 7,
-              "cueIn": 557.04
-            },
-            {
-              "lineIndex": 8,
-              "cueIn": 557.14
-            },
-            {
-              "lineIndex": 9,
-              "cueIn": 558.22
-            }
-          ]
-        },
-        {
-          "chantId": "great-vows",
-          "startTime": 562.04,
-          "lines": [
-            {
-              "lineIndex": 0,
-              "cueIn": 562.04
-            },
-            {
-              "lineIndex": 1,
-              "cueIn": 564.64
-            },
-            {
-              "lineIndex": 2,
-              "cueIn": 566.72
-            },
-            {
-              "lineIndex": 3,
-              "cueIn": 568.8
-            },
-            {
-              "lineIndex": 5,
-              "cueIn": 568.84
-            },
-            {
-              "lineIndex": 6,
-              "cueIn": 568.96
-            },
-            {
-              "lineIndex": 8,
-              "cueIn": 570.8
-            },
-            {
-              "lineIndex": 9,
-              "cueIn": 575.1
-            },
-            {
-              "lineIndex": 11,
-              "cueIn": 576.1
-            },
-            {
-              "lineIndex": 12,
-              "cueIn": 580.06
-            },
-            {
-              "lineIndex": 14,
-              "cueIn": 594.06
+              "cueIn": 446.1
             },
             {
               "lineIndex": 15,
-              "cueIn": 662.86
+              "cueIn": 449.6
+            },
+            {
+              "lineIndex": 16,
+              "cueIn": 451.56
+            },
+            {
+              "lineIndex": 17,
+              "cueIn": 455.1
+            },
+            {
+              "lineIndex": 18,
+              "cueIn": 458.72
+            },
+            {
+              "lineIndex": 19,
+              "cueIn": 462.6
+            }
+          ]
+        },
+        {
+          "chantId": "shosaimyo-x3",
+          "startTime": 475.14,
+          "lines": [
+            {
+              "lineIndex": 0,
+              "cueIn": 475.14
+            },
+            {
+              "lineIndex": 1,
+              "cueIn": 477.76
+            },
+            {
+              "lineIndex": 2,
+              "cueIn": 479.36
+            },
+            {
+              "lineIndex": 3,
+              "cueIn": 482.16
+            },
+            {
+              "lineIndex": 4,
+              "cueIn": 485.0
+            },
+            {
+              "lineIndex": 5,
+              "cueIn": 485.4
+            },
+            {
+              "lineIndex": 6,
+              "cueIn": 485.98
+            },
+            {
+              "lineIndex": 7,
+              "cueIn": 488.62
+            },
+            {
+              "lineIndex": 8,
+              "cueIn": 489.44
+            },
+            {
+              "lineIndex": 9,
+              "cueIn": 491.56
+            },
+            {
+              "lineIndex": 10,
+              "cueIn": 494.5
+            },
+            {
+              "lineIndex": 11,
+              "cueIn": 496.54
+            },
+            {
+              "lineIndex": 12,
+              "cueIn": 498.44
+            },
+            {
+              "lineIndex": 13,
+              "cueIn": 500.5
+            },
+            {
+              "lineIndex": 14,
+              "cueIn": 502.0
+            },
+            {
+              "lineIndex": 16,
+              "cueIn": 504.18
+            },
+            {
+              "lineIndex": 17,
+              "cueIn": 506.54
+            },
+            {
+              "lineIndex": 18,
+              "cueIn": 507.42
+            },
+            {
+              "lineIndex": 19,
+              "cueIn": 510.16
+            },
+            {
+              "lineIndex": 20,
+              "cueIn": 512.7
+            },
+            {
+              "lineIndex": 21,
+              "cueIn": 513.18
+            },
+            {
+              "lineIndex": 22,
+              "cueIn": 513.7
+            },
+            {
+              "lineIndex": 23,
+              "cueIn": 516.22
+            },
+            {
+              "lineIndex": 24,
+              "cueIn": 517.16
+            },
+            {
+              "lineIndex": 25,
+              "cueIn": 519.28
+            },
+            {
+              "lineIndex": 26,
+              "cueIn": 522.3
+            },
+            {
+              "lineIndex": 27,
+              "cueIn": 524.0
+            },
+            {
+              "lineIndex": 28,
+              "cueIn": 526.24
+            },
+            {
+              "lineIndex": 29,
+              "cueIn": 528.32
+            },
+            {
+              "lineIndex": 30,
+              "cueIn": 529.84
+            },
+            {
+              "lineIndex": 32,
+              "cueIn": 532.0
+            },
+            {
+              "lineIndex": 33,
+              "cueIn": 534.48
+            },
+            {
+              "lineIndex": 34,
+              "cueIn": 535.48
+            },
+            {
+              "lineIndex": 35,
+              "cueIn": 538.14
+            },
+            {
+              "lineIndex": 36,
+              "cueIn": 540.8
+            },
+            {
+              "lineIndex": 37,
+              "cueIn": 541.2
+            },
+            {
+              "lineIndex": 38,
+              "cueIn": 541.84
+            },
+            {
+              "lineIndex": 39,
+              "cueIn": 544.28
+            },
+            {
+              "lineIndex": 40,
+              "cueIn": 545.24
+            },
+            {
+              "lineIndex": 41,
+              "cueIn": 547.42
+            },
+            {
+              "lineIndex": 42,
+              "cueIn": 550.42
+            },
+            {
+              "lineIndex": 43,
+              "cueIn": 552.48
+            },
+            {
+              "lineIndex": 44,
+              "cueIn": 554.16
+            },
+            {
+              "lineIndex": 45,
+              "cueIn": 556.5
+            },
+            {
+              "lineIndex": 46,
+              "cueIn": 558.14
+            }
+          ]
+        },
+        {
+          "chantId": "after-dedication-english",
+          "startTime": 561.12,
+          "lines": [
+            {
+              "lineIndex": 0,
+              "cueIn": 561.12
+            },
+            {
+              "lineIndex": 1,
+              "cueIn": 567.44
+            },
+            {
+              "lineIndex": 2,
+              "cueIn": 567.6
+            },
+            {
+              "lineIndex": 3,
+              "cueIn": 568.82
+            }
+          ]
+        },
+        {
+          "chantId": "sandokai-japanese",
+          "startTime": 572.42,
+          "lines": [
+            {
+              "lineIndex": 0,
+              "cueIn": 572.42
+            },
+            {
+              "lineIndex": 1,
+              "cueIn": 623.79
+            },
+            {
+              "lineIndex": 2,
+              "cueIn": 625.54
+            },
+            {
+              "lineIndex": 3,
+              "cueIn": 654.4
+            },
+            {
+              "lineIndex": 5,
+              "cueIn": 687.52
+            },
+            {
+              "lineIndex": 6,
+              "cueIn": 691.96
+            },
+            {
+              "lineIndex": 7,
+              "cueIn": 695.2
+            },
+            {
+              "lineIndex": 8,
+              "cueIn": 700.08
+            },
+            {
+              "lineIndex": 10,
+              "cueIn": 704.88
+            },
+            {
+              "lineIndex": 11,
+              "cueIn": 708.42
+            },
+            {
+              "lineIndex": 12,
+              "cueIn": 710.96
+            },
+            {
+              "lineIndex": 13,
+              "cueIn": 715.28
+            },
+            {
+              "lineIndex": 15,
+              "cueIn": 719.76
+            },
+            {
+              "lineIndex": 16,
+              "cueIn": 723.9
+            },
+            {
+              "lineIndex": 17,
+              "cueIn": 728.0
+            },
+            {
+              "lineIndex": 18,
+              "cueIn": 732.94
+            },
+            {
+              "lineIndex": 20,
+              "cueIn": 737.16
+            },
+            {
+              "lineIndex": 21,
+              "cueIn": 741.8
+            },
+            {
+              "lineIndex": 22,
+              "cueIn": 745.24
+            },
+            {
+              "lineIndex": 23,
+              "cueIn": 750.12
+            },
+            {
+              "lineIndex": 25,
+              "cueIn": 754.56
+            },
+            {
+              "lineIndex": 26,
+              "cueIn": 758.86
+            },
+            {
+              "lineIndex": 27,
+              "cueIn": 762.42
+            },
+            {
+              "lineIndex": 28,
+              "cueIn": 767.38
+            },
+            {
+              "lineIndex": 30,
+              "cueIn": 770.88
+            },
+            {
+              "lineIndex": 31,
+              "cueIn": 776.26
+            },
+            {
+              "lineIndex": 32,
+              "cueIn": 779.78
+            },
+            {
+              "lineIndex": 33,
+              "cueIn": 784.42
+            },
+            {
+              "lineIndex": 35,
+              "cueIn": 789.54
+            },
+            {
+              "lineIndex": 36,
+              "cueIn": 794.28
+            },
+            {
+              "lineIndex": 37,
+              "cueIn": 799.06
+            },
+            {
+              "lineIndex": 38,
+              "cueIn": 804.56
+            },
+            {
+              "lineIndex": 40,
+              "cueIn": 809.02
+            },
+            {
+              "lineIndex": 41,
+              "cueIn": 813.72
+            },
+            {
+              "lineIndex": 42,
+              "cueIn": 818.16
+            },
+            {
+              "lineIndex": 43,
+              "cueIn": 822.78
+            },
+            {
+              "lineIndex": 45,
+              "cueIn": 826.82
+            },
+            {
+              "lineIndex": 46,
+              "cueIn": 833.66
+            },
+            {
+              "lineIndex": 47,
+              "cueIn": 838.62
+            },
+            {
+              "lineIndex": 48,
+              "cueIn": 842.78
+            },
+            {
+              "lineIndex": 50,
+              "cueIn": 848.68
+            },
+            {
+              "lineIndex": 51,
+              "cueIn": 854.46
+            },
+            {
+              "lineIndex": 52,
+              "cueIn": 860.04
+            },
+            {
+              "lineIndex": 53,
+              "cueIn": 864.36
+            }
+          ]
+        },
+        {
+          "chantId": "after-dedication-japanese",
+          "startTime": 869.6,
+          "lines": [
+            {
+              "lineIndex": 0,
+              "cueIn": 869.6
+            },
+            {
+              "lineIndex": 1,
+              "cueIn": 873.62
+            },
+            {
+              "lineIndex": 2,
+              "cueIn": 904.38
+            },
+            {
+              "lineIndex": 3,
+              "cueIn": 917.9
+            },
+            {
+              "lineIndex": 4,
+              "cueIn": 923.56
+            },
+            {
+              "lineIndex": 5,
+              "cueIn": 928.7
             }
           ]
         }
@@ -7245,209 +7490,218 @@
       "items": [
         {
           "type": "ceremonial",
-          "id": "han",
-          "label": "Han — assembly called to zendo"
+          "label": "Opening bows",
+          "cues": []
         },
         {
-          "type": "silence",
-          "label": "Zazen",
-          "durationMinutes": 40
-        },
-        {
-          "type": "chant",
-          "id": "purification"
+          "type": "doshi",
+          "label": "Heart Sutra announcement"
         },
         {
           "type": "chant",
-          "id": "heart-sutra"
+          "id": "heart-sutra",
+          "noAnnouncement": true
+        },
+        {
+          "type": "doshi",
+          "label": "Hymn to the Perfection of Wisdom"
         },
         {
           "type": "chant",
-          "id": "maka-hannya"
+          "id": "hymn-perfection-wisdom"
+        },
+        {
+          "type": "doshi",
+          "label": "Enmei Jukku Kannon Gyō"
         },
         {
           "type": "chant",
-          "id": "enmei-jukku"
+          "id": "enmei-jukku-x7"
+        },
+        {
+          "type": "doshi",
+          "label": "Eko"
         },
         {
           "type": "chant",
-          "id": "great-vows"
+          "id": "after-dedication-english",
+          "noAnnouncement": true
+        },
+        {
+          "type": "doshi",
+          "label": "Song of the Jewel Mirror Samadhi"
+        },
+        {
+          "type": "chant",
+          "id": "jewel-mirror-samadhi"
+        },
+        {
+          "type": "doshi",
+          "label": "Eko — closing dedication"
+        },
+        {
+          "type": "chant",
+          "id": "after-dedication-japanese",
+          "noAnnouncement": true
+        },
+        {
+          "type": "ceremonial",
+          "label": "Closing bows",
+          "cues": []
         }
       ],
       "timestampMap": [
         {
-          "chantId": "purification",
-          "startTime": 186.65,
-          "lines": [
-            {
-              "lineIndex": 0,
-              "cueIn": 186.65
-            },
-            {
-              "lineIndex": 1,
-              "cueIn": 198.92
-            },
-            {
-              "lineIndex": 2,
-              "cueIn": 201.32
-            },
-            {
-              "lineIndex": 3,
-              "cueIn": 202.5
-            }
-          ]
-        },
-        {
           "chantId": "heart-sutra",
-          "startTime": 203.24,
+          "startTime": 266.96,
           "lines": [
             {
               "lineIndex": 0,
-              "cueIn": 203.24
+              "cueIn": 266.96
             },
             {
               "lineIndex": 1,
-              "cueIn": 203.26
+              "cueIn": 269.92
             },
             {
               "lineIndex": 2,
-              "cueIn": 203.26
+              "cueIn": 275.32
             },
             {
               "lineIndex": 3,
-              "cueIn": 205.54
+              "cueIn": 279.88
             },
             {
               "lineIndex": 5,
-              "cueIn": 206.36
+              "cueIn": 283.46
             },
             {
               "lineIndex": 6,
-              "cueIn": 209.0
+              "cueIn": 287.34
             },
             {
               "lineIndex": 7,
-              "cueIn": 215.0
+              "cueIn": 291.3
             },
             {
               "lineIndex": 8,
-              "cueIn": 244.4
+              "cueIn": 293.8
             },
             {
               "lineIndex": 9,
-              "cueIn": 244.4
+              "cueIn": 297.8
             },
             {
               "lineIndex": 10,
-              "cueIn": 244.4
+              "cueIn": 301.78
             },
             {
               "lineIndex": 12,
-              "cueIn": 244.4
+              "cueIn": 304.76
             },
             {
               "lineIndex": 13,
-              "cueIn": 244.4
+              "cueIn": 309.84
             },
             {
               "lineIndex": 14,
-              "cueIn": 244.4
+              "cueIn": 312.72
             },
             {
               "lineIndex": 15,
-              "cueIn": 244.4
+              "cueIn": 312.72
             },
             {
               "lineIndex": 17,
-              "cueIn": 244.4
+              "cueIn": 318.3
             },
             {
               "lineIndex": 18,
-              "cueIn": 244.42
+              "cueIn": 321.16
             },
             {
               "lineIndex": 19,
-              "cueIn": 244.42
+              "cueIn": 322.44
             },
             {
               "lineIndex": 20,
-              "cueIn": 244.86
+              "cueIn": 323.82
             },
             {
               "lineIndex": 21,
-              "cueIn": 244.86
+              "cueIn": 325.1
             },
             {
               "lineIndex": 22,
-              "cueIn": 244.86
+              "cueIn": 325.52
             },
             {
               "lineIndex": 23,
-              "cueIn": 244.86
+              "cueIn": 326.58
             },
             {
               "lineIndex": 24,
-              "cueIn": 255.62
+              "cueIn": 327.92
             },
             {
               "lineIndex": 25,
-              "cueIn": 257.24
+              "cueIn": 329.84
             },
             {
               "lineIndex": 27,
-              "cueIn": 270.96
+              "cueIn": 344.36
             },
             {
               "lineIndex": 28,
-              "cueIn": 271.42
+              "cueIn": 345.94
             },
             {
               "lineIndex": 29,
-              "cueIn": 274.46
+              "cueIn": 348.94
             },
             {
               "lineIndex": 30,
-              "cueIn": 280.68
+              "cueIn": 351.24
             },
             {
               "lineIndex": 31,
-              "cueIn": 280.68
+              "cueIn": 354.44
             },
             {
               "lineIndex": 32,
-              "cueIn": 283.36
+              "cueIn": 355.28
             },
             {
               "lineIndex": 34,
-              "cueIn": 286.54
+              "cueIn": 361.6
             },
             {
               "lineIndex": 35,
-              "cueIn": 286.68
+              "cueIn": 363.62
             },
             {
               "lineIndex": 36,
-              "cueIn": 288.42
+              "cueIn": 369.3
             },
             {
               "lineIndex": 37,
-              "cueIn": 288.42
+              "cueIn": 370.94
             },
             {
               "lineIndex": 38,
-              "cueIn": 291.14
+              "cueIn": 375.96
             },
             {
               "lineIndex": 39,
-              "cueIn": 293.3
+              "cueIn": 378.86
             },
             {
               "lineIndex": 41,
-              "cueIn": 306.26
+              "cueIn": 381.62
             },
             {
               "lineIndex": 42,
-              "cueIn": 310.44
+              "cueIn": 384.94
             },
             {
               "lineIndex": 43,
@@ -7455,11 +7709,11 @@
             },
             {
               "lineIndex": 44,
-              "cueIn": 392.38
+              "cueIn": 392.42
             },
             {
               "lineIndex": 46,
-              "cueIn": 394.72
+              "cueIn": 394.74
             },
             {
               "lineIndex": 47,
@@ -7467,11 +7721,11 @@
             },
             {
               "lineIndex": 48,
-              "cueIn": 399.76
+              "cueIn": 399.78
             },
             {
               "lineIndex": 49,
-              "cueIn": 402.78
+              "cueIn": 402.8
             },
             {
               "lineIndex": 50,
@@ -7479,285 +7733,829 @@
             },
             {
               "lineIndex": 51,
-              "cueIn": 409.66
+              "cueIn": 409.68
             },
             {
               "lineIndex": 52,
-              "cueIn": 411.6
+              "cueIn": 411.58
             },
             {
               "lineIndex": 54,
-              "cueIn": 414.12
+              "cueIn": 414.94
             },
             {
               "lineIndex": 55,
-              "cueIn": 414.16
+              "cueIn": 415.96
             },
             {
               "lineIndex": 57,
-              "cueIn": 423.9
+              "cueIn": 423.76
             },
             {
               "lineIndex": 58,
-              "cueIn": 427.6
+              "cueIn": 427.5
             }
           ]
         },
         {
-          "chantId": "maka-hannya",
-          "startTime": 433.42,
+          "chantId": "hymn-perfection-wisdom",
+          "startTime": 433.38,
           "lines": [
             {
               "lineIndex": 0,
-              "cueIn": 433.42
+              "cueIn": 433.38
             },
             {
               "lineIndex": 1,
-              "cueIn": 434.72
+              "cueIn": 434.48
             },
             {
               "lineIndex": 2,
-              "cueIn": 435.26
+              "cueIn": 439.32
             },
             {
               "lineIndex": 3,
-              "cueIn": 476.98
+              "cueIn": 442.44
             },
             {
               "lineIndex": 5,
-              "cueIn": 480.74
+              "cueIn": 457.52
             },
             {
               "lineIndex": 6,
-              "cueIn": 482.24
+              "cueIn": 459.26
             },
             {
               "lineIndex": 7,
-              "cueIn": 482.24
+              "cueIn": 462.3
             },
             {
               "lineIndex": 8,
-              "cueIn": 482.24
+              "cueIn": 464.96
             },
             {
-              "lineIndex": 9,
-              "cueIn": 483.46
+              "lineIndex": 10,
+              "cueIn": 467.42
             },
             {
               "lineIndex": 11,
-              "cueIn": 514.34
+              "cueIn": 470.7
             },
             {
               "lineIndex": 12,
-              "cueIn": 516.14
+              "cueIn": 473.26
             },
             {
               "lineIndex": 13,
-              "cueIn": 517.52
-            },
-            {
-              "lineIndex": 14,
-              "cueIn": 519.32
-            },
-            {
-              "lineIndex": 16,
-              "cueIn": 520.22
-            },
-            {
-              "lineIndex": 17,
-              "cueIn": 533.46
-            },
-            {
-              "lineIndex": 18,
-              "cueIn": 536.32
-            },
-            {
-              "lineIndex": 19,
-              "cueIn": 569.78
-            },
-            {
-              "lineIndex": 20,
-              "cueIn": 573.08
-            },
-            {
-              "lineIndex": 22,
-              "cueIn": 574.56
-            },
-            {
-              "lineIndex": 23,
-              "cueIn": 575.74
-            },
-            {
-              "lineIndex": 24,
-              "cueIn": 575.74
-            },
-            {
-              "lineIndex": 25,
-              "cueIn": 575.74
-            },
-            {
-              "lineIndex": 27,
-              "cueIn": 579.34
-            },
-            {
-              "lineIndex": 28,
-              "cueIn": 582.12
-            },
-            {
-              "lineIndex": 29,
-              "cueIn": 583.4
-            },
-            {
-              "lineIndex": 30,
-              "cueIn": 583.88
-            },
-            {
-              "lineIndex": 31,
-              "cueIn": 592.18
-            },
-            {
-              "lineIndex": 33,
-              "cueIn": 596.9
-            },
-            {
-              "lineIndex": 34,
-              "cueIn": 603.18
-            },
-            {
-              "lineIndex": 36,
-              "cueIn": 604.92
-            },
-            {
-              "lineIndex": 37,
-              "cueIn": 608.32
-            },
-            {
-              "lineIndex": 38,
-              "cueIn": 609.14
-            },
-            {
-              "lineIndex": 39,
-              "cueIn": 617.7
-            },
-            {
-              "lineIndex": 41,
-              "cueIn": 621.9
-            },
-            {
-              "lineIndex": 42,
-              "cueIn": 630.16
-            },
-            {
-              "lineIndex": 44,
-              "cueIn": 630.92
-            },
-            {
-              "lineIndex": 45,
-              "cueIn": 631.36
-            },
-            {
-              "lineIndex": 46,
-              "cueIn": 631.36
-            }
-          ]
-        },
-        {
-          "chantId": "enmei-jukku",
-          "startTime": 631.36,
-          "lines": [
-            {
-              "lineIndex": 0,
-              "cueIn": 631.36
-            },
-            {
-              "lineIndex": 1,
-              "cueIn": 631.36
-            },
-            {
-              "lineIndex": 2,
-              "cueIn": 632.26
-            },
-            {
-              "lineIndex": 3,
-              "cueIn": 634.44
-            },
-            {
-              "lineIndex": 4,
-              "cueIn": 635.68
-            },
-            {
-              "lineIndex": 5,
-              "cueIn": 637.4
-            },
-            {
-              "lineIndex": 6,
-              "cueIn": 638.9
-            },
-            {
-              "lineIndex": 7,
-              "cueIn": 640.78
-            },
-            {
-              "lineIndex": 8,
-              "cueIn": 641.12
-            },
-            {
-              "lineIndex": 9,
-              "cueIn": 642.74
-            }
-          ]
-        },
-        {
-          "chantId": "great-vows",
-          "startTime": 646.78,
-          "lines": [
-            {
-              "lineIndex": 0,
-              "cueIn": 646.78
-            },
-            {
-              "lineIndex": 1,
-              "cueIn": 648.82
-            },
-            {
-              "lineIndex": 2,
-              "cueIn": 649.94
-            },
-            {
-              "lineIndex": 3,
-              "cueIn": 651.64
-            },
-            {
-              "lineIndex": 5,
-              "cueIn": 669.56
-            },
-            {
-              "lineIndex": 6,
-              "cueIn": 691.9
-            },
-            {
-              "lineIndex": 8,
-              "cueIn": 703.44
-            },
-            {
-              "lineIndex": 9,
-              "cueIn": 703.44
-            },
-            {
-              "lineIndex": 11,
-              "cueIn": 704.98
-            },
-            {
-              "lineIndex": 12,
-              "cueIn": 709.38
-            },
-            {
-              "lineIndex": 14,
-              "cueIn": 722.86
+              "cueIn": 478.02
             },
             {
               "lineIndex": 15,
-              "cueIn": 730.18
+              "cueIn": 481.24
+            },
+            {
+              "lineIndex": 16,
+              "cueIn": 482.92
+            },
+            {
+              "lineIndex": 17,
+              "cueIn": 486.64
+            },
+            {
+              "lineIndex": 18,
+              "cueIn": 489.5
+            },
+            {
+              "lineIndex": 19,
+              "cueIn": 493.24
+            }
+          ]
+        },
+        {
+          "chantId": "enmei-jukku-x7",
+          "startTime": 506.49,
+          "lines": [
+            {
+              "lineIndex": 0,
+              "cueIn": 506.49
+            },
+            {
+              "lineIndex": 1,
+              "cueIn": 508.24
+            },
+            {
+              "lineIndex": 2,
+              "cueIn": 510.32
+            },
+            {
+              "lineIndex": 3,
+              "cueIn": 512.38
+            },
+            {
+              "lineIndex": 4,
+              "cueIn": 514.74
+            },
+            {
+              "lineIndex": 5,
+              "cueIn": 516.94
+            },
+            {
+              "lineIndex": 6,
+              "cueIn": 519.24
+            },
+            {
+              "lineIndex": 7,
+              "cueIn": 521.96
+            },
+            {
+              "lineIndex": 8,
+              "cueIn": 522.48
+            },
+            {
+              "lineIndex": 9,
+              "cueIn": 524.66
+            },
+            {
+              "lineIndex": 11,
+              "cueIn": 530.06
+            },
+            {
+              "lineIndex": 12,
+              "cueIn": 531.64
+            },
+            {
+              "lineIndex": 13,
+              "cueIn": 533.38
+            },
+            {
+              "lineIndex": 14,
+              "cueIn": 535.24
+            },
+            {
+              "lineIndex": 15,
+              "cueIn": 537.42
+            },
+            {
+              "lineIndex": 16,
+              "cueIn": 539.36
+            },
+            {
+              "lineIndex": 17,
+              "cueIn": 541.36
+            },
+            {
+              "lineIndex": 18,
+              "cueIn": 543.96
+            },
+            {
+              "lineIndex": 19,
+              "cueIn": 544.44
+            },
+            {
+              "lineIndex": 20,
+              "cueIn": 546.48
+            },
+            {
+              "lineIndex": 22,
+              "cueIn": 551.6
+            },
+            {
+              "lineIndex": 23,
+              "cueIn": 553.18
+            },
+            {
+              "lineIndex": 24,
+              "cueIn": 554.8
+            },
+            {
+              "lineIndex": 25,
+              "cueIn": 556.58
+            },
+            {
+              "lineIndex": 26,
+              "cueIn": 556.76
+            },
+            {
+              "lineIndex": 27,
+              "cueIn": 560.68
+            },
+            {
+              "lineIndex": 28,
+              "cueIn": 562.7
+            },
+            {
+              "lineIndex": 29,
+              "cueIn": 565.26
+            },
+            {
+              "lineIndex": 30,
+              "cueIn": 565.68
+            },
+            {
+              "lineIndex": 31,
+              "cueIn": 567.76
+            },
+            {
+              "lineIndex": 33,
+              "cueIn": 572.7
+            },
+            {
+              "lineIndex": 34,
+              "cueIn": 574.18
+            },
+            {
+              "lineIndex": 35,
+              "cueIn": 575.8
+            },
+            {
+              "lineIndex": 36,
+              "cueIn": 577.56
+            },
+            {
+              "lineIndex": 37,
+              "cueIn": 579.48
+            },
+            {
+              "lineIndex": 38,
+              "cueIn": 581.52
+            },
+            {
+              "lineIndex": 39,
+              "cueIn": 583.5
+            },
+            {
+              "lineIndex": 40,
+              "cueIn": 585.84
+            },
+            {
+              "lineIndex": 41,
+              "cueIn": 586.36
+            },
+            {
+              "lineIndex": 42,
+              "cueIn": 588.44
+            },
+            {
+              "lineIndex": 44,
+              "cueIn": 593.04
+            },
+            {
+              "lineIndex": 45,
+              "cueIn": 594.5
+            },
+            {
+              "lineIndex": 46,
+              "cueIn": 596.08
+            },
+            {
+              "lineIndex": 47,
+              "cueIn": 597.64
+            },
+            {
+              "lineIndex": 48,
+              "cueIn": 599.48
+            },
+            {
+              "lineIndex": 49,
+              "cueIn": 601.3
+            },
+            {
+              "lineIndex": 50,
+              "cueIn": 603.16
+            },
+            {
+              "lineIndex": 51,
+              "cueIn": 605.42
+            },
+            {
+              "lineIndex": 52,
+              "cueIn": 605.84
+            },
+            {
+              "lineIndex": 53,
+              "cueIn": 607.72
+            },
+            {
+              "lineIndex": 55,
+              "cueIn": 612.06
+            },
+            {
+              "lineIndex": 56,
+              "cueIn": 613.4
+            },
+            {
+              "lineIndex": 57,
+              "cueIn": 614.9
+            },
+            {
+              "lineIndex": 58,
+              "cueIn": 616.48
+            },
+            {
+              "lineIndex": 59,
+              "cueIn": 618.28
+            },
+            {
+              "lineIndex": 60,
+              "cueIn": 619.94
+            },
+            {
+              "lineIndex": 61,
+              "cueIn": 621.62
+            },
+            {
+              "lineIndex": 62,
+              "cueIn": 623.68
+            },
+            {
+              "lineIndex": 63,
+              "cueIn": 624.18
+            },
+            {
+              "lineIndex": 64,
+              "cueIn": 625.88
+            },
+            {
+              "lineIndex": 66,
+              "cueIn": 629.98
+            },
+            {
+              "lineIndex": 67,
+              "cueIn": 631.16
+            },
+            {
+              "lineIndex": 68,
+              "cueIn": 632.48
+            },
+            {
+              "lineIndex": 69,
+              "cueIn": 634.04
+            },
+            {
+              "lineIndex": 70,
+              "cueIn": 635.66
+            },
+            {
+              "lineIndex": 71,
+              "cueIn": 637.32
+            },
+            {
+              "lineIndex": 72,
+              "cueIn": 638.86
+            },
+            {
+              "lineIndex": 73,
+              "cueIn": 640.72
+            },
+            {
+              "lineIndex": 74,
+              "cueIn": 641.16
+            },
+            {
+              "lineIndex": 75,
+              "cueIn": 642.68
+            }
+          ]
+        },
+        {
+          "chantId": "after-dedication-english",
+          "startTime": 646.58,
+          "lines": [
+            {
+              "lineIndex": 0,
+              "cueIn": 646.58
+            },
+            {
+              "lineIndex": 1,
+              "cueIn": 655.16
+            },
+            {
+              "lineIndex": 2,
+              "cueIn": 661.18
+            },
+            {
+              "lineIndex": 3,
+              "cueIn": 661.18
+            }
+          ]
+        },
+        {
+          "chantId": "jewel-mirror-samadhi",
+          "startTime": 661.18,
+          "lines": [
+            {
+              "lineIndex": 0,
+              "cueIn": 661.18
+            },
+            {
+              "lineIndex": 1,
+              "cueIn": 663.88
+            },
+            {
+              "lineIndex": 2,
+              "cueIn": 663.88
+            },
+            {
+              "lineIndex": 3,
+              "cueIn": 663.88
+            },
+            {
+              "lineIndex": 4,
+              "cueIn": 663.88
+            },
+            {
+              "lineIndex": 6,
+              "cueIn": 663.88
+            },
+            {
+              "lineIndex": 7,
+              "cueIn": 664.74
+            },
+            {
+              "lineIndex": 8,
+              "cueIn": 667.48
+            },
+            {
+              "lineIndex": 9,
+              "cueIn": 671.5
+            },
+            {
+              "lineIndex": 11,
+              "cueIn": 672.42
+            },
+            {
+              "lineIndex": 12,
+              "cueIn": 713.74
+            },
+            {
+              "lineIndex": 13,
+              "cueIn": 713.74
+            },
+            {
+              "lineIndex": 14,
+              "cueIn": 715.6
+            },
+            {
+              "lineIndex": 16,
+              "cueIn": 729.32
+            },
+            {
+              "lineIndex": 17,
+              "cueIn": 732.68
+            },
+            {
+              "lineIndex": 18,
+              "cueIn": 740.9
+            },
+            {
+              "lineIndex": 19,
+              "cueIn": 743.5
+            },
+            {
+              "lineIndex": 21,
+              "cueIn": 744.9
+            },
+            {
+              "lineIndex": 22,
+              "cueIn": 751.84
+            },
+            {
+              "lineIndex": 23,
+              "cueIn": 752.68
+            },
+            {
+              "lineIndex": 24,
+              "cueIn": 764.96
+            },
+            {
+              "lineIndex": 26,
+              "cueIn": 766.28
+            },
+            {
+              "lineIndex": 27,
+              "cueIn": 766.28
+            },
+            {
+              "lineIndex": 28,
+              "cueIn": 769.56
+            },
+            {
+              "lineIndex": 29,
+              "cueIn": 798.72
+            },
+            {
+              "lineIndex": 30,
+              "cueIn": 825.42
+            },
+            {
+              "lineIndex": 31,
+              "cueIn": 826.58
+            },
+            {
+              "lineIndex": 33,
+              "cueIn": 828.28
+            },
+            {
+              "lineIndex": 34,
+              "cueIn": 828.72
+            },
+            {
+              "lineIndex": 35,
+              "cueIn": 831.94
+            },
+            {
+              "lineIndex": 36,
+              "cueIn": 833.66
+            },
+            {
+              "lineIndex": 37,
+              "cueIn": 835.42
+            },
+            {
+              "lineIndex": 38,
+              "cueIn": 836.78
+            },
+            {
+              "lineIndex": 40,
+              "cueIn": 838.72
+            },
+            {
+              "lineIndex": 41,
+              "cueIn": 841.64
+            },
+            {
+              "lineIndex": 42,
+              "cueIn": 844.68
+            },
+            {
+              "lineIndex": 43,
+              "cueIn": 848.8
+            },
+            {
+              "lineIndex": 45,
+              "cueIn": 851.2
+            },
+            {
+              "lineIndex": 46,
+              "cueIn": 852.7
+            },
+            {
+              "lineIndex": 47,
+              "cueIn": 855.52
+            },
+            {
+              "lineIndex": 48,
+              "cueIn": 855.6
+            },
+            {
+              "lineIndex": 50,
+              "cueIn": 860.32
+            },
+            {
+              "lineIndex": 51,
+              "cueIn": 862.56
+            },
+            {
+              "lineIndex": 52,
+              "cueIn": 865.52
+            },
+            {
+              "lineIndex": 53,
+              "cueIn": 868.5
+            },
+            {
+              "lineIndex": 55,
+              "cueIn": 871.5
+            },
+            {
+              "lineIndex": 56,
+              "cueIn": 873.44
+            },
+            {
+              "lineIndex": 57,
+              "cueIn": 875.1
+            },
+            {
+              "lineIndex": 58,
+              "cueIn": 877.7
+            },
+            {
+              "lineIndex": 60,
+              "cueIn": 881.72
+            },
+            {
+              "lineIndex": 61,
+              "cueIn": 884.76
+            },
+            {
+              "lineIndex": 62,
+              "cueIn": 887.02
+            },
+            {
+              "lineIndex": 63,
+              "cueIn": 889.9
+            },
+            {
+              "lineIndex": 65,
+              "cueIn": 893.44
+            },
+            {
+              "lineIndex": 66,
+              "cueIn": 894.72
+            },
+            {
+              "lineIndex": 67,
+              "cueIn": 898.72
+            },
+            {
+              "lineIndex": 68,
+              "cueIn": 900.52
+            },
+            {
+              "lineIndex": 70,
+              "cueIn": 903.54
+            },
+            {
+              "lineIndex": 71,
+              "cueIn": 906.34
+            },
+            {
+              "lineIndex": 72,
+              "cueIn": 908.04
+            },
+            {
+              "lineIndex": 73,
+              "cueIn": 909.98
+            },
+            {
+              "lineIndex": 74,
+              "cueIn": 912.5
+            },
+            {
+              "lineIndex": 76,
+              "cueIn": 914.7
+            },
+            {
+              "lineIndex": 77,
+              "cueIn": 917.34
+            },
+            {
+              "lineIndex": 78,
+              "cueIn": 919.54
+            },
+            {
+              "lineIndex": 79,
+              "cueIn": 921.5
+            },
+            {
+              "lineIndex": 81,
+              "cueIn": 924.12
+            },
+            {
+              "lineIndex": 82,
+              "cueIn": 926.04
+            },
+            {
+              "lineIndex": 83,
+              "cueIn": 927.86
+            },
+            {
+              "lineIndex": 84,
+              "cueIn": 930.34
+            },
+            {
+              "lineIndex": 86,
+              "cueIn": 933.6
+            },
+            {
+              "lineIndex": 87,
+              "cueIn": 936.68
+            },
+            {
+              "lineIndex": 88,
+              "cueIn": 939.46
+            },
+            {
+              "lineIndex": 89,
+              "cueIn": 942.14
+            },
+            {
+              "lineIndex": 91,
+              "cueIn": 945.04
+            },
+            {
+              "lineIndex": 92,
+              "cueIn": 946.98
+            },
+            {
+              "lineIndex": 93,
+              "cueIn": 949.5
+            },
+            {
+              "lineIndex": 94,
+              "cueIn": 949.52
+            },
+            {
+              "lineIndex": 95,
+              "cueIn": 953.82
+            },
+            {
+              "lineIndex": 96,
+              "cueIn": 954.12
+            },
+            {
+              "lineIndex": 98,
+              "cueIn": 958.44
+            },
+            {
+              "lineIndex": 99,
+              "cueIn": 959.94
+            },
+            {
+              "lineIndex": 100,
+              "cueIn": 962.84
+            },
+            {
+              "lineIndex": 101,
+              "cueIn": 965.14
+            },
+            {
+              "lineIndex": 103,
+              "cueIn": 968.0
+            },
+            {
+              "lineIndex": 104,
+              "cueIn": 968.02
+            },
+            {
+              "lineIndex": 105,
+              "cueIn": 972.34
+            },
+            {
+              "lineIndex": 106,
+              "cueIn": 975.82
+            },
+            {
+              "lineIndex": 108,
+              "cueIn": 979.08
+            },
+            {
+              "lineIndex": 109,
+              "cueIn": 981.04
+            },
+            {
+              "lineIndex": 110,
+              "cueIn": 982.92
+            },
+            {
+              "lineIndex": 111,
+              "cueIn": 984.66
+            },
+            {
+              "lineIndex": 113,
+              "cueIn": 987.12
+            },
+            {
+              "lineIndex": 114,
+              "cueIn": 989.6
+            },
+            {
+              "lineIndex": 115,
+              "cueIn": 991.46
+            },
+            {
+              "lineIndex": 116,
+              "cueIn": 993.0
+            }
+          ]
+        },
+        {
+          "chantId": "after-dedication-japanese",
+          "startTime": 996.36,
+          "lines": [
+            {
+              "lineIndex": 0,
+              "cueIn": 996.36
+            },
+            {
+              "lineIndex": 1,
+              "cueIn": 997.46
+            },
+            {
+              "lineIndex": 2,
+              "cueIn": 998.44
+            },
+            {
+              "lineIndex": 3,
+              "cueIn": 1041.88
+            },
+            {
+              "lineIndex": 4,
+              "cueIn": 1046.94
+            },
+            {
+              "lineIndex": 5,
+              "cueIn": 1051.8
             }
           ]
         }
