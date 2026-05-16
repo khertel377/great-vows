@@ -7693,6 +7693,30 @@
           {
             "lineIndex": 25,
             "cueIn": 301.0
+          },
+          {
+            "lineIndex": 32,
+            "cueIn": 320.0
+          },
+          {
+            "lineIndex": 47,
+            "cueIn": 363.0
+          },
+          {
+            "lineIndex": 48,
+            "cueIn": 367.0
+          },
+          {
+            "lineIndex": 49,
+            "cueIn": 369.0
+          },
+          {
+            "lineIndex": 50,
+            "cueIn": 371.0
+          },
+          {
+            "lineIndex": 55,
+            "cueIn": 386.0
           }
         ],
         "after-dedication-japanese": [
