@@ -7723,6 +7723,46 @@
           {
             "lineIndex": 0,
             "cueIn": 898.0
+          },
+          {
+            "lineIndex": 1,
+            "cueIn": 906.0
+          },
+          {
+            "lineIndex": 2,
+            "cueIn": 912.0
+          },
+          {
+            "lineIndex": 3,
+            "cueIn": 919.0
+          },
+          {
+            "lineIndex": 4,
+            "cueIn": 925.0
+          },
+          {
+            "lineIndex": 5,
+            "cueIn": 933.0
+          }
+        ],
+        "hymn-perfection-wisdom": [
+          {
+            "lineIndex": 1,
+            "cueIn": 412.0
+          },
+          {
+            "lineIndex": 2,
+            "cueIn": 415.0
+          },
+          {
+            "lineIndex": 3,
+            "cueIn": 419.0
+          }
+        ],
+        "shosaimyo-x3": [
+          {
+            "lineIndex": 0,
+            "cueIn": 474.14
           }
         ]
       }
