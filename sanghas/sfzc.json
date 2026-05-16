@@ -6859,7 +6859,28 @@
         {
           "type": "ceremonial",
           "label": "Opening bows",
-          "cues": []
+          "cues": [
+            {
+              "time": 213,
+              "emoji": "📖",
+              "text": "Heart of Great Perfect Wisdom Sutra"
+            },
+            {
+              "time": 400,
+              "emoji": "📖",
+              "text": "Hymn to the Perfection of Wisdom"
+            },
+            {
+              "time": 466,
+              "emoji": "📖",
+              "text": "Shōsaimyō Kichijō Darani"
+            },
+            {
+              "time": 667,
+              "emoji": "📖",
+              "text": "Sandōkai"
+            }
+          ]
         },
         {
           "type": "doshi",
@@ -6876,7 +6897,8 @@
         },
         {
           "type": "chant",
-          "id": "hymn-perfection-wisdom"
+          "id": "hymn-perfection-wisdom",
+          "noAnnouncement": true
         },
         {
           "type": "doshi",
@@ -6884,7 +6906,8 @@
         },
         {
           "type": "chant",
-          "id": "shosaimyo-x3"
+          "id": "shosaimyo-x3",
+          "noAnnouncement": true
         },
         {
           "type": "doshi",
@@ -6901,7 +6924,8 @@
         },
         {
           "type": "chant",
-          "id": "sandokai-japanese"
+          "id": "sandokai-japanese",
+          "noAnnouncement": true
         },
         {
           "type": "doshi",
