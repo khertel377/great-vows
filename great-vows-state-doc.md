@@ -1,5 +1,5 @@
 # Great Vows — Project State Document
-*Updated after schedule canonization, three-mode system, bell taxonomy, iOS fixes, file hygiene, all three mode arrays formalized, Safari 18+ cross jitter fix, sticky now-row architecture, konsho evening bell loop, ambient audio engine, audio dot, git case-sensitivity fix, audio files committed to repo, ambient audio retry logic fix, audio dot alignment fix, Web Audio overnight bell scheduling, midnight reschedule, ambient audio stop bug fix, firewatch split, tick mark full-height fix, Web Audio wall-clock setTimeout fix, period transition polish, time-travel debug tool, mute covers Web Audio path, iOS keepalive, entry overlay z-index fix, ghost hover suppression, meta row tap-only on mobile, full mute system architecture, bell:/bellEnd:/service: field taxonomy, zazen bells, morning service day-keyed playback, elapsed seek, time-travel audio stop/restart, work-afternoon bellEnd migration (March 2026).*
+*Updated after schedule canonization, three-mode system, bell taxonomy, iOS fixes, file hygiene, all three mode arrays formalized, Safari 18+ cross jitter fix, sticky now-row architecture, konsho evening bell loop, ambient audio engine, audio dot, git case-sensitivity fix, audio files committed to repo, ambient audio retry logic fix, audio dot alignment fix, Web Audio overnight bell scheduling, midnight reschedule, ambient audio stop bug fix, firewatch split, tick mark full-height fix, Web Audio wall-clock setTimeout fix, period transition polish, time-travel debug tool, mute covers Web Audio path, iOS keepalive, entry overlay z-index fix, ghost hover suppression, meta row tap-only on mobile, full mute system architecture, bell:/bellEnd:/service: field taxonomy, zazen bells, morning service day-keyed playback, elapsed seek, time-travel audio stop/restart, work-afternoon bellEnd migration, Wed/Thu morning service authoring, eko-drift bug characterization, per-chant clip-alignment pattern, renderer-gap catalog, alignment-scaling decision, Wed announcement cues authored, announcement rendering engine debugged (May 2026).*
 
 ---
 
@@ -477,13 +477,29 @@ New audio creation sets muted state at birth:
 
 ## index.html — Current State
 
-### What's working ✅
+### What's working
 - Zoom lock on viewport meta
 - WakeLock IIFE with visibility restore
 - iOS overlay: dark `#05060f` background, subtitle shows service name
 - `sessionStorage['gv-audio-unlocked']` shared with schedule.html
 - `_pendingSeekTime` consumed inside gesture context — iOS compliant seek
 - `?service=X&t=Y` parsed after sangha data loads, routes correctly
+- Teleprompter sync via `timestampMap` + `timestampCorrections` overlay
+- Mon/Tue substantially shipped; Wed/Thu alignment data substantially complete
+- **Validated product insight:** the resonant use case right now is "start a service anytime, anywhere, follow along in the flow, nothing else needed." The chant-along experience is leading the schedule app for current user value.
+
+### Renderer gaps — KNOWN, separate workstream (do not fix with timestamp data)
+These are `index.html` rendering issues, NOT alignment problems. They affect ALL services. Do not paper over them with corrupted cueIn values.
+
+1. **Pre-first-chant text leak** — chant text is visible from 0:00 during opening bows / before the first doshi announcement. Needs a gate suppressing chant lines until the service reaches the first chant window.
+2. **Last-line dims too early** — `chantEndTimes` uses a hardcoded `lastCueIn + 3`. Final lines held by the assembly longer than 3s dim while the voice is still going (observed: heart-sutra "Parasamgate" wants to hold to 6:39 not 6:36; "maha prajna paramita" to 11:07; sandokai last line to 14:30). Fix: use next-chant-start as prior-chant-end, or an explicit per-chant/per-line hold/end value. Do NOT fake late cueIns to compensate.
+3. **Doshi announcement timing** — Wednesday now uses explicit `cues` arrays on the `ceremonial` opening-bows item (4 cues at 213/400/466/667s) instead of auto-gen. Auto-gen (`chantStart - 10s`) suppressed via `noAnnouncement: true` on all Wed chant items. Thursday still on auto-gen backlog (`cues: []` empty) — needs a focused listen to place cue times. The 10s heuristic may need to be configurable per item once Thu is authored.
+
+These three pair conceptually with the alignment scaling plan: both are "the pipeline/renderer must respect declared service structure."
+
+**Tween engine fixes (May 2026)** — Two bugs in the announcement cue rendering path, now fixed:
+- **Bug A (pre-init):** `var curItem = allItems[0]` pre-loaded the first cue as the active item before its time. Fixed: `var curItem = null`. Same fix applied to `seekToPct`'s `bestItem`.
+- **Bug B (30s promotion):** A "prefer chant lines over cues" block demoted any ceremony cue to `nextItem` when the last chant line was within 30s — which silently suppressed all four announcement cues (gaps: 6.54s, 3.4s, 8.38s from prior chant end). Fixed: skip promotion for cues with `isAnnouncement: true`. `isAnnouncement` is set on announcement cues in `sfzc.json`; bells/bows/other ceremony cues are unaffected.
 
 ---
 
@@ -572,7 +588,53 @@ Prototyped on `sticky-now-row` branch. Mobile scroll smoothness is the primary m
 
 ## Alignment Pipeline
 
-- `stable_whisper` with `--model large` for dense Japanese chants
+### Core tooling
+- `tools/align_service.py sanghas/sfzc.json <service-id>` — full-service forced alignment, `stable_whisper --model large`. Writes `timestampMap`.
+- `tools/extract_clip.py <audio> <start_s> <end_s> <out.mp3>` — pull an audio window for per-chant alignment.
+- `tools/align.py sanghas/sfzc.json --chant <id> --audio <clip>` — align one chant in isolation against a clip.
+- `tools/merge_clip_alignment.py` — folds clip alignment back into the service `timestampMap` with offset applied.
+- `tools/correct_timestamp.py sanghas/sfzc.json <service-id> <chant-id> <lineIndex> <cueIn>` — single-line manual correction. Writes `timestampCorrections[chantId]`.
+- `tools/apply_corrections.py` — shared module; both alignment scripts call it before writing so manual corrections survive re-alignment.
+- `index.html` `loadService()` applies `timestampCorrections` on top of `timestampMap` at render time. Corrections are the source of truth at playback; `timestampMap` is the raw alignment substrate.
+
+### Service status (SFZC morning services)
+- **Monday** — aligned, manually corrected (9 heart-sutra corrections). Substantially complete.
+- **Tuesday** — aligned, manually corrected (7 maka-hannya corrections). Substantially complete.
+- **Wednesday** — items array corrected, re-aligned, multi-round manual corrections applied (heart-sutra dense section + mantra section, hymn lines 1-3, shosaimyo onset, after-dedication-english 4-line anchor, sandokai-japanese clip-aligned, after-dedication-japanese full 6-line anchor). Announcement cues authored (4 explicit cues on opening-bows ceremonial item). Alignment data complete pending final listen + renderer fixes.
+- **Thursday** — items array corrected, re-aligned, manual corrections applied (heart-sutra dense section, after-dedication-english 4-line anchor, jewel-mirror-samadhi clip-aligned, after-dedication-japanese line 0 anchor). Interior of after-dedication-japanese lines 1-5 NOT yet verified — pending listen-through (likely needs full 6-line anchor like Wednesday).
+- **Fri/Sat/Sun** — no recordings. `service:` map falls back to Monday default.
+
+### Wed/Thu service structure (authored this session)
+Both services were placeholder skeletons (`purification / heart-sutra / maka-hannya / enmei-jukku / great-vows`) that did NOT match the recordings. Rewritten from Kevin's listen-through. Actual structure:
+
+**Wednesday:** Opening bows -> heart-sutra (English) -> hymn-perfection-wisdom -> shosaimyo-x3 -> Eko 1 -> after-dedication-english -> sandokai-**japanese** -> Eko 2 -> after-dedication-japanese -> Closing bows.
+
+**Thursday:** Opening bows -> heart-sutra -> hymn-perfection-wisdom -> enmei-jukku-x7 -> Eko 1 -> after-dedication-english -> jewel-mirror-samadhi (**English**) -> Eko 2 -> after-dedication-japanese -> Closing bows.
+
+Listening notes live in `sanghas/notes/morning-service-wednesday.md` and `sanghas/notes/morning-service-thursday.md` (human prose; NOT pipeline input — see scaling note in On the Horizon).
+
+Confirmed chant ids: `heart-sutra`, `hymn-perfection-wisdom`, `shosaimyo-x3`, `enmei-jukku-x7`, `after-dedication-english`, `after-dedication-japanese`, `harmony-difference-equality` (Sandokai English), `sandokai-japanese`, `jewel-mirror-samadhi`. The Mon/Tue lineage chants (`names-buddhas-ancestors`, `names-women-ancestors`) do NOT appear in Wed/Thu — those have only the short eko dedication responses, not the long lineage recitation. The earlier mention of `shosaimyo-x7` / `enmei-jukku-x10` may be inaccurate for morning services; only x3 and x7 are confirmed in use.
+
+### THE EKO-DRIFT BUG (fully characterized — read before aligning any new service)
+
+**Symptom:** Chant text appears during doshi-spoken eko sections (no audible match); the chant *following* an eko gets pulled minutes early and its interior squashed.
+
+**Root cause:** `stable_whisper` forced alignment assumes the transcript is *continuous and complete* — every second of audio maps to some transcript line in order. A morning service violates this: doshi-spoken eko bodies (60-120s each, ~2 per service), bell sequences, processionals, and announcements are audio with NO corresponding transcript line. ~30-40% of a service recording is unrepresented in the transcript. The aligner doesn't know these gaps exist, so it smears chant text across them — matching e.g. `after-dedication-english`'s 4 lines to phonetic shapes in the doshi's spoken eko, then starting the *next* chant against the assembly's actual dedication response.
+
+**Critical sub-finding:** Anchoring only line 0 of a drifted chant is INSUFFICIENT. Interior lines retain their drifted values, and a drifted interior line can sit *before* the corrected line 0 (observed: Wed `after-dedication-japanese` line 0 = 898 but line 1 = 873.62). The renderer keys onset off the earliest line it sees, so the chant still starts ~24s early. **Drifted short chants need ALL lines anchored, or clip re-alignment.**
+
+**Two fixes used this session:**
+1. **Full-chant manual anchor** — for short chants (`after-dedication-japanese`, 6 lines), get every line by ear and `correct_timestamp.py` all of them.
+2. **Per-chant clip alignment** — for long chants sandwiched between ekos (`sandokai-japanese`, `jewel-mirror-samadhi`). Extract the chant's audio window, align in isolation (aligner physically cannot drift into eko body because the clip excludes it), merge back with offset. Same workflow as `names-buddhas-ancestors-monday`.
+
+**Rule of thumb:** Any chant that follows a doshi-spoken section is a drift candidate. Short (<~60s) -> full manual anchor. Long -> clip alignment. Never trust a single line-0 anchor to fix a drifted chant.
+
+### Heart Sutra / dense-section limitation (still real)
+The "no eyes no ears no nose..." stretch (lineIndexes ~13-25) of `heart-sutra`, and equivalent dense list sections of `maka-hannya`, defeat forced alignment regardless of model size — many short similar-shaped lines in rapid succession. Manual `correct_timestamp.py` per service is the current remedy. Corrections are service-specific (not chant-global) so they do NOT carry between services; each recording's tempo differs.
+
+### Aligner-swap question — RESOLVED for now
+Mon/Tue pain made `stable_whisper`'s viability look doubtful. Wed/Thu disproved that: with a *correct items array*, Thursday's segment failure rate collapsed from 20% (placeholder items) to 2.7%. The 20% was a structural-mismatch artifact, not an aligner limitation. **`stable_whisper --large` + correct items + targeted manual corrections is a viable pipeline.** Do NOT pursue WhisperX/MFA/Aeneas at this time. The remaining pain is the eko-drift architecture (addressable via the scaling plan in On the Horizon), not the model.
+
 - `timestampCorrections` kept separate — human corrections persist across re-runs
 - Unified single-track teleprompter — stable architecture
 
@@ -595,7 +657,26 @@ Prototyped on `sticky-now-row` branch. Mobile scroll smoothness is the primary m
 ## On the Horizon
 
 ### Immediate (next CC session)
-*(Cleared)*
+
+#### Scaling the alignment intake — Option 1 (designated next-batch architecture)
+The eko-drift bug is structural, not incidental. It will recur on every lunch/evening service and is fatal for the long-term goal of user-uploaded audio. Before the next service batch, evolve the pipeline so the `items` array becomes the *alignment plan*, not just a render manifest.
+
+**Decision:** Build the items-array-driven segmented-alignment orchestrator. The `items` array already encodes service structure (ceremonial -> doshi -> chant -> ...). What's missing is a per-non-chant-item rough duration/window from a single structural listen (the listen-through Kevin already does). The orchestrator:
+1. Walks `items`, accumulates rough durations to compute each chant's expected audio window
+2. Auto-extracts that window as a clip (`extract_clip.py`)
+3. Aligns each chant in isolation (`align.py --chant --audio`) — eko bodies physically excluded
+4. Merges back with offset (`merge_clip_alignment.py`)
+
+No new ML. All component tools exist. The new piece is the orchestrator + a schema field. **Schema decision to make deliberately before building:** structural timings graduate from `sanghas/notes/*.md` prose into machine-readable data on non-chant `items` (field shape — absolute rough start? duration? both? — to be designed). `notes/*.md` stays human prose (anomalies, "chanter was fast today"); it is NOT pipeline input.
+
+**Long-term (separate project, not now):** Option 2 — speech/chant/silence segmentation to derive boundaries automatically for arbitrary user uploads where no human structural listen exists. Design Option 1's interfaces so Option 2 can later drop in as the boundary source without a downstream rewrite. Principle: *separate "where do segment boundaries come from" (cheap for curated, expensive for arbitrary) from "how do we align within a segment" (solved — clip alignment works).*
+
+Also queued (smaller):
+- **Verify Mon/Tue `after-dedication-japanese`** for the same eko-drift pattern — both services end with this chant; the original bulk alignment may have the same doshi-body matching issue that went unnoticed.
+- **Renderer fixes** (the three index.html gaps above) — own focused pass with cross-service testing.
+- **Thursday announcement cues** — `cues: []` still empty on the opening-bows ceremonial item. Needs a focused listen to place 4 announcement times (heart-sutra, hymn, enmei-jukku, jewel-mirror-samadhi).
+- **Opening/closing bow ceremonial cues** for Wed/Thu — bow timing cues (densho, kinhin, prostrations) not yet authored. Separate focused listen, different concentration than sync drift.
+
 
 **4:30 wake-up bell overnight test:** Wall-clock setTimeout architecture is in place. First real overnight test was this session. If 4:30 fires cleanly the issue is closed. If not, next suspect is iOS killing the tab under memory pressure — which requires Service Worker + Web Push.
 
@@ -743,3 +824,4 @@ On cancel (tap button while active): same audio teardown as Go, clears `_debugOf
 28. `bellEnd`-only periods are fully supported throughout the stack — scheduling, dev tool dot, pointer cursor, and tap-to-play. No `bell:` field required. `data-bell-end` stores the resolved src string (same pattern as `data-bell` and `data-service`). `personal` is the canonical example: han fires at −847s, no bell at period open.
 29. Any period with both `bell:` and `bellEnd:` automatically gets cycle behavior in the dev tool (bell → bellEnd → off). No per-period handling required — the `cycleState` Map and `hasBoth` check in `wireAudioDevTool()` handle it generically.
 30. Kinhin bisects the zazen period. Densho fires at the exact midpoint (`periodStart + floor(duration / 2)`); kinhin clapper at midpoint + 5min; floor bells at midpoint + 5min + 990ms + 30s settle. Fires only for zazen periods > 42 min. Midpoint math means the sequence self-adjusts to any zazen duration — no hardcoded clock times.
+31. Any element that must be conditionally visible on load must start hidden in HTML/CSS — never rely on JS to hide it after first paint. The browser renders static HTML before scripts execute; adding a hide class in JS produces a visible flash. Pattern: add `class="hidden"` (or `opacity: 0` in CSS) to the element in markup, then have JS remove the class after logic resolves. Use `requestAnimationFrame(() => el.classList.remove('hidden'))` before fade-in to ensure the browser commits one paint at `opacity: 0` first — otherwise the transition skips and the element pops in. Applied to `#entry-overlay` (March 2026).
