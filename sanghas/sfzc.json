@@ -6863,22 +6863,26 @@
             {
               "time": 213,
               "emoji": "📖",
-              "text": "Heart of Great Perfect Wisdom Sutra"
+              "text": "Heart of Great Perfect Wisdom Sutra",
+              "isAnnouncement": true
             },
             {
               "time": 400,
               "emoji": "📖",
-              "text": "Hymn to the Perfection of Wisdom"
+              "text": "Hymn to the Perfection of Wisdom",
+              "isAnnouncement": true
             },
             {
               "time": 466,
               "emoji": "📖",
-              "text": "Shōsaimyō Kichijō Darani"
+              "text": "Shōsaimyō Kichijō Darani",
+              "isAnnouncement": true
             },
             {
               "time": 667,
               "emoji": "📖",
-              "text": "Sandōkai"
+              "text": "Sandōkai",
+              "isAnnouncement": true
             }
           ]
         },

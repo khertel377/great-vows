@@ -1110,7 +1110,7 @@ function startTween() {
 
     if (!listeningMode) {
       var allItems = getAllTimedItems();
-      var curItem = allItems[0], nextItem = null;
+      var curItem = null, nextItem = null;
       for (var i = 0; i < allItems.length; i++) {
         if (t >= allItems[i].time) {
           var candidate = allItems[i];
@@ -1123,15 +1123,20 @@ function startTween() {
       }
 
       // Prefer chant lines over ceremony cues: if the active item is a ceremony cue,
-      // scan back for a recent chant line (within 30s) and promote it to active
+      // scan back for a recent chant line (within 30s) and promote it to active.
+      // Skip promotion for explicitly authored announcement cues (isAnnouncement:true).
       if (curItem && typeof curItem.idx === 'string') {
-        for (var bi = allItems.length - 1; bi >= 0; bi--) {
-          if (typeof allItems[bi].idx === 'number' && allItems[bi].time <= t) {
-            if (t - allItems[bi].time <= 30) {
-              nextItem = curItem;
-              curItem = allItems[bi];
+        var _bci = parseInt(curItem.idx.slice(2));
+        var _bcue = currentChant.ceremonyCues[_bci];
+        if (!_bcue || !_bcue.isAnnouncement) {
+          for (var bi = allItems.length - 1; bi >= 0; bi--) {
+            if (typeof allItems[bi].idx === 'number' && allItems[bi].time <= t) {
+              if (t - allItems[bi].time <= 30) {
+                nextItem = curItem;
+                curItem = allItems[bi];
+              }
+              break;
             }
-            break;
           }
         }
       }
@@ -1202,7 +1207,7 @@ function seekToPct(pct) {
   if (tweenRaf) { cancelAnimationFrame(tweenRaf); tweenRaf = null; }
   if (!listeningMode) {
     var allItems = getAllTimedItems();
-    var bestItem = allItems[0] || null;
+    var bestItem = null;
     for (var i = 0; i < allItems.length; i++) {
       if (newTime >= allItems[i].time) {
         var candidate = allItems[i];
@@ -1212,14 +1217,18 @@ function seekToPct(pct) {
         }
       }
     }
-    // Prefer chant lines over ceremony cues
+    // Prefer chant lines over ceremony cues (skip for explicit announcement cues)
     if (bestItem && typeof bestItem.idx === 'string') {
-      for (var bi = allItems.length - 1; bi >= 0; bi--) {
-        if (typeof allItems[bi].idx === 'number' && allItems[bi].time <= newTime) {
-          if (newTime - allItems[bi].time <= 30) {
-            bestItem = allItems[bi];
+      var _sci = parseInt(bestItem.idx.slice(2));
+      var _scue = currentChant.ceremonyCues[_sci];
+      if (!_scue || !_scue.isAnnouncement) {
+        for (var bi = allItems.length - 1; bi >= 0; bi--) {
+          if (typeof allItems[bi].idx === 'number' && allItems[bi].time <= newTime) {
+            if (newTime - allItems[bi].time <= 30) {
+              bestItem = allItems[bi];
+            }
+            break;
           }
-          break;
         }
       }
     }
