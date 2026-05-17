@@ -3924,232 +3924,302 @@
       "audio": null,
       "lines": [
         {
-          "text": "Kanzeon"
+          "text": "Kanzeon",
+          "cueIn": 11.72
         },
         {
-          "text": "namu butsu"
+          "text": "namu butsu",
+          "cueIn": 12.92
         },
         {
-          "text": "yo butsu u in"
+          "text": "yo butsu u in",
+          "cueIn": 15.24
         },
         {
-          "text": "yo butsu u en"
+          "text": "yo butsu u en",
+          "cueIn": 17.38
         },
         {
-          "text": "buppo so en"
+          "text": "buppo so en",
+          "cueIn": 19.78
         },
         {
-          "text": "jo raku ga jo"
+          "text": "jo raku ga jo",
+          "cueIn": 21.94
         },
         {
-          "text": "cho nen kanzeon"
+          "text": "cho nen kanzeon",
+          "cueIn": 24.24
         },
         {
-          "text": "bo nen kanzeon"
+          "text": "bo nen kanzeon",
+          "cueIn": 27.0
         },
         {
-          "text": "nen nen ju shin ki"
+          "text": "nen nen ju shin ki",
+          "cueIn": 27.8
         },
         {
-          "text": "nen nen fu ri shin"
-        },
-        {
-          "text": null
-        },
-        {
-          "text": "Kanzeon"
-        },
-        {
-          "text": "namu butsu"
-        },
-        {
-          "text": "yo butsu u in"
-        },
-        {
-          "text": "yo butsu u en"
-        },
-        {
-          "text": "buppo so en"
-        },
-        {
-          "text": "jo raku ga jo"
-        },
-        {
-          "text": "cho nen kanzeon"
-        },
-        {
-          "text": "bo nen kanzeon"
-        },
-        {
-          "text": "nen nen ju shin ki"
-        },
-        {
-          "text": "nen nen fu ri shin"
+          "text": "nen nen fu ri shin",
+          "cueIn": 29.66
         },
         {
           "text": null
         },
         {
-          "text": "Kanzeon"
+          "text": "Kanzeon",
+          "cueIn": 35.04
         },
         {
-          "text": "namu butsu"
+          "text": "namu butsu",
+          "cueIn": 36.58
         },
         {
-          "text": "yo butsu u in"
+          "text": "yo butsu u in",
+          "cueIn": 38.36
         },
         {
-          "text": "yo butsu u en"
+          "text": "yo butsu u en",
+          "cueIn": 39.8
         },
         {
-          "text": "buppo so en"
+          "text": "buppo so en",
+          "cueIn": 42.16
         },
         {
-          "text": "jo raku ga jo"
+          "text": "jo raku ga jo",
+          "cueIn": 44.34
         },
         {
-          "text": "cho nen kanzeon"
+          "text": "cho nen kanzeon",
+          "cueIn": 46.36
         },
         {
-          "text": "bo nen kanzeon"
+          "text": "bo nen kanzeon",
+          "cueIn": 49.02
         },
         {
-          "text": "nen nen ju shin ki"
+          "text": "nen nen ju shin ki",
+          "cueIn": 49.82
         },
         {
-          "text": "nen nen fu ri shin"
-        },
-        {
-          "text": null
-        },
-        {
-          "text": "Kanzeon"
-        },
-        {
-          "text": "namu butsu"
-        },
-        {
-          "text": "yo butsu u in"
-        },
-        {
-          "text": "yo butsu u en"
-        },
-        {
-          "text": "buppo so en"
-        },
-        {
-          "text": "jo raku ga jo"
-        },
-        {
-          "text": "cho nen kanzeon"
-        },
-        {
-          "text": "bo nen kanzeon"
-        },
-        {
-          "text": "nen nen ju shin ki"
-        },
-        {
-          "text": "nen nen fu ri shin"
+          "text": "nen nen fu ri shin",
+          "cueIn": 51.74
         },
         {
           "text": null
         },
         {
-          "text": "Kanzeon"
+          "text": "Kanzeon",
+          "cueIn": 56.62
         },
         {
-          "text": "namu butsu"
+          "text": "namu butsu",
+          "cueIn": 58.22
         },
         {
-          "text": "yo butsu u in"
+          "text": "yo butsu u in",
+          "cueIn": 59.86
         },
         {
-          "text": "yo butsu u en"
+          "text": "yo butsu u en",
+          "cueIn": 61.64
         },
         {
-          "text": "buppo so en"
+          "text": "buppo so en",
+          "cueIn": 63.7
         },
         {
-          "text": "jo raku ga jo"
+          "text": "jo raku ga jo",
+          "cueIn": 65.7
         },
         {
-          "text": "cho nen kanzeon"
+          "text": "cho nen kanzeon",
+          "cueIn": 67.76
         },
         {
-          "text": "bo nen kanzeon"
+          "text": "bo nen kanzeon",
+          "cueIn": 70.26
         },
         {
-          "text": "nen nen ju shin ki"
+          "text": "nen nen ju shin ki",
+          "cueIn": 71.06
         },
         {
-          "text": "nen nen fu ri shin"
-        },
-        {
-          "text": null
-        },
-        {
-          "text": "Kanzeon"
-        },
-        {
-          "text": "namu butsu"
-        },
-        {
-          "text": "yo butsu u in"
-        },
-        {
-          "text": "yo butsu u en"
-        },
-        {
-          "text": "buppo so en"
-        },
-        {
-          "text": "jo raku ga jo"
-        },
-        {
-          "text": "cho nen kanzeon"
-        },
-        {
-          "text": "bo nen kanzeon"
-        },
-        {
-          "text": "nen nen ju shin ki"
-        },
-        {
-          "text": "nen nen fu ri shin"
+          "text": "nen nen fu ri shin",
+          "cueIn": 72.76
         },
         {
           "text": null
         },
         {
-          "text": "Kanzeon"
+          "text": "Kanzeon",
+          "cueIn": 77.68
         },
         {
-          "text": "namu butsu"
+          "text": "namu butsu",
+          "cueIn": 79.24
         },
         {
-          "text": "yo butsu u in"
+          "text": "yo butsu u in",
+          "cueIn": 80.86
         },
         {
-          "text": "yo butsu u en"
+          "text": "yo butsu u en",
+          "cueIn": 82.56
         },
         {
-          "text": "buppo so en"
+          "text": "buppo so en",
+          "cueIn": 84.52
         },
         {
-          "text": "jo raku ga jo"
+          "text": "jo raku ga jo",
+          "cueIn": 86.56
         },
         {
-          "text": "cho nen kanzeon"
+          "text": "cho nen kanzeon",
+          "cueIn": 88.42
         },
         {
-          "text": "bo nen kanzeon"
+          "text": "bo nen kanzeon",
+          "cueIn": 90.88
         },
         {
-          "text": "nen nen ju shin ki"
+          "text": "nen nen ju shin ki",
+          "cueIn": 91.68
         },
         {
-          "text": "nen nen fu ri shin"
+          "text": "nen nen fu ri shin",
+          "cueIn": 93.4
+        },
+        {
+          "text": null
+        },
+        {
+          "text": "Kanzeon",
+          "cueIn": 98.04
+        },
+        {
+          "text": "namu butsu",
+          "cueIn": 99.56
+        },
+        {
+          "text": "yo butsu u in",
+          "cueIn": 101.0
+        },
+        {
+          "text": "yo butsu u en",
+          "cueIn": 102.7
+        },
+        {
+          "text": "buppo so en",
+          "cueIn": 104.48
+        },
+        {
+          "text": "jo raku ga jo",
+          "cueIn": 106.28
+        },
+        {
+          "text": "cho nen kanzeon",
+          "cueIn": 108.18
+        },
+        {
+          "text": "bo nen kanzeon",
+          "cueIn": 110.46
+        },
+        {
+          "text": "nen nen ju shin ki",
+          "cueIn": 111.26
+        },
+        {
+          "text": "nen nen fu ri shin",
+          "cueIn": 112.74
+        },
+        {
+          "text": null
+        },
+        {
+          "text": "Kanzeon",
+          "cueIn": 117.08
+        },
+        {
+          "text": "namu butsu",
+          "cueIn": 118.34
+        },
+        {
+          "text": "yo butsu u in",
+          "cueIn": 119.9
+        },
+        {
+          "text": "yo butsu u en",
+          "cueIn": 121.44
+        },
+        {
+          "text": "buppo so en",
+          "cueIn": 123.16
+        },
+        {
+          "text": "jo raku ga jo",
+          "cueIn": 124.92
+        },
+        {
+          "text": "cho nen kanzeon",
+          "cueIn": 126.64
+        },
+        {
+          "text": "bo nen kanzeon",
+          "cueIn": 128.8
+        },
+        {
+          "text": "nen nen ju shin ki",
+          "cueIn": 129.6
+        },
+        {
+          "text": "nen nen fu ri shin",
+          "cueIn": 130.98
+        },
+        {
+          "text": null
+        },
+        {
+          "text": "Kanzeon",
+          "cueIn": 134.98
+        },
+        {
+          "text": "namu butsu",
+          "cueIn": 136.18
+        },
+        {
+          "text": "yo butsu u in",
+          "cueIn": 137.54
+        },
+        {
+          "text": "yo butsu u en",
+          "cueIn": 139.02
+        },
+        {
+          "text": "buppo so en",
+          "cueIn": 140.68
+        },
+        {
+          "text": "jo raku ga jo",
+          "cueIn": 142.3
+        },
+        {
+          "text": "cho nen kanzeon",
+          "cueIn": 143.86
+        },
+        {
+          "text": "bo nen kanzeon",
+          "cueIn": 145.78
+        },
+        {
+          "text": "nen nen ju shin ki",
+          "cueIn": 146.58
+        },
+        {
+          "text": "nen nen fu ri shin",
+          "cueIn": 147.68
         }
       ]
     },
@@ -7808,7 +7878,32 @@
         {
           "type": "ceremonial",
           "label": "Opening bows",
-          "cues": []
+          "cues": [
+            {
+              "time": 253,
+              "emoji": "📖",
+              "text": "Heart of Great Perfect Wisdom Sutra",
+              "isAnnouncement": true
+            },
+            {
+              "time": 433,
+              "emoji": "📖",
+              "text": "Hymn to the Perfection of Wisdom",
+              "isAnnouncement": true
+            },
+            {
+              "time": 497,
+              "emoji": "📖",
+              "text": "Enmei Jukku Kannon Gyō",
+              "isAnnouncement": true
+            },
+            {
+              "time": 757,
+              "emoji": "📖",
+              "text": "Song of the Jewel Mirror Samadhi",
+              "isAnnouncement": true
+            }
+          ]
         },
         {
           "type": "doshi",
@@ -7825,7 +7920,8 @@
         },
         {
           "type": "chant",
-          "id": "hymn-perfection-wisdom"
+          "id": "hymn-perfection-wisdom",
+          "noAnnouncement": true
         },
         {
           "type": "doshi",
@@ -7833,7 +7929,8 @@
         },
         {
           "type": "chant",
-          "id": "enmei-jukku-x7"
+          "id": "enmei-jukku-x7",
+          "noAnnouncement": true
         },
         {
           "type": "doshi",
@@ -7850,7 +7947,8 @@
         },
         {
           "type": "chant",
-          "id": "jewel-mirror-samadhi"
+          "id": "jewel-mirror-samadhi",
+          "noAnnouncement": true
         },
         {
           "type": "doshi",
@@ -7986,7 +8084,7 @@
             },
             {
               "lineIndex": 32,
-              "cueIn": 355.28
+              "cueIn": 358.0
             },
             {
               "lineIndex": 34,
@@ -8038,15 +8136,15 @@
             },
             {
               "lineIndex": 48,
-              "cueIn": 399.78
+              "cueIn": 402.0
             },
             {
               "lineIndex": 49,
-              "cueIn": 402.8
+              "cueIn": 404.0
             },
             {
               "lineIndex": 50,
-              "cueIn": 405.04
+              "cueIn": 407.0
             },
             {
               "lineIndex": 51,
@@ -8058,19 +8156,19 @@
             },
             {
               "lineIndex": 54,
-              "cueIn": 414.94
+              "cueIn": 414.0
             },
             {
               "lineIndex": 55,
-              "cueIn": 415.96
+              "cueIn": 421.0
             },
             {
               "lineIndex": 57,
-              "cueIn": 423.76
+              "cueIn": 423.0
             },
             {
               "lineIndex": 58,
-              "cueIn": 427.5
+              "cueIn": 428.0
             }
           ]
         },
@@ -8150,19 +8248,19 @@
         },
         {
           "chantId": "enmei-jukku-x7",
-          "startTime": 506.49,
+          "startTime": 506.72,
           "lines": [
             {
               "lineIndex": 0,
-              "cueIn": 506.49
+              "cueIn": 506.72
             },
             {
               "lineIndex": 1,
-              "cueIn": 508.24
+              "cueIn": 507.92
             },
             {
               "lineIndex": 2,
-              "cueIn": 510.32
+              "cueIn": 510.24
             },
             {
               "lineIndex": 3,
@@ -8170,7 +8268,7 @@
             },
             {
               "lineIndex": 4,
-              "cueIn": 514.74
+              "cueIn": 514.78
             },
             {
               "lineIndex": 5,
@@ -8182,11 +8280,11 @@
             },
             {
               "lineIndex": 7,
-              "cueIn": 521.96
+              "cueIn": 522.0
             },
             {
               "lineIndex": 8,
-              "cueIn": 522.48
+              "cueIn": 522.8
             },
             {
               "lineIndex": 9,
@@ -8194,27 +8292,27 @@
             },
             {
               "lineIndex": 11,
-              "cueIn": 530.06
+              "cueIn": 530.04
             },
             {
               "lineIndex": 12,
-              "cueIn": 531.64
+              "cueIn": 531.58
             },
             {
               "lineIndex": 13,
-              "cueIn": 533.38
+              "cueIn": 533.36
             },
             {
               "lineIndex": 14,
-              "cueIn": 535.24
+              "cueIn": 534.8
             },
             {
               "lineIndex": 15,
-              "cueIn": 537.42
+              "cueIn": 537.16
             },
             {
               "lineIndex": 16,
-              "cueIn": 539.36
+              "cueIn": 539.34
             },
             {
               "lineIndex": 17,
@@ -8222,43 +8320,43 @@
             },
             {
               "lineIndex": 18,
-              "cueIn": 543.96
+              "cueIn": 544.02
             },
             {
               "lineIndex": 19,
-              "cueIn": 544.44
+              "cueIn": 544.82
             },
             {
               "lineIndex": 20,
-              "cueIn": 546.48
+              "cueIn": 546.74
             },
             {
               "lineIndex": 22,
-              "cueIn": 551.6
+              "cueIn": 551.62
             },
             {
               "lineIndex": 23,
-              "cueIn": 553.18
+              "cueIn": 553.22
             },
             {
               "lineIndex": 24,
-              "cueIn": 554.8
+              "cueIn": 554.86
             },
             {
               "lineIndex": 25,
-              "cueIn": 556.58
+              "cueIn": 556.64
             },
             {
               "lineIndex": 26,
-              "cueIn": 556.76
+              "cueIn": 558.7
             },
             {
               "lineIndex": 27,
-              "cueIn": 560.68
+              "cueIn": 560.7
             },
             {
               "lineIndex": 28,
-              "cueIn": 562.7
+              "cueIn": 562.76
             },
             {
               "lineIndex": 29,
@@ -8266,7 +8364,7 @@
             },
             {
               "lineIndex": 30,
-              "cueIn": 565.68
+              "cueIn": 566.06
             },
             {
               "lineIndex": 31,
@@ -8274,15 +8372,15 @@
             },
             {
               "lineIndex": 33,
-              "cueIn": 572.7
+              "cueIn": 572.68
             },
             {
               "lineIndex": 34,
-              "cueIn": 574.18
+              "cueIn": 574.24
             },
             {
               "lineIndex": 35,
-              "cueIn": 575.8
+              "cueIn": 575.86
             },
             {
               "lineIndex": 36,
@@ -8290,27 +8388,27 @@
             },
             {
               "lineIndex": 37,
-              "cueIn": 579.48
+              "cueIn": 579.52
             },
             {
               "lineIndex": 38,
-              "cueIn": 581.52
+              "cueIn": 581.56
             },
             {
               "lineIndex": 39,
-              "cueIn": 583.5
+              "cueIn": 583.42
             },
             {
               "lineIndex": 40,
-              "cueIn": 585.84
+              "cueIn": 585.88
             },
             {
               "lineIndex": 41,
-              "cueIn": 586.36
+              "cueIn": 586.68
             },
             {
               "lineIndex": 42,
-              "cueIn": 588.44
+              "cueIn": 588.4
             },
             {
               "lineIndex": 44,
@@ -8318,15 +8416,15 @@
             },
             {
               "lineIndex": 45,
-              "cueIn": 594.5
+              "cueIn": 594.56
             },
             {
               "lineIndex": 46,
-              "cueIn": 596.08
+              "cueIn": 596.0
             },
             {
               "lineIndex": 47,
-              "cueIn": 597.64
+              "cueIn": 597.7
             },
             {
               "lineIndex": 48,
@@ -8334,31 +8432,31 @@
             },
             {
               "lineIndex": 49,
-              "cueIn": 601.3
+              "cueIn": 601.28
             },
             {
               "lineIndex": 50,
-              "cueIn": 603.16
+              "cueIn": 603.18
             },
             {
               "lineIndex": 51,
-              "cueIn": 605.42
+              "cueIn": 605.46
             },
             {
               "lineIndex": 52,
-              "cueIn": 605.84
+              "cueIn": 606.26
             },
             {
               "lineIndex": 53,
-              "cueIn": 607.72
+              "cueIn": 607.74
             },
             {
               "lineIndex": 55,
-              "cueIn": 612.06
+              "cueIn": 612.08
             },
             {
               "lineIndex": 56,
-              "cueIn": 613.4
+              "cueIn": 613.34
             },
             {
               "lineIndex": 57,
@@ -8366,31 +8464,31 @@
             },
             {
               "lineIndex": 58,
-              "cueIn": 616.48
+              "cueIn": 616.44
             },
             {
               "lineIndex": 59,
-              "cueIn": 618.28
+              "cueIn": 618.16
             },
             {
               "lineIndex": 60,
-              "cueIn": 619.94
+              "cueIn": 619.92
             },
             {
               "lineIndex": 61,
-              "cueIn": 621.62
+              "cueIn": 621.64
             },
             {
               "lineIndex": 62,
-              "cueIn": 623.68
+              "cueIn": 623.8
             },
             {
               "lineIndex": 63,
-              "cueIn": 624.18
+              "cueIn": 624.6
             },
             {
               "lineIndex": 64,
-              "cueIn": 625.88
+              "cueIn": 625.98
             },
             {
               "lineIndex": 66,
@@ -8398,23 +8496,23 @@
             },
             {
               "lineIndex": 67,
-              "cueIn": 631.16
+              "cueIn": 631.18
             },
             {
               "lineIndex": 68,
-              "cueIn": 632.48
+              "cueIn": 632.54
             },
             {
               "lineIndex": 69,
-              "cueIn": 634.04
+              "cueIn": 634.02
             },
             {
               "lineIndex": 70,
-              "cueIn": 635.66
+              "cueIn": 635.68
             },
             {
               "lineIndex": 71,
-              "cueIn": 637.32
+              "cueIn": 637.3
             },
             {
               "lineIndex": 72,
@@ -8422,11 +8520,11 @@
             },
             {
               "lineIndex": 73,
-              "cueIn": 640.72
+              "cueIn": 640.78
             },
             {
               "lineIndex": 74,
-              "cueIn": 641.16
+              "cueIn": 641.58
             },
             {
               "lineIndex": 75,
@@ -8856,23 +8954,23 @@
             },
             {
               "lineIndex": 1,
-              "cueIn": 997.46
+              "cueIn": 1029.0
             },
             {
               "lineIndex": 2,
-              "cueIn": 998.44
+              "cueIn": 1035.0
             },
             {
               "lineIndex": 3,
-              "cueIn": 1041.88
+              "cueIn": 1041.0
             },
             {
               "lineIndex": 4,
-              "cueIn": 1046.94
+              "cueIn": 1047.0
             },
             {
               "lineIndex": 5,
-              "cueIn": 1051.8
+              "cueIn": 1054.0
             }
           ]
         }
@@ -8950,14 +9048,69 @@
           {
             "lineIndex": 25,
             "cueIn": 341.0
+          },
+          {
+            "lineIndex": 32,
+            "cueIn": 358.0
+          },
+          {
+            "lineIndex": 48,
+            "cueIn": 402.0
+          },
+          {
+            "lineIndex": 49,
+            "cueIn": 404.0
+          },
+          {
+            "lineIndex": 50,
+            "cueIn": 407.0
+          },
+          {
+            "lineIndex": 54,
+            "cueIn": 414.0
+          },
+          {
+            "lineIndex": 55,
+            "cueIn": 421.0
+          },
+          {
+            "lineIndex": 57,
+            "cueIn": 423.0
+          },
+          {
+            "lineIndex": 58,
+            "cueIn": 428.0
           }
         ],
         "after-dedication-japanese": [
           {
             "lineIndex": 0,
             "cueIn": 1023.0
+          },
+          {
+            "lineIndex": 1,
+            "cueIn": 1029.0
+          },
+          {
+            "lineIndex": 2,
+            "cueIn": 1035.0
+          },
+          {
+            "lineIndex": 3,
+            "cueIn": 1041.0
+          },
+          {
+            "lineIndex": 4,
+            "cueIn": 1047.0
+          },
+          {
+            "lineIndex": 5,
+            "cueIn": 1054.0
           }
         ]
+      },
+      "chantEndOverrides": {
+        "after-dedication-japanese": 1065
       }
     },
     {
