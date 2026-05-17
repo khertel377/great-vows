@@ -538,11 +538,24 @@ fetch('chantbook.json')
       // Normalize serviceParam: strip trailing weekday suffix (e.g. evening-service-tuesday → evening-service)
       // so day-invariant services are found by their bare id.
       var _serviceParamNorm = serviceParam.replace(/-(sunday|monday|tuesday|wednesday|thursday|friday|saturday|sun|mon|tue|wed|thu|fri|sat)$/, '');
+
+      // ── v3 morning-service weekday cycling — MIRROR of schedule.html
+      //    `morning-service` service: audio-file keys. Canonical statement
+      //    lives in great-vows-state-doc.md v3 sync register. Fri borrows
+      //    Mon, Sat→Tue, Sun→Wed. If the cycle changes, update BOTH sites
+      //    and the state-doc sync register together.
+      var MORNING_CYCLE = {
+        'morning-service-friday':   'morning-service-monday',
+        'morning-service-saturday': 'morning-service-tuesday',
+        'morning-service-sunday':   'morning-service-wednesday'
+      };
+      var _searchId = MORNING_CYCLE[serviceParam] || serviceParam;
+
       var targetSanghaId = null, targetSvc = null;
       Object.keys(SANGHAS).forEach(function(id) {
         if (targetSvc) return;
         var svc = (SANGHAS[id].services || []).find(function(s) {
-          return s.id === serviceParam || s.id === _serviceParamNorm;
+          return s.id === serviceParam || s.id === _serviceParamNorm || s.id === _searchId;
         });
         if (svc) { targetSanghaId = id; targetSvc = svc; }
       });

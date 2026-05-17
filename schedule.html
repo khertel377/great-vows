@@ -592,6 +592,8 @@ const SCHEDULE = [
   { id: 'zazen-morning',  time: [5,0],   end: [6,30],  name: 'Zazen',                 type: 'zazen', hasService: false, bell: 'audio/sfzc/3_Floor_Bells.mp3', bellEnd: { src: 'audio/sfzc/morning_zazen_end.mp3', offsetMs: -211000 } },
   { id: 'morning-service',time: [6,30],  end: [7,0],   name: 'Morning Service',       type: 'chant', hasService: true,
     service: { mon: 'audio/sfzc/MorningService_Monday.mp4', tue: 'audio/sfzc/MorningService_Tuesday.mp4', wed: 'audio/sfzc/MorningService_Wednesday.mp4', thu: 'audio/sfzc/MorningService_Thursday.mp4',
+               // Fri=Mon, Sat=Tue, Sun=Wed — MIRROR of index.html MORNING_CYCLE remap.
+               // Canonical: great-vows-state-doc.md v3 sync register. Change both sites together.
                fri: 'audio/sfzc/MorningService_Monday.mp4', sat: 'audio/sfzc/MorningService_Tuesday.mp4', sun: 'audio/sfzc/MorningService_Wednesday.mp4',
                default: 'audio/sfzc/MorningService_Monday.mp4' } },
   { id: 'soji',           time: [7,0],   end: [7,20],  name: 'Soji',                  type: 'work',  hasService: false },

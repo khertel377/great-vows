@@ -744,6 +744,15 @@ Deleted ~280 lines: `positionConnector()`, the rAF loop, `alignSidebar()`,
 ```
 Six grid children: `.clock-display`, `.clock-meta`, `.sidebar-next`, `.enter-btn`, `.period-name`, `.period-row-meta`.
 
+### Morning-service weekday cycle — keep in sync
+The v3 cycle (Fri=Mon, Sat=Tue, Sun=Wed) is expressed in **two places** by
+necessity (no shared module in this stack):
+1. `schedule.html` — `morning-service` `service:` audio-file keys (fri/sat/sun keys)
+2. `index.html` — `MORNING_CYCLE` serviceId remap in the `?service=` deeplink handler
+
+If the cycle ever changes, update **both sites and this register** together.
+Canonical session record: Session Addendum v3.
+
 ### Mobile column width — keep in sync
 Four values must always match at every breakpoint: `.period-left { width }`,
 `.period-row.now { grid-template-columns }`, `.period-row.now::before { left }`, and `.period-row.now::after { left }`.
