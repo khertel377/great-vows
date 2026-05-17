@@ -510,7 +510,7 @@ fetch('chantbook.json')
       // Find the service across all loaded sanghas.
       // Normalize serviceParam: strip trailing weekday suffix (e.g. evening-service-tuesday → evening-service)
       // so day-invariant services are found by their bare id.
-      var _serviceParamNorm = serviceParam.replace(/-(sun|mon|tue|wed|thu|fri|sat)$/, '');
+      var _serviceParamNorm = serviceParam.replace(/-(sunday|monday|tuesday|wednesday|thursday|friday|saturday|sun|mon|tue|wed|thu|fri|sat)$/, '');
       var targetSanghaId = null, targetSvc = null;
       Object.keys(SANGHAS).forEach(function(id) {
         if (targetSvc) return;
