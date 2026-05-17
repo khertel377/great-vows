@@ -9380,6 +9380,12 @@
             "lineIndex": 3,
             "cueIn": 446
           }
+        ],
+        "dai-hi-shin-darani": [
+          {
+            "lineIndex": 14,
+            "cueIn": 205.0
+          }
         ]
       },
       "chantEndOverrides": {
