@@ -572,7 +572,8 @@ const SCHEDULE = [
   { id: 'zazen-morning',  time: [5,0],   end: [6,30],  name: 'Zazen',                 type: 'zazen', hasService: false, bell: 'audio/sfzc/3_Floor_Bells.mp3', bellEnd: { src: 'audio/sfzc/morning_zazen_end.mp3', offsetMs: -211000 } },
   { id: 'morning-service',time: [6,30],  end: [7,0],   name: 'Morning Service',       type: 'chant', hasService: true,
     service: { mon: 'audio/sfzc/MorningService_Monday.mp4', tue: 'audio/sfzc/MorningService_Tuesday.mp4', wed: 'audio/sfzc/MorningService_Wednesday.mp4', thu: 'audio/sfzc/MorningService_Thursday.mp4',
-               default: 'audio/sfzc/MorningService_Thursday.mp4' } },
+               fri: 'audio/sfzc/MorningService_Monday.mp4', sat: 'audio/sfzc/MorningService_Tuesday.mp4', sun: 'audio/sfzc/MorningService_Wednesday.mp4',
+               default: 'audio/sfzc/MorningService_Monday.mp4' } },
   { id: 'soji',           time: [7,0],   end: [7,20],  name: 'Soji',                  type: 'work',  hasService: false },
   { id: 'breakfast',      time: [7,20],  end: [8,10],  name: 'Breakfast',             type: 'meal',  hasService: false, bell: 'audio/sfzc/eiheiji-breakfast-instruments.mp3' },
   { id: 'study-hall',     time: [8,10],  end: [9,10],  name: 'Study Hall',            type: 'study', hasService: false, bell: 'audio/sfzc/study-bell.mp3', bellEnd: 'audio/sfzc/study-bell.mp3' },
@@ -734,7 +735,7 @@ function updateSidebar(state, now) {
     nextValueEl.textContent = formatNextValue(state.period, now);
     if (state.period.hasService && (typeof AudioEngine === 'undefined' || AudioEngine.isServiceAvailable(state.period.serviceId))) {
       enterBtn.classList.remove('hidden');
-      enterBtn.href = 'index.html?service=' + state.period.serviceId;
+      enterBtn.href = 'index.html?service=' + state.period.serviceId + '&day=' + getDayKey();
     } else {
       enterBtn.classList.add('hidden');
     }
@@ -2052,8 +2053,13 @@ const AudioEngine = (() => {
   }
 
   const SERVICE_AUDIO = {
-    'morning-service-monday':  BASE + 'MorningService_Monday.mp4',
-    'morning-service-tuesday': BASE + 'MorningService_Tuesday.mp4',
+    'morning-service-monday':    BASE + 'MorningService_Monday.mp4',
+    'morning-service-tuesday':   BASE + 'MorningService_Tuesday.mp4',
+    'morning-service-wednesday': BASE + 'MorningService_Wednesday.mp4',
+    'morning-service-thursday':  BASE + 'MorningService_Thursday.mp4',
+    'morning-service-friday':    BASE + 'MorningService_Monday.mp4',
+    'morning-service-saturday':  BASE + 'MorningService_Tuesday.mp4',
+    'morning-service-sunday':    BASE + 'MorningService_Wednesday.mp4',
   };
 
   const HAN_LEAD_MINUTES = 15;

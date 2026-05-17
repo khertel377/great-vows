@@ -468,10 +468,11 @@ fetch('chantbook.json')
     buildSwitcher();
     switchSangha(MANIFEST.sanghas[0].id);
 
-    // ── ?service=X&t=Y handoff from schedule.html ──
+    // ── ?service=X&t=Y&day=Z handoff from schedule.html ──
     var params = new URLSearchParams(window.location.search);
     var serviceParam = params.get('service');
     var tParam = parseFloat(params.get('t') || '0') || 0;
+    var dayParam = params.get('day') || null;
 
     if (serviceParam) {
       // Find the service across all loaded sanghas
@@ -488,13 +489,17 @@ fetch('chantbook.json')
         var isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
         var alreadyUnlocked = sessionStorage.getItem('gv-audio-unlocked');
 
+        var _dayNames = { sun: 'Sunday', mon: 'Monday', tue: 'Tuesday', wed: 'Wednesday', thu: 'Thursday', fri: 'Friday', sat: 'Saturday' };
+        var _resolvedDay = dayParam || ['sun','mon','tue','wed','thu','fri','sat'][getNow().getDay()];
+        var _displayTitle = (_dayNames[_resolvedDay] || targetSvc.title) + ' Morning Service';
+
         if (isTouchDevice && !alreadyUnlocked) {
           // Show gesture gate — iOS needs a tap before audio can play
           var overlay = document.createElement('div');
           overlay.style.cssText = 'position:fixed;inset:0;z-index:500;background:#05060f;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:opacity 0.4s ease;';
           overlay.innerHTML = '<span style="font-family:\'Cormorant Garamond\',serif;font-style:italic;font-size:26px;font-weight:400;color:rgba(255,255,255,0.85);letter-spacing:-0.01em;pointer-events:none;">Tap to enter</span>'
             + '<span style="font-family:\'IBM Plex Mono\',monospace;font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.28);margin-top:14px;pointer-events:none;">'
-            + (targetSvc.title || serviceParam) + '</span>';
+            + _displayTitle + '</span>';
 
           overlay.addEventListener('click', function() {
             // Unlock audio context with silent play
@@ -508,14 +513,14 @@ fetch('chantbook.json')
             setTimeout(function() { overlay.remove(); }, 420);
             // Load service and seek INSIDE the gesture handler
             if (tParam > 0) _pendingSeekTime = tParam;
-            loadService(targetSvc);
+            loadService(targetSvc, _resolvedDay);
           }, { once: true });
 
           document.body.appendChild(overlay);
         } else {
           // Desktop or already-unlocked: load directly
           if (tParam > 0) _pendingSeekTime = tParam;
-          loadService(targetSvc);
+          loadService(targetSvc, _resolvedDay);
         }
       }
     }
@@ -585,13 +590,13 @@ function buildIndex() {
   svcEl.innerHTML = '';
 
   var _weekDaysCanonical = [
-    { key: 'sun', label: 'Sun', svcId: 'morning-service-thursday'  },
+    { key: 'sun', label: 'Sun', svcId: 'morning-service-wednesday' },  // reuse Wed
     { key: 'mon', label: 'Mon', svcId: 'morning-service-monday'    },
     { key: 'tue', label: 'Tue', svcId: 'morning-service-tuesday'   },
     { key: 'wed', label: 'Wed', svcId: 'morning-service-wednesday' },
     { key: 'thu', label: 'Thu', svcId: 'morning-service-thursday'  },
-    { key: 'fri', label: 'Fri', svcId: 'morning-service-thursday'  },
-    { key: 'sat', label: 'Sat', svcId: 'morning-service-thursday'  }
+    { key: 'fri', label: 'Fri', svcId: 'morning-service-monday'    },  // reuse Mon
+    { key: 'sat', label: 'Sat', svcId: 'morning-service-tuesday'   }   // reuse Tue
   ];
   var _weekDays = _weekDaysCanonical.slice(_dow).concat(_weekDaysCanonical.slice(0, _dow));
 
@@ -623,7 +628,7 @@ function buildIndex() {
     cell.innerHTML = '<span class="day-label">' + day.label + '</span>'
       + (chantListHtml ? '<div class="day-chant-list">' + chantListHtml + '</div>' : '');
 
-    if (svc) { cell.onclick = function() { loadService(svc); }; }
+    if (svc) { cell.onclick = function() { loadService(svc, day.key); }; }
     strip.appendChild(cell);
   });
 
@@ -638,7 +643,7 @@ function buildIndex() {
 // builds a virtual chant from a service's items array
 // handles type:chant items; skips silence/ceremonial for now
 // ══════════════════════════════
-function loadService(svc) {
+function loadService(svc, dayKey) {
   var DATA = currentSangha;
   var lines = [];
 
@@ -761,10 +766,15 @@ function loadService(svc) {
       : chantWindowStart;
   }
 
+  // Derive display title from clicked weekday, not the borrowed recording's name
+  var _dayNames = { sun: 'Sunday', mon: 'Monday', tue: 'Tuesday', wed: 'Wednesday', thu: 'Thursday', fri: 'Friday', sat: 'Saturday' };
+  var _resolvedDay = dayKey || ['sun','mon','tue','wed','thu','fri','sat'][getNow().getDay()];
+  var displayTitle = (_dayNames[_resolvedDay] || svc.title) + ' Morning Service';
+
   // use the service's own recording if it has one
   var virtual = {
     id: svc.id,
-    title: svc.title,
+    title: displayTitle,
     audio: svc.audio || null,
     lines: lines,
     chantNames: chantNames,
