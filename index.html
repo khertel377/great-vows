@@ -393,6 +393,7 @@
 // ══════════════════════════════
 var SHOW_CHANT_INDEX = false;
 var WEEK_LAYOUT = 'vertical'; // 'horizontal' | 'vertical'
+var CARD_DETAIL = 'titles';   // 'titles' (clean title only) | 'counts' (keep ×N) | 'subtle' (dimmed ×N)
 
 function getNow() { return new Date(); }
 
@@ -568,6 +569,23 @@ function switchSangha(id) {
 }
 
 // ══════════════════════════════
+// CARD LABEL HELPER
+// Returns the display string for a chant on a calendar card, or null to omit the line.
+// Always uses chant.title (not subtitle — subtitles are translation notes, not display names).
+// ══════════════════════════════
+function cardLabel(chant) {
+  var t = chant.title || '';
+  if (!t) return null;
+  // Drop dedication lines entirely — these are cue markers, not service content
+  if (/^After Dedication/i.test(t)) return null;
+  // In 'titles' mode strip repetition counts; 'counts' keeps them; 'subtle' = same as titles here
+  if (CARD_DETAIL !== 'counts') {
+    t = t.replace(/\s*[（(][×x]\d+[)）]/g, '').trim();
+  }
+  return t || null;
+}
+
+// ══════════════════════════════
 // INDEX
 // ══════════════════════════════
 function buildIndex() {
@@ -616,8 +634,8 @@ function buildIndex() {
       svc.timestampMap.forEach(function(entry) {
         var chant = DATA.chants.find(function(c) { return c.id === entry.chantId; });
         if (chant) {
-          var name = chant.subtitle || chant.title;
-          if (chantTitles.indexOf(name) === -1) chantTitles.push(name);
+          var label = cardLabel(chant);
+          if (label && chantTitles.indexOf(label) === -1) chantTitles.push(label);
         }
       });
     }
