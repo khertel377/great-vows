@@ -578,7 +578,7 @@ const SCHEDULE = [
   { id: 'breakfast',      time: [7,20],  end: [8,10],  name: 'Breakfast',             type: 'meal',  hasService: false, bell: 'audio/sfzc/eiheiji-breakfast-instruments.mp3' },
   { id: 'study-hall',     time: [8,10],  end: [9,10],  name: 'Study Hall',            type: 'study', hasService: false, bell: 'audio/sfzc/study-bell.mp3', bellEnd: 'audio/sfzc/study-bell.mp3' },
   { id: 'work-morning',   time: [9,10],  end: [12,15], name: 'Work Period',           type: 'work',  hasService: false, bell: 'audio/sfzc/railroad-bell.mp3', bellEnd: { src: 'audio/sfzc/temple_sounds-the_densho_bell.mp3', offsetMs: -622000 } },
-  { id: 'midday-service', time: [12,15], end: [12,30], name: 'Mid-day Service',       type: 'chant', hasService: false,
+  { id: 'midday-service', time: [12,15], end: [12,30], name: 'Mid-day Service',       type: 'chant', hasService: true,
     bell: 'audio/sfzc/midday-service-start.mp3',
     service: { default: 'audio/sfzc/midday-service.mp3' } },
   { id: 'lunch',          time: [12,30], end: [13,15], name: 'Lunch',                 type: 'meal',  hasService: false, bell: 'audio/sfzc/eiheiji-breakfast-instruments.mp3' },
@@ -1251,6 +1251,8 @@ function tick() {
   if (_mornSvc) _mornSvc.serviceId = resolveServiceId('morning-service', now);
   const _evenSvc = SCHEDULE.find(p => p.id === 'evening-service');
   if (_evenSvc) _evenSvc.serviceId = resolveServiceId('evening-service', now);
+  const _midSvc = SCHEDULE.find(p => p.id === 'midday-service');
+  if (_midSvc) _midSvc.serviceId = 'midday-service'; // day-invariant
 
   // Quiet mode: dark inversion during 10pm–4:30am
   document.body.classList.toggle('quiet-mode', state.state === 'during' && state.period.type === 'quiet');
@@ -2067,6 +2069,7 @@ const AudioEngine = (() => {
     'evening-service-friday':    BASE + 'evening_service_dai_hi_shin_dharani.mp3',
     'evening-service-saturday':  BASE + 'evening_service_dai_hi_shin_dharani.mp3',
     'evening-service-sunday':    BASE + 'evening_service_dai_hi_shin_dharani.mp3',
+    'midday-service':            BASE + 'midday-service.mp3',
   };
 
   const HAN_LEAD_MINUTES = 15;

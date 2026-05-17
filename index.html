@@ -528,10 +528,12 @@ fetch('chantbook.json')
 
         var _dayNames = { sun: 'Sunday', mon: 'Monday', tue: 'Tuesday', wed: 'Wednesday', thu: 'Thursday', fri: 'Friday', sat: 'Saturday' };
         var _resolvedDay = dayParam || ['sun','mon','tue','wed','thu','fri','sat'][getNow().getDay()];
-        var _serviceKind = targetSvc.id.startsWith('evening-service') ? 'evening' : 'morning';
+        var _serviceKind = targetSvc.id.startsWith('evening-service') ? 'evening' : targetSvc.id === 'midday-service' ? 'midday' : 'morning';
         var _displayTitle = _serviceKind === 'evening'
           ? 'Evening Service'
-          : (_dayNames[_resolvedDay] || targetSvc.title) + ' Morning Service';
+          : _serviceKind === 'midday'
+            ? 'Midday Service'
+            : (_dayNames[_resolvedDay] || targetSvc.title) + ' Morning Service';
 
         if (isTouchDevice && !alreadyUnlocked) {
           // Show gesture gate — iOS needs a tap before audio can play
@@ -658,8 +660,9 @@ function buildIndex() {
   var strip = document.createElement('div');
   strip.className = 'week-strip layout-' + WEEK_LAYOUT;
 
-  // resolve the single evening-service entry once (day-invariant)
+  // resolve day-invariant services once
   var _eveningSvc = (DATA.services || []).find(function(s) { return s.id === 'evening-service'; });
+  var _middaySvc  = (DATA.services || []).find(function(s) { return s.id === 'midday-service'; });
 
   // helper: build chant title HTML for a service slot
   function _slotTitles(svc) {
@@ -696,11 +699,13 @@ function buildIndex() {
       + (mornTitles ? '<div class="day-chant-list">' + mornTitles + '</div>' : '');
     if (mornSvc) { mornSlot.onclick = function() { loadService(mornSvc, day.key); }; }
 
-    // ── Lunch slot (placeholder) ──
+    // ── Lunch slot ──
+    var middayTitles = _slotTitles(_middaySvc);
     var lunchSlot = document.createElement('div');
-    lunchSlot.className = 'service-slot lunch-placeholder';
+    lunchSlot.className = 'service-slot';
     lunchSlot.innerHTML = '<span class="slot-label">Lunch</span>'
-      + '<span class="day-chant-item">Coming soon</span>';
+      + (middayTitles ? '<div class="day-chant-list">' + middayTitles + '</div>' : '');
+    if (_middaySvc) { (function(ms, dk) { lunchSlot.onclick = function() { loadService(ms, dk); }; })(_middaySvc, day.key); }
 
     // ── Evening slot ──
     var evenTitles = _slotTitles(_eveningSvc);
@@ -859,10 +864,12 @@ function loadService(svc, dayKey) {
   // Derive display title from clicked weekday, not the borrowed recording's name
   var _dayNames = { sun: 'Sunday', mon: 'Monday', tue: 'Tuesday', wed: 'Wednesday', thu: 'Thursday', fri: 'Friday', sat: 'Saturday' };
   var _resolvedDay = dayKey || ['sun','mon','tue','wed','thu','fri','sat'][getNow().getDay()];
-  var _serviceKind = svc.id.startsWith('evening-service') ? 'evening' : 'morning';
+  var _serviceKind = svc.id.startsWith('evening-service') ? 'evening' : svc.id === 'midday-service' ? 'midday' : 'morning';
   var displayTitle = _serviceKind === 'evening'
     ? 'Evening Service'
-    : (_dayNames[_resolvedDay] || svc.title) + ' Morning Service';
+    : _serviceKind === 'midday'
+      ? 'Midday Service'
+      : (_dayNames[_resolvedDay] || svc.title) + ' Morning Service';
 
   // use the service's own recording if it has one
   var virtual = {
