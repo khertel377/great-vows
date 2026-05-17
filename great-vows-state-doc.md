@@ -1,5 +1,5 @@
 # Great Vows — Project State Document
-*Updated after schedule canonization, three-mode system, bell taxonomy, iOS fixes, file hygiene, all three mode arrays formalized, Safari 18+ cross jitter fix, sticky now-row architecture, konsho evening bell loop, ambient audio engine, audio dot, git case-sensitivity fix, audio files committed to repo, ambient audio retry logic fix, audio dot alignment fix, Web Audio overnight bell scheduling, midnight reschedule, ambient audio stop bug fix, firewatch split, tick mark full-height fix, Web Audio wall-clock setTimeout fix, period transition polish, time-travel debug tool, mute covers Web Audio path, iOS keepalive, entry overlay z-index fix, ghost hover suppression, meta row tap-only on mobile, full mute system architecture, bell:/bellEnd:/service: field taxonomy, zazen bells, morning service day-keyed playback, elapsed seek, time-travel audio stop/restart, work-afternoon bellEnd migration, Wed/Thu morning service authoring, eko-drift bug characterization, per-chant clip-alignment pattern, renderer-gap catalog, alignment-scaling decision, Wed announcement cues authored, announcement rendering engine debugged, renderer gaps #1+#2 fixed, Thursday brought to Wed/Tue parity (May 2026).*
+*Updated after schedule canonization, three-mode system, bell taxonomy, iOS fixes, file hygiene, all three mode arrays formalized, Safari 18+ cross jitter fix, sticky now-row architecture, konsho evening bell loop, ambient audio engine, audio dot, git case-sensitivity fix, audio files committed to repo, ambient audio retry logic fix, audio dot alignment fix, Web Audio overnight bell scheduling, midnight reschedule, ambient audio stop bug fix, firewatch split, tick mark full-height fix, Web Audio wall-clock setTimeout fix, period transition polish, time-travel debug tool, mute covers Web Audio path, iOS keepalive, entry overlay z-index fix, ghost hover suppression, meta row tap-only on mobile, full mute system architecture, bell:/bellEnd:/service: field taxonomy, zazen bells, morning service day-keyed playback, elapsed seek, time-travel audio stop/restart, work-afternoon bellEnd migration, Wed/Thu morning service authoring, eko-drift bug characterization, per-chant clip-alignment pattern, renderer-gap catalog, alignment-scaling decision, Wed announcement cues authored, announcement rendering engine debugged, renderer gaps #1+#2 fixed, Thursday brought to Wed/Tue parity, Calendar of Morning Services + Two-Sides-of-One-Coin linking (May 2026).*
 
 ---
 
@@ -394,7 +394,7 @@ great-vows/
 - sessionStorage audio unlock shared between schedule.html and index.html ✅
 - try/catch with console logging on every `.play()` call ✅
 - AudioContext health check on every tick — resumes if suspended ✅
-- Thursday Enter button hidden (service audio not yet available) ✅
+- Thursday Enter button: was hidden, now available — service complete ✅
 - Cross on rAF loop, geometry cached in `_connGeo` — no `getBoundingClientRect()` per frame ✅
 - Row rects stored as document-space coords (+ scrollY); `_docToVp()` converts back each frame ✅
 - Period transition polish ✅ — `--tick-progress` reset to 0 atomically on new now-row; `updateClock()` + `updateSidebar()` called at end of `buildTrack()` (no `--:--` flash); `rAF` scroll-to-now on transition
@@ -421,7 +421,7 @@ great-vows/
 | `audio` | string | Ambient loop — plays for duration of period, shown as track dot |
 | `bell` | string | One-shot bell — fires once at period start via Web Audio, shown as track dot |
 | `bellEnd` | string \| `{ src, offsetMs }` | One-shot bell at period end — or before it when offsetMs is negative. String form: fires at `period.end`. Object form: fires at `period.end + offsetMs`. `-211000` = 3m31s before end (morning zazen end recording). Array-driven, shown as track dot. |
-| `service` | `{ mon, tue, wed, thu, default }` | Day-keyed map of service audio files. Resolution: `service[dayKey] \|\| service.default`. `default` covers Fri/Sat/Sun until dedicated recordings exist — currently points to Monday. Missing both key and default → `console.warn` + silence. Played by `tickServiceAudio()`. Shown as track dot. |
+| `service` | `{ mon, tue, wed, thu, default }` | Day-keyed map of service audio files. Resolution: `service[dayKey] \|\| service.default`. `default` covers Fri/Sat/Sun — **now points to Thursday** (updated May 2026; Thursday is the closest to weekend-practice energy). Missing both key and default → `console.warn` + silence. Played by `tickServiceAudio()`. Shown as track dot. |
 | `dharmaTalk` | *(future)* | URL or local path to a dharma talk audio file. Played after a fixed ritual preamble sequence; elapsed seek offsets by preamble duration. Two placements: dedicated talk period (intensive/sesshin) or Study Hall content option. First source: Kokyo / Santa Cruz Zen Center archive. |
 
 `audio:`, `bell:`, `bellEnd:`, and `service:` can coexist on a period. All render a dot; ambient dot pulses when ambient is playing.
@@ -477,6 +477,12 @@ New audio creation sets muted state at birth:
 
 ## index.html — Current State
 
+### Design system (reconciled May 2026)
+Both pages now share a unified design identity:
+- **Fonts:** Cormorant Garamond (display/serif) + IBM Plex Mono (UI/labels/chant lines)
+- **Colors:** `--accent: #B8860B` (gold), `--seal: #B03A2E`, `--bg: #05060f` dark
+- **No blue:** `#2a3fcc` fully purged from index.html
+
 ### What's working
 - Zoom lock on viewport meta
 - WakeLock IIFE with visibility restore
@@ -487,6 +493,20 @@ New audio creation sets muted state at birth:
 - Teleprompter sync via `timestampMap` + `timestampCorrections` overlay
 - Mon/Tue substantially shipped; Wed/Thu alignment data substantially complete
 - **Validated product insight:** the resonant use case right now is "start a service anytime, anywhere, follow along in the flow, nothing else needed." The chant-along experience is leading the schedule app for current user value.
+
+### Index screen (Calendar of Morning Services — May 2026)
+- **Week strip** replaces old service-card grid: 7 day cells (Mon–Thu tappable/strong, Fri–Sun dimmed), today's cell gold-bordered with dot
+- **Sub-header** shows today in plain language: "Wednesday · Service C" (Mon=A, Tue=B, Wed=C, Thu=D; Fri–Sun show day name only)
+- **Chant index** gated by `SHOW_CHANT_INDEX = false` constant; `#chantList` hidden in markup (`display:none`)
+- **Sangha switcher** auto-hidden when ≤1 sangha
+- **`↑ Schedule` link** quiet back-link to schedule.html on index screen
+- **`getNow()`** added (mirrors schedule.html's shim — `return new Date()`)
+- **Civil weekday** (no timezone correction): `['sun','mon','tue','wed','thu','fri','sat'][getNow().getDay()]` — identical one-liner to `getDayKey()` in schedule.html
+
+### sfzc.json archival convention (May 2026)
+- `services_archived[]` — non-morning-service entries (full-moon-ceremony, one-day-sitting, beginners) moved here. Not rendered by index.html or visible in the week strip. Reversible — move back to `services[]` to restore.
+- `chants_archived[]` — empty placeholder; reserved for future curation when chant list is restored.
+- `"_comment"` key documents the convention at the top of the archived section.
 
 ### Renderer gaps — KNOWN, separate workstream (do not fix with timestamp data)
 These are `index.html` rendering issues, NOT alignment problems. They affect ALL services. Do not paper over them with corrupted cueIn values.
@@ -603,7 +623,7 @@ Prototyped on `sticky-now-row` branch. Mobile scroll smoothness is the primary m
 - **Tuesday** — aligned, manually corrected (7 maka-hannya corrections). Substantially complete.
 - **Wednesday** — items array corrected, re-aligned, multi-round manual corrections applied (heart-sutra dense section + mantra section, hymn lines 1-3, shosaimyo onset, after-dedication-english 4-line anchor, sandokai-japanese clip-aligned, after-dedication-japanese full 6-line anchor). Announcement cues authored (4 explicit cues on opening-bows ceremonial item). `chantEndOverrides: {after-dedication-japanese: 938}` sets tail blank at 15:38. Renderer gaps #1+#2 resolved. Substantially complete pending final listen-through.
 - **Thursday** — brought to Wed/Tue parity. Explicit authored announcement cues (4 cues: heart-sutra 253s, hymn 433s, enmei 497s, jewel-mirror 757s; auto-gen disabled via `noAnnouncement:true` on all chant items). heart-sutra per-line corrections (dense section li=13-25 from prior round + mantra section li=32,48-50,54-55,57-58 this pass; li=32 Note A fix holds "no suffering..." phrase). enmei-jukku-x7 clip-aligned (495-655s window; bo/nen gaps improved 0.5s→0.8s; actual audio boundary). jewel-mirror body alignment unchanged (prior round clip-align confirmed not regressed). after-dedication-japanese full 6-line anchor (closes state-doc line-600 open item: li=0=1023, li=1-5=1029/1035/1041/1047/1054). `chantEndOverrides: {after-dedication-japanese: 1065}` (closing bows blank at 17:45). Renderer gaps #1+#2 inherited globally. Substantially complete pending final listen-through.
-- **Fri/Sat/Sun** — no recordings. `service:` map falls back to Monday default.
+- **Fri/Sat/Sun** — no recordings. `service:` map falls back to Thursday default (updated May 2026).
 
 ### Wed/Thu service structure (authored this session)
 Both services were placeholder skeletons (`purification / heart-sutra / maka-hannya / enmei-jukku / great-vows`) that did NOT match the recordings. Rewritten from Kevin's listen-through. Actual structure:
