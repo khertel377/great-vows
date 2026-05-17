@@ -785,10 +785,20 @@ Prototyped on `sticky-now-row` branch. Mobile scroll smoothness is the primary m
 - **Fri/Sat/Sun** — no native recordings. `service:` map now uses an explicit **cycling borrow** (v3 decision, permanent by design): Fri=Mon recording, Sat=Tue recording, Sun=Wed recording. Supersedes the earlier Thursday-default fallback. Each borrowed day also borrows its lender's `timestampMap` (playback identity = the borrowed service; display identity = the clicked weekday — see Session Addendum).
 
 ### Service status (SFZC evening service)
-- **Evening service** — added (Dai Hi Shin Darani + after-dedication-english). `--smooth-only` pass applied; 3 lines corrected: two sub-1s gaps (idx 26 and 31) and a rush (idx 12, 1.68s → 2.00s). Remaining issue: lineIndex 14 ("ru gya chi kya rya chi") cues ~3s late — base model grouped audio time incorrectly, placing it at ~202.5s when correct is ~198-200s. Smoothing reduced the dump (10.08s → 7.6s) but cannot close it fully; the outlier ceiling redistribution converges asymptotically and can't fix a base-model misalignment of this magnitude. Needs: `pip3 install stable-whisper` then `--model small` re-alignment, OR `correct_timestamp.py` manual correction by ear for lineIndex 14 alone.
+- **Evening service** — added (Dai Hi Shin Darani + after-dedication-english). Substantially complete. See addendum below.
 
-### Addendum — align_service.py pipeline updates (May 2026)
-`align_service.py` updated this session: `--model` flag added (was hardcoded `base`), `--smooth-only` flag added, smoothing pass now wired into the service path (existed in `align.py` but was never called from `align_service.py`). `DHARANI_CHANT_IDS` set controls tighter post-processing: 2.0s min gap floor, outlier ceiling at `outlier_ratio × median gap`. Dharani `outlier_ratio` set to 1.8 (was 2.8 — the 2.8 value made the ceiling ~11.2s, just above the 10.08s dump; 1.8 sets ceiling ~7.2s). `from __future__ import annotations` added for Python 3.9 compatibility (union type hint syntax). `stable_whisper` not currently installed on this machine — `pip3 install stable-whisper` when needed.
+### Addendum — Evening service alignment, Dai Hi Shin Darani (May 2026)
+Evening service added. Dai Hi Shin Darani alignment required post-processing work.
+
+`align_service.py` updated: `--model` flag (was hardcoded `base`), `--smooth-only` flag, smoothing pass now wired into service path (was missing — existed in `align.py` but never called). `DHARANI_CHANT_IDS` set controls tighter parameters: 2.0s min gap floor, outlier ceiling at `outlier_ratio × median gap`. `outlier_ratio` set to 1.8 for dharanis (was 2.8 — ceiling sat just above the 10s gap and let it pass).
+
+`--smooth-only` fixed 3 lines: sub-1s gaps at lineIndex 26 and 31, rush at lineIndex 12. The 10.08s gap at lineIndex 13→14 was initially misread as a misalignment — confirmed by both base and small models to be real audio content (a structural pause in the recording). Smoothing passes had incorrectly moved lineIndex 14; restored manually via `correct_timestamp.py` to 205.0s.
+
+`--model small` ran in 14s on CPU, all 44 lines present. base was reliable for this dharani — small confirms rather than corrects.
+
+**Install notes for this machine:** `pip3 install stable-ts` (not `stable-whisper` — that's the package name). ffmpeg provided via `npm install ffmpeg-static` (no Homebrew needed); binary at `node_modules/ffmpeg-static/ffmpeg` — prepend to PATH before running alignment. Remote URL / SSH auth issue still pending — commits are local, push blocked until resolved.
+
+**For future dharanis:** `--model small` is ready. The 2.0s floor and 1.8× outlier ceiling are the right defaults. Manual correction is still the fastest path for any single structural gap once `--smooth-only` has run.
 
 ### Wed/Thu service structure (authored this session)
 Both services were placeholder skeletons (`purification / heart-sutra / maka-hannya / enmei-jukku / great-vows`) that did NOT match the recordings. Rewritten from Kevin's listen-through. Actual structure:
