@@ -106,43 +106,51 @@
   }
   .schedule-link:hover { color: rgba(255,255,255,0.6); border-color: rgba(255,255,255,0.25); }
 
+  /* ── SANGHA SWITCHER — always hidden ── */
+  #sanghaSwitcher { display: none; }
+
   /* ── WEEK STRIP ── */
   #serviceCards {
     opacity: 0; animation: fadeUp 0.8s ease 0.38s forwards;
   }
   .week-strip {
-    display: flex; gap: 10px; flex-wrap: nowrap;
-    margin-bottom: 0;
+    display: flex; gap: 8px; flex-wrap: nowrap;
+    overflow-x: auto; padding-bottom: 2px;
+    scrollbar-width: none;
   }
+  .week-strip::-webkit-scrollbar { display: none; }
   .day-cell {
-    flex: 1; min-width: 0;
+    flex: 1; min-width: 80px;
     border: 1px solid rgba(255,255,255,0.12);
-    border-radius: 3px; padding: 16px 10px 14px;
-    cursor: pointer; text-align: center;
+    border-radius: 3px; padding: 14px 10px 12px;
+    cursor: pointer; text-align: left;
     transition: background 0.2s, border-color 0.2s;
     position: relative;
   }
-  .day-cell:hover { background: rgba(184,134,11,0.08); border-color: var(--gold-dim); }
+  .day-cell:hover { background: rgba(184,134,11,0.06); border-color: var(--gold-dim); }
   .day-cell.today {
     border-color: var(--gold);
-    background: rgba(184,134,11,0.06);
-  }
-  .day-cell.today::after {
-    content: '';
-    position: absolute; bottom: 7px; left: 50%; transform: translateX(-50%);
-    width: 4px; height: 4px; border-radius: 50%;
-    background: var(--gold); opacity: 0.8;
-  }
-  .day-cell.dimmed {
-    opacity: 0.28; cursor: default; pointer-events: none;
+    background: rgba(184,134,11,0.05);
   }
   .day-label {
     display: block;
     font-family: 'IBM Plex Mono', monospace;
-    font-size: 11px; font-weight: 500; letter-spacing: 0.18em;
-    text-transform: uppercase; color: rgba(255,255,255,0.7);
+    font-size: 10px; font-weight: 500; letter-spacing: 0.22em;
+    text-transform: uppercase; color: rgba(255,255,255,0.5);
+    margin-bottom: 8px;
   }
   .day-cell.today .day-label { color: var(--gold); }
+  .day-chant-list {
+    display: flex; flex-direction: column; gap: 3px;
+  }
+  .day-chant-item {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px; letter-spacing: 0.04em;
+    color: rgba(255,255,255,0.25);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    line-height: 1.4;
+  }
+  .day-cell.today .day-chant-item { color: rgba(184,134,11,0.5); }
 
   /* ── CHANT LIST (SHOW_CHANT_INDEX=false → display:none via JS) ── */
   .chant-section { margin-top: 40px; opacity: 0; animation: fadeUp 0.8s ease 0.45s forwards; }
@@ -568,10 +576,6 @@ function buildIndex() {
     : _dayNames[_dow];
   document.getElementById('indexSub').textContent = _subText;
 
-  // ── Sangha switcher: hide when only one sangha ──
-  document.getElementById('sanghaSwitcher').style.display =
-    MANIFEST.sanghas.length <= 1 ? 'none' : '';
-
   // ── Week strip ──
   var svcEl = document.getElementById('serviceCards');
   svcEl.innerHTML = '';
@@ -581,9 +585,9 @@ function buildIndex() {
     { key: 'tue', label: 'Tue', svcId: 'morning-service-tuesday'   },
     { key: 'wed', label: 'Wed', svcId: 'morning-service-wednesday' },
     { key: 'thu', label: 'Thu', svcId: 'morning-service-thursday'  },
-    { key: 'fri', label: 'Fri', svcId: null },
-    { key: 'sat', label: 'Sat', svcId: null },
-    { key: 'sun', label: 'Sun', svcId: null }
+    { key: 'fri', label: 'Fri', svcId: 'morning-service-thursday'  },
+    { key: 'sat', label: 'Sat', svcId: 'morning-service-thursday'  },
+    { key: 'sun', label: 'Sun', svcId: 'morning-service-thursday'  }
   ];
 
   var strip = document.createElement('div');
@@ -592,15 +596,29 @@ function buildIndex() {
   _weekDays.forEach(function(day) {
     var cell = document.createElement('div');
     var isToday = day.key === _todayKey;
-    var isAligned = !!day.svcId;
-    cell.className = 'day-cell'
-      + (isToday   ? ' today'  : '')
-      + (!isAligned ? ' dimmed' : '');
-    cell.innerHTML = '<span class="day-label">' + day.label + '</span>';
-    if (isAligned) {
-      var svc = (DATA.services || []).find(function(s) { return s.id === day.svcId; });
-      if (svc) { cell.onclick = function() { loadService(svc); }; }
+    cell.className = 'day-cell' + (isToday ? ' today' : '');
+
+    var svc = (DATA.services || []).find(function(s) { return s.id === day.svcId; });
+
+    // build chant title list from timestampMap
+    var chantTitles = [];
+    if (svc && svc.timestampMap) {
+      svc.timestampMap.forEach(function(entry) {
+        var chant = DATA.chants.find(function(c) { return c.id === entry.chantId; });
+        if (chant) {
+          var name = chant.subtitle || chant.title;
+          if (chantTitles.indexOf(name) === -1) chantTitles.push(name);
+        }
+      });
     }
+    var chantListHtml = chantTitles.map(function(t) {
+      return '<span class="day-chant-item">' + t + '</span>';
+    }).join('');
+
+    cell.innerHTML = '<span class="day-label">' + day.label + '</span>'
+      + (chantListHtml ? '<div class="day-chant-list">' + chantListHtml + '</div>' : '');
+
+    if (svc) { cell.onclick = function() { loadService(svc); }; }
     strip.appendChild(cell);
   });
 

@@ -84,8 +84,10 @@ body::before {
   opacity: 0.3;
   line-height: 1.6;
   z-index: 5;
-  pointer-events: none;
+  text-decoration: none;
+  transition: opacity 0.2s;
 }
+.sidebar-header:hover { opacity: 0.6; }
 
 .sidebar-now {
   padding-bottom: 12px; /* descender clearance — Cormorant 7 drops below baseline */
@@ -544,7 +546,7 @@ body.placed .period-row.now .period-name { font-size: 52px; }
   <div class="entry-note">the schedule is already running</div>
 </div>
 
-<div class="sidebar-header">San Francisco<br>Zen Center</div>
+<a href="index.html" class="sidebar-header">San Francisco<br>Zen Center</a>
 
 <div id="layout">
   <main id="track"></main>
