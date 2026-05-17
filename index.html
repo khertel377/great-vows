@@ -617,12 +617,16 @@ function loadService(svc) {
     });
 
     // build chantEndTimes: endTime for each chant (used to dim all lines after chant ends)
+    // Precedence: 1) explicit chantEndOverrides, 2) next-chant startTime, 3) svc.duration (last chant), 4) lastCueIn+10 defensive
+    var _endOverrides = svc.chantEndOverrides || {};
     svc.timestampMap.forEach(function(entry, i) {
       var lastLines = entry.lines;
       var lastCueIn = lastLines.length > 0 ? lastLines[lastLines.length - 1].cueIn : entry.startTime;
       var endTime;
-      if (i < svc.timestampMap.length - 1) {
-        endTime = lastCueIn + 3;
+      if (_endOverrides[entry.chantId] !== undefined) {
+        endTime = _endOverrides[entry.chantId];
+      } else if (i < svc.timestampMap.length - 1) {
+        endTime = svc.timestampMap[i + 1].startTime;
       } else {
         endTime = svc.duration !== undefined ? svc.duration : lastCueIn + 10;
       }
@@ -751,9 +755,15 @@ function openChant(chant) {
   requestAnimationFrame(function() {
     requestAnimationFrame(function() {
       cacheTranslates();
-      var firstIdx = firstTextIndex();
-      setClasses(firstIdx);
-      applyTranslate(lineTranslates[firstIdx] || 0);
+      if (chant.ceremonyCues && chant.ceremonyCues.length > 0) {
+        // Timed service with ceremony cues: start blank (currentIndex = -1) so nothing
+        // is pre-activated before its cueIn time. Tween engine takes over once audio plays.
+        currentIndex = -1;
+      } else {
+        var firstIdx = firstTextIndex();
+        setClasses(firstIdx);
+        applyTranslate(lineTranslates[firstIdx] || 0);
+      }
 
       var hasTimestampMap = chant.timestampMap && chant.timestampMap.length > 0;
       var cueInCount = chant.lines.filter(function(l) { return l.cueIn !== undefined; }).length;

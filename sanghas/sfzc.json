@@ -7793,6 +7793,9 @@
             "cueIn": 474.14
           }
         ]
+      },
+      "chantEndOverrides": {
+        "after-dedication-japanese": 938
       }
     },
     {
