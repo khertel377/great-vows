@@ -1,5 +1,5 @@
 # Great Vows — Project State Document
-*Updated after schedule canonization, three-mode system, bell taxonomy, iOS fixes, file hygiene, all three mode arrays formalized, Safari 18+ cross jitter fix, sticky now-row architecture, konsho evening bell loop, ambient audio engine, audio dot, git case-sensitivity fix, audio files committed to repo, ambient audio retry logic fix, audio dot alignment fix, Web Audio overnight bell scheduling, midnight reschedule, ambient audio stop bug fix, firewatch split, tick mark full-height fix, Web Audio wall-clock setTimeout fix, period transition polish, time-travel debug tool, mute covers Web Audio path, iOS keepalive, entry overlay z-index fix, ghost hover suppression, meta row tap-only on mobile, full mute system architecture, bell:/bellEnd:/service: field taxonomy, zazen bells, morning service day-keyed playback, elapsed seek, time-travel audio stop/restart, work-afternoon bellEnd migration, Wed/Thu morning service authoring, eko-drift bug characterization, per-chant clip-alignment pattern, renderer-gap catalog, alignment-scaling decision, Wed announcement cues authored, announcement rendering engine debugged, renderer gaps #1+#2 fixed, Thursday brought to Wed/Tue parity, Calendar of Morning Services + Two-Sides-of-One-Coin linking (May 2026).*
+*Updated after schedule canonization, three-mode system, bell taxonomy, iOS fixes, file hygiene, all three mode arrays formalized, Safari 18+ cross jitter fix, sticky now-row architecture, konsho evening bell loop, ambient audio engine, audio dot, git case-sensitivity fix, audio files committed to repo, ambient audio retry logic fix, audio dot alignment fix, Web Audio overnight bell scheduling, midnight reschedule, ambient audio stop bug fix, firewatch split, tick mark full-height fix, Web Audio wall-clock setTimeout fix, period transition polish, time-travel debug tool, mute covers Web Audio path, iOS keepalive, entry overlay z-index fix, ghost hover suppression, meta row tap-only on mobile, full mute system architecture, bell:/bellEnd:/service: field taxonomy, zazen bells, morning service day-keyed playback, elapsed seek, time-travel audio stop/restart, work-afternoon bellEnd migration, Wed/Thu morning service authoring, eko-drift bug characterization, per-chant clip-alignment pattern, renderer-gap catalog, alignment-scaling decision, Wed announcement cues authored, announcement rendering engine debugged, renderer gaps #1+#2 fixed, Thursday brought to Wed/Tue parity, Calendar of Morning Services + Two-Sides-of-One-Coin linking, calendar refinements v2–v4 specced (week rotation + vertical toggle, permanent service cycling Fri=Mon/Sat=Tue/Sun=Wed, playback/display identity split, reciprocal Service Index link, card title cleanup + Sandōkai data fix + title-follows-chant-language) (May 2026).*
 
 ---
 
@@ -421,7 +421,7 @@ great-vows/
 | `audio` | string | Ambient loop — plays for duration of period, shown as track dot |
 | `bell` | string | One-shot bell — fires once at period start via Web Audio, shown as track dot |
 | `bellEnd` | string \| `{ src, offsetMs }` | One-shot bell at period end — or before it when offsetMs is negative. String form: fires at `period.end`. Object form: fires at `period.end + offsetMs`. `-211000` = 3m31s before end (morning zazen end recording). Array-driven, shown as track dot. |
-| `service` | `{ mon, tue, wed, thu, default }` | Day-keyed map of service audio files. Resolution: `service[dayKey] \|\| service.default`. `default` covers Fri/Sat/Sun — **now points to Thursday** (updated May 2026; Thursday is the closest to weekend-practice energy). Missing both key and default → `console.warn` + silence. Played by `tickServiceAudio()`. Shown as track dot. |
+| `service` | `{ mon, tue, wed, thu, fri, sat, sun, default }` | Day-keyed map of service audio files. Resolution: `service[dayKey] \|\| service.default`. **Fri/Sat/Sun now have explicit keys (cycling map — see § Session Addendum, v3): Fri=Mon, Sat=Tue, Sun=Wed.** `default` is a safety net only and should never fire. (Supersedes the earlier "Fri/Sat/Sun → Thursday default" — that was the pre-cycling model.) Missing both key and default → `console.warn` + silence. Played by `tickServiceAudio()`. Shown as track dot. |
 | `dharmaTalk` | *(future)* | URL or local path to a dharma talk audio file. Played after a fixed ritual preamble sequence; elapsed seek offsets by preamble duration. Two placements: dedicated talk period (intensive/sesshin) or Study Hall content option. First source: Kokyo / Santa Cruz Zen Center archive. |
 
 `audio:`, `bell:`, `bellEnd:`, and `service:` can coexist on a period. All render a dot; ambient dot pulses when ambient is playing.
@@ -431,7 +431,7 @@ great-vows/
 2. **Han** — plays `temple_sounds-the_han.mp3` starting 15 min before any `type: 'zazen'` period. Seeks/loops.
 3. **Ambient service** — MP4 at 0.33 volume, radio-model elapsed seek, 3s crossfade. (index.html path — not schedule.html)
 4. **Period transition bell** — densho on boundary, skips first tick.
-5. **Service audio** — `tickServiceAudio(currentPeriod)` runs each second from `tick()`. On period change, stops previous, reads `currentPeriod.service[getDayKey()]`, creates a fresh `Audio()` and plays from the beginning. No elapsed seek — schedule.html plays audio; index.html handles aligned chant player. Mon–Thu wired; Fri/Sat/Sun absent keys fall back to silence. `_serviceAudio` / `_servicePeriodId` globals in script #1; covered in `applyMute()` via `typeof` guard. `getDayKey()` uses `getNow()` — debug-aware.
+5. **Service audio** — `tickServiceAudio(currentPeriod)` runs each second from `tick()`. On period change, stops previous, reads `currentPeriod.service[getDayKey()]`, creates a fresh `Audio()` and plays from the beginning. No elapsed seek — schedule.html plays audio; index.html handles aligned chant player. Mon–Thu wired natively; **Fri/Sat/Sun now resolve via explicit cycling keys (Fri=Mon, Sat=Tue, Sun=Wed) — see Session Addendum v3; the old "absent keys → silence" behavior no longer applies once CC adds the keys.** `_serviceAudio` / `_servicePeriodId` globals in script #1; covered in `applyMute()` via `typeof` guard. `getDayKey()` uses `getNow()` — debug-aware.
 
 **API corrections (locked — do not regress):**
 - `getScheduleState(getNow())` — use `getNow()` not `new Date()` at all call sites
@@ -495,11 +495,12 @@ Both pages now share a unified design identity:
 - **Validated product insight:** the resonant use case right now is "start a service anytime, anywhere, follow along in the flow, nothing else needed." The chant-along experience is leading the schedule app for current user value.
 
 ### Index screen (Calendar of Morning Services — May 2026)
-- **Week strip** replaces old service-card grid: 7 day cells (Mon–Thu tappable/strong, Fri–Sun dimmed), today's cell gold-bordered with dot
+- **Page identity:** browser `<title>` = "San Francisco Zen Center"; eyebrow (`#indexEyebrow`) = "San Francisco Zen Center"; page title (`#indexTitle`) = "Services". This aligns the two pages and makes room for services beyond morning practice.
+- **Week strip** replaces old service-card grid: 7 day cells, all equal treatment, today's cell gold-bordered. Today is always the leftmost card (rotated by `getDay()`).
 - **Sub-header** shows today in plain language: "Wednesday · Service C" (Mon=A, Tue=B, Wed=C, Thu=D; Fri–Sun show day name only)
 - **Chant index** gated by `SHOW_CHANT_INDEX = false` constant; `#chantList` hidden in markup (`display:none`)
 - **Sangha switcher** auto-hidden when ≤1 sangha
-- **`↑ Schedule` link** quiet back-link to schedule.html on index screen
+- **`↑ Today's Schedule` link** quiet back-link to schedule.html, top of index screen
 - **`getNow()`** added (mirrors schedule.html's shim — `return new Date()`)
 - **Civil weekday** (no timezone correction): `['sun','mon','tue','wed','thu','fri','sat'][getNow().getDay()]` — identical one-liner to `getDayKey()` in schedule.html
 
@@ -520,6 +521,164 @@ These three pair conceptually with the alignment scaling plan: both are "the pip
 **Tween engine fixes (May 2026)** — Two bugs in the announcement cue rendering path, now fixed:
 - **Bug A (pre-init):** `var curItem = allItems[0]` pre-loaded the first cue as the active item before its time. Fixed: `var curItem = null`. Same fix applied to `seekToPct`'s `bestItem`.
 - **Bug B (30s promotion):** A "prefer chant lines over cues" block demoted any ceremony cue to `nextItem` when the last chant line was within 30s — which silently suppressed all four announcement cues (gaps: 6.54s, 3.4s, 8.38s from prior chant end). Fixed: skip promotion for cues with `isAnnouncement: true`. `isAnnouncement` is set on announcement cues in `sfzc.json`; bells/bows/other ceremony cues are unaffected.
+
+---
+
+## Session Addendum — Calendar Refinements v2–v4 (May 2026, Chat)
+
+*This is the Chat-side addendum per the handoff protocol. Items below were
+**decided and specced (briefs v2/v3/v4)** but are **pending CC execution** unless
+marked ✅. Briefs live in the session outputs; this is the durable record. The
+"What's working" / Index-screen sections above remain accurate for **v1**
+(calendar strip, design reconciliation, archival, civil weekday). v2–v4 layer on
+top.*
+
+### v2 — Layout toggle + reciprocal mobile linkage (pending CC)
+- **`WEEK_LAYOUT` constant** (`'horizontal' | 'vertical'`) — single switch flips
+  the week strip between the current row and a full-width vertical stack. One
+  render path; the constant only toggles flex-direction + card width. Default
+  value TBD by Kevin after seeing vertical live.
+- **Bigger in-card text** — chant lines were near-watermark; enlarge to readable
+  (~13–14px), raise opacity floor, relax title truncation in vertical mode. Day
+  label (MON/TUE) stays the small mono eyebrow. Two-family discipline preserved.
+- **Reciprocal link, the real fix.** Diagnosis: schedule→index was *only* the
+  conditional `#enterBtn` ("Enter service →"), visible ~30 min/day during Morning
+  Service; on mobile `.sidebar-header` is `display:none` so the SFZC anchor
+  vanished too. Decision: **keep `#enterBtn` exactly as is** (it's the contextual
+  in-the-moment deep-link with `?t=` seek) and **add a separate persistent
+  `↓ Service Index` button** under the SFZC title, the reciprocal of index's
+  `↑ Schedule`. Two link *types*, do not merge: (a) conditional in-service
+  deep-link; (b) always-on structural hinge, no params, no condition. Requires
+  unhiding `.sidebar-header` on mobile (retire the `display:none` rule ~line
+  1496), pointer-events on the button only, shared `.enter-btn` ruleset so the
+  pair can't drift.
+
+### v3 — Week service cycling + playback/display identity (pending CC)
+- **Permanent cycling map (by design, not a stopgap):** Mon–Thu native;
+  **Fri=Mon, Sat=Tue, Sun=Wed**. The week rotates the four services. Implemented
+  purely by adding `fri/sat/sun` keys to the `morning-service` `service:` object —
+  no cycle counter, still pure `getDayKey()`. **This supersedes the prior
+  "Fri/Sat/Sun → Thursday default"** model (corrected in the `service` field
+  table and service-audio sections above — that was stale relative to this
+  decision).
+- **Playback identity vs display identity (core principle).** What a period
+  *plays* (the borrowed recording + its `timestampMap`) and what it *shows* (the
+  weekday the user entered from) are deliberately separate. Sunday plays
+  Wednesday's recording but the player title reads "Sunday." Keep them distinct —
+  do not let one leak into the other.
+- **Player title = clicked weekday.** Bug: player title was a static `svc.title`
+  from `sfzc.json` (index.html ~706/742), unrelated to the tapped day — so
+  borrowed days showed the lender's name. Fix: derive the displayed title from
+  the weekday entered from. Carry it via a `&day=` param on both entry paths
+  (index calendar click + schedule `#enterBtn` href, which already knows the day
+  via `getDayKey()`). Apply to chantTitleDisplay, the virtual-chant title, the
+  touch-gate overlay, and the listening overlay. Bare-deeplink fallback = today
+  via the shared `getDay()` basis.
+- **`SERVICE_AUDIO` parity — real bug, verify first.** `SERVICE_AUDIO`
+  (schedule.html ~line 2052) gates `AudioEngine.isServiceAvailable()`. In the
+  copy reviewed it held only `morning-service-monday` / `-tuesday`. Every weekday
+  the cycling map can resolve to (incl. Wed for Sun) must have an entry or the
+  enter button hides / load fails. **CC's first action:** read the live block,
+  confirm actual contents (uploaded files may lag local), bring to full parity.
+  Single most likely silent break in the cycling work.
+
+### v4 — Card titles: display cleanup + data-integrity (pending CC)
+- **Cue-note stripping — DECIDED: strip entirely (title only).** A `cardLabel()`
+  pure helper at the card-render site only (never where the teleprompter consumes
+  titles). Strips trailing `(×N)` / `(xN)` / `（×N）` (unicode × U+00D7 and ascii
+  x), drops "After Dedication (English/Japanese)" lines and pure-cue
+  parentheticals entirely. "When unsure, keep" — a stray kept title is
+  recoverable, a wrongly-stripped real title is not. **`sfzc.json` is NOT mutated
+  for this** — cues stay in the data; the teleprompter and timestamp maps depend
+  on them. Display-only, helper isolated for future revert.
+- **The bare "Japanese" line = the Sandōkai data bug.** Wed (and Sun via the
+  Wed-borrow) showed a card line reading just "Japanese" — a chant entry whose
+  `title` is empty or the literal string "Japanese". By elimination it is the
+  **Japanese Sandōkai** (Wed already shows the English "Harmony of Difference
+  and Equality" as a separate line, so the broken line is specifically the
+  Japanese pairing). Data fix in `sfzc.json` (chant def and/or service item);
+  grep all services for other empty/language-string titles and fix every
+  occurrence, not just the visible two. Verify the teleprompter shows the
+  corrected title too. **Fix 1 will not fix this and may mask it — distinct work.**
+- **Title-follows-chant-language — LOCKED CONVENTION.** English title when the
+  service chants in English, Japanese title when it chants in Japanese. Titles
+  follow the **audio**, not the JSON's current label and not a global preference.
+  Applied uniformly to every paired text. **This can override a user title
+  request that contradicts its audio — surface the conflict, don't silently
+  resolve.** (Not invoked for Thursday — see below.)
+- **Thursday — settled.** Kevin confirmed Thursday's Jewel Mirror Samadhi is
+  chanted **in English**; therefore Thursday's card title is **"Song of the Jewel
+  Mirror Samadhi"** — request and convention agree, set directly, no
+  re-verification or callback. Other paired-text cards: CC determines language
+  from the alignment data and titles per the convention; only escalate if
+  alignment data is missing/ambiguous.
+
+### Canonical SFZC title table (ground truth — extracted from project chant book)
+From `00_daily_sutras_table_of_contents.pdf` and the individual `daily_sutras`
+chant files. English and Japanese versions of paired texts are **distinct
+entries with distinct canonical titles** — future title questions resolve here:
+
+| Text | English (canonical) | Japanese (canonical) |
+|---|---|---|
+| Prajñāpāramitā heart | Heart of Great Perfect Wisdom Sutra | Maka Hannya Haramitta Shin Gyō |
+| Sekitō's harmony poem | Harmony of Difference and Equality | Sandōkai |
+| Dongshan's samadhi song | Song of the Jewel Mirror Samadhi | Hōkyō Zammai |
+
+Other confirmed forms: Hymn to the Perfection of Wisdom; Shōsaimyō Kichijō
+Darani; Enmei Jukku Kannon Gyō; Loving Kindness Meditation; Names of the Buddhas
+and Ancestors; Names of Women Ancestors; Daihi Shin Darani; Fukanzazengi; Genjo
+Koan; Self-Receiving and Employing Samadhi; Eihei Koso Hotsuganmon; Gate of
+Sweet Dew; Kan Ro Mon.
+
+### New principles (candidates to fold into Key Principles list)
+- *Playback identity ≠ display identity. The recording + timestampMap a period
+  loads is the borrowed service; the title shown is the weekday entered from.
+  Borrowed days never show the lender's name.*
+- *Two link types between schedule and index, never merged: (a) `#enterBtn`
+  conditional in-service deep-link with `?t=` seek; (b) the persistent reciprocal
+  pair `↑ Schedule` (index) / `↓ Service Index` (schedule), no params, no
+  condition. Shared button vocabulary, opposite arrows.*
+- *`.sidebar-header` must remain visible on mobile — SFZC identity anchor + host
+  of the reciprocal link. The old `display:none` mobile rule is retired.*
+- *Card titles are display; cues/dedications/repetition counts live in the data
+  and drive the teleprompter — never strip them from `sfzc.json`, only filter the
+  card view via `cardLabel()`. A clean card and a complete data record are not in
+  tension.*
+- *Title follows chant language: English when chanted English, Japanese when
+  chanted Japanese. Paired texts are distinct entries; the card shows whichever
+  the recording chants, uniform across days. May override a user title request
+  that contradicts the audio — surface, don't silently resolve.*
+
+### Stale-doc note (process)
+The version Chat held at session start carried "Wed/Thu authoring / eko-drift /
+stub-quality" and a mon+tue-only `SERVICE_AUDIO`, and nearly drove a worse
+mapping decision (Sun→Mon interim) to dodge a non-existent problem. The uploaded
+doc is current on Wed/Thu alignment (✅ done). Recording this because catching
+exactly this drift is what the handoff protocol exists for: Chat reasons from the
+pasted doc; if the doc is stale the plan inherits the staleness. The `service`
+table / service-audio Fri-Sat-Sun corrections above were applied for the same
+reason — they contradicted the v3 decision.
+
+### Pending for CC
+1. **v3 first** (sequence-critical): add `fri/sat/sun` keys (Fri=Mon, Sat=Tue,
+   Sun=Wed) to `morning-service` `service:`; bring `SERVICE_AUDIO` to full
+   weekday parity (verify live block first); ensure each borrowed day carries its
+   lender's `timestampMap`.
+2. **v3 title:** `&day=` param on both entry paths; player title derives from
+   clicked weekday; apply to all four title render sites; bare-deeplink fallback.
+3. **v4 Fix 1:** `cardLabel()` strip-entirely helper at card-render site only;
+   `sfzc.json` untouched by this fix; teleprompter unaffected.
+4. **v4 Fix 2:** correct the blank/"Japanese" Sandōkai entry in `sfzc.json`;
+   grep + fix all empty/language-string titles; verify teleprompter.
+5. **v4 Fix 3:** title-follows-language across all paired-text cards; Thursday →
+   "Song of the Jewel Mirror Samadhi" set directly.
+6. **v2:** `WEEK_LAYOUT` toggle; enlarge in-card text; add persistent
+   `↓ Service Index` button + unhide `.sidebar-header` on mobile; keep `#enterBtn`
+   untouched.
+7. Sequence note: land v3 mapping before/with v4 so titles aren't cleaned on
+   Fri/Sat/Sun content that's about to change.
+8. Verify all on live GitHub Pages + real iOS (off-origin gives false negatives).
+9. Clear this Pending list as items complete; update the masthead line.
 
 ---
 
@@ -623,7 +782,7 @@ Prototyped on `sticky-now-row` branch. Mobile scroll smoothness is the primary m
 - **Tuesday** — aligned, manually corrected (7 maka-hannya corrections). Substantially complete.
 - **Wednesday** — items array corrected, re-aligned, multi-round manual corrections applied (heart-sutra dense section + mantra section, hymn lines 1-3, shosaimyo onset, after-dedication-english 4-line anchor, sandokai-japanese clip-aligned, after-dedication-japanese full 6-line anchor). Announcement cues authored (4 explicit cues on opening-bows ceremonial item). `chantEndOverrides: {after-dedication-japanese: 938}` sets tail blank at 15:38. Renderer gaps #1+#2 resolved. Substantially complete pending final listen-through.
 - **Thursday** — brought to Wed/Tue parity. Explicit authored announcement cues (4 cues: heart-sutra 253s, hymn 433s, enmei 497s, jewel-mirror 757s; auto-gen disabled via `noAnnouncement:true` on all chant items). heart-sutra per-line corrections (dense section li=13-25 from prior round + mantra section li=32,48-50,54-55,57-58 this pass; li=32 Note A fix holds "no suffering..." phrase). enmei-jukku-x7 clip-aligned (495-655s window; bo/nen gaps improved 0.5s→0.8s; actual audio boundary). jewel-mirror body alignment unchanged (prior round clip-align confirmed not regressed). after-dedication-japanese full 6-line anchor (closes state-doc line-600 open item: li=0=1023, li=1-5=1029/1035/1041/1047/1054). `chantEndOverrides: {after-dedication-japanese: 1065}` (closing bows blank at 17:45). Renderer gaps #1+#2 inherited globally. Substantially complete pending final listen-through.
-- **Fri/Sat/Sun** — no recordings. `service:` map falls back to Thursday default (updated May 2026).
+- **Fri/Sat/Sun** — no native recordings. `service:` map now uses an explicit **cycling borrow** (v3 decision, permanent by design): Fri=Mon recording, Sat=Tue recording, Sun=Wed recording. Supersedes the earlier Thursday-default fallback. Each borrowed day also borrows its lender's `timestampMap` (playback identity = the borrowed service; display identity = the clicked weekday — see Session Addendum).
 
 ### Wed/Thu service structure (authored this session)
 Both services were placeholder skeletons (`purification / heart-sutra / maka-hannya / enmei-jukku / great-vows`) that did NOT match the recordings. Rewritten from Kevin's listen-through. Actual structure:
