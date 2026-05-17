@@ -393,7 +393,6 @@
 // ══════════════════════════════
 var SHOW_CHANT_INDEX = false;
 var WEEK_LAYOUT = 'vertical'; // 'horizontal' | 'vertical'
-var CARD_DETAIL = 'titles';   // 'titles' (clean title only) | 'counts' (keep ×N) | 'subtle' (dimmed ×N)
 
 function getNow() { return new Date(); }
 
@@ -578,10 +577,8 @@ function cardLabel(chant) {
   if (!t) return null;
   // Drop dedication lines entirely — these are cue markers, not service content
   if (/^After Dedication/i.test(t)) return null;
-  // In 'titles' mode strip repetition counts; 'counts' keeps them; 'subtle' = same as titles here
-  if (CARD_DETAIL !== 'counts') {
-    t = t.replace(/\s*[（(][×x]\d+[)）]/g, '').trim();
-  }
+  // Strip repetition counts: (×3), (x7),（×3）
+  t = t.replace(/\s*[（(][×x]\d+[)）]/g, '').trim();
   return t || null;
 }
 
