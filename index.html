@@ -151,9 +151,7 @@
     line-height: 1.4;
   }
   .day-cell.today .day-chant-item { color: rgba(184,134,11,0.65); }
-  .day-cell.off-day { opacity: 0.4; }
-  .day-cell.off-day:hover { opacity: 0.6; }
-  .week-strip.layout-vertical { flex-direction: column; }
+.week-strip.layout-vertical { flex-direction: column; }
   .week-strip.layout-vertical .day-cell { width: 100%; min-width: unset; }
   .week-strip.layout-vertical .day-chant-item { white-space: normal; overflow: visible; text-overflow: unset; }
 
@@ -603,8 +601,7 @@ function buildIndex() {
   _weekDays.forEach(function(day) {
     var cell = document.createElement('div');
     var isToday = day.key === _todayKey;
-    var isOffDay = !isToday && (day.key === 'fri' || day.key === 'sat' || day.key === 'sun');
-    cell.className = 'day-cell' + (isToday ? ' today' : '') + (isOffDay ? ' off-day' : '');
+    cell.className = 'day-cell' + (isToday ? ' today' : '');
 
     var svc = (DATA.services || []).find(function(s) { return s.id === day.svcId; });
 
