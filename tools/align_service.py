@@ -84,6 +84,7 @@ DHARANI_CHANT_IDS = {
     "maka-hannya",
     "before-lecture",
     "after-dedication",
+    "self-employing-samadhi",
 }
 
 
