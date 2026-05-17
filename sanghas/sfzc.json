@@ -9112,7 +9112,10 @@
       "chantEndOverrides": {
         "after-dedication-japanese": 1065
       }
-    },
+    }
+  ],
+  "_comment": "services_archived holds non-morning-service entries kept for reference. chants_archived is reserved for future curation.",
+  "services_archived": [
     {
       "id": "full-moon-ceremony",
       "title": "Full Moon Ceremony",
@@ -9216,5 +9219,6 @@
         }
       ]
     }
-  ]
+  ],
+  "chants_archived": []
 }
