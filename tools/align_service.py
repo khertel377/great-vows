@@ -5,7 +5,11 @@ Align a full service recording to chant text using stable-whisper forced alignme
 Usage:
     python3 tools/align_service.py sanghas/sfzc.json morning-service-monday
     python3 tools/align_service.py sanghas/sfzc.json morning-service-monday --dry-run
+    python3 tools/align_service.py sanghas/sfzc.json evening-service --model small
+    python3 tools/align_service.py sanghas/sfzc.json evening-service --model medium --language ja
 """
+
+from __future__ import annotations
 
 import argparse
 import json
@@ -67,6 +71,106 @@ def build_transcript(chants: list[dict]) -> tuple[str, list[dict]]:
     return " ".join(parts), index
 
 
+# ---------------------------------------------------------------------------
+# Per-chant post-processing
+# ---------------------------------------------------------------------------
+
+# Chant IDs that are phonetically repetitive dharanis or Japanese-script chants
+# and benefit from tighter alignment constraints.
+DHARANI_CHANT_IDS = {
+    "dai-hi-shin-darani",
+    "shosaimyo",
+    "enmei-jukku",
+    "maka-hannya",
+    "before-lecture",
+    "after-dedication",
+}
+
+
+def smooth_service_chant(chant_id: str, lines: list[dict], chant_duration: float) -> int:
+    """
+    Post-process cueIn timestamps for a single chant within a service recording.
+
+    `lines` is the list of {lineIndex, cueIn} dicts from the timestampMap entry —
+    all entries here have a cueIn (nulls were never added).
+
+    `chant_duration` is the wall-clock span of this chant segment (last cueIn
+    minus first cueIn); used to set the outlier ceiling.
+
+    Returns the number of cueIn values that were changed.
+    """
+    if len(lines) < 2:
+        return 0
+
+    original = [l["cueIn"] for l in lines]
+
+    # --- Parameters ---
+    # Tighter floor for phonetically repetitive dharanis; looser for normal chants.
+    if chant_id in DHARANI_CHANT_IDS:
+        min_gap = 2.0          # no two lines closer than 2s
+        outlier_ratio = 1.8    # gap > 1.8× median is an outlier
+    else:
+        min_gap = 1.2
+        outlier_ratio = 3.5
+
+    # --- Pass 1: Enforce minimum gap (cascade forward) ---
+    for i in range(1, len(lines)):
+        gap = lines[i]["cueIn"] - lines[i - 1]["cueIn"]
+        if gap < min_gap:
+            lines[i]["cueIn"] = round(lines[i - 1]["cueIn"] + min_gap, 2)
+
+    # --- Pass 2: Outlier ceiling — redistribute gaps that are suspiciously large ---
+    # A large gap after a rushed pair means the aligner stole time and dumped it
+    # as dead space. We detect it by comparing each gap to the median gap, then
+    # redistribute the surplus evenly to the neighbours.
+    gaps = [lines[i]["cueIn"] - lines[i - 1]["cueIn"] for i in range(1, len(lines))]
+    if gaps:
+        sorted_gaps = sorted(gaps)
+        median_gap = sorted_gaps[len(sorted_gaps) // 2]
+        ceiling = outlier_ratio * median_gap
+
+        for i in range(1, len(lines)):
+            gap = lines[i]["cueIn"] - lines[i - 1]["cueIn"]
+            if gap > ceiling and i + 1 < len(lines):
+                # Steal half the surplus from this gap and give it to the next.
+                surplus = gap - ceiling
+                half = round(surplus / 2, 2)
+                lines[i]["cueIn"] = round(lines[i]["cueIn"] - half, 2)
+                # Cascade: bump subsequent lines forward only if they'd collide.
+                # (They shouldn't, but guard anyway.)
+                for j in range(i + 1, len(lines)):
+                    if lines[j]["cueIn"] < lines[j - 1]["cueIn"] + min_gap:
+                        lines[j]["cueIn"] = round(lines[j - 1]["cueIn"] + min_gap, 2)
+                    else:
+                        break
+
+    changed = sum(1 for i, l in enumerate(lines) if l["cueIn"] != original[i])
+    return changed
+
+
+def smooth_timestamp_map(timestamp_map: list[dict], chant_id_set: set[str] | None = None) -> None:
+    """
+    Run smooth_service_chant on every chant in the timestamp_map.
+    If chant_id_set is given, only smooth those chants.
+    Prints a summary line for each chant where changes were made.
+    """
+    for entry in timestamp_map:
+        cid = entry["chantId"]
+        if chant_id_set and cid not in chant_id_set:
+            continue
+        lines = entry.get("lines", [])
+        if not lines:
+            continue
+        span = lines[-1]["cueIn"] - lines[0]["cueIn"] if len(lines) > 1 else 0
+        changed = smooth_service_chant(cid, lines, span)
+        if changed:
+            print(f"  [smooth] {cid}: adjusted {changed} line(s)")
+
+
+# ---------------------------------------------------------------------------
+# Main
+# ---------------------------------------------------------------------------
+
 def main():
     parser = argparse.ArgumentParser(
         description="Align a service recording to chant text with stable-whisper."
@@ -78,7 +182,24 @@ def main():
         action="store_true",
         help="Print what would happen without running the model or writing files",
     )
-    parser.add_argument("--language", metavar="LANG", default="en", help="Language code for alignment (default: en)")
+    parser.add_argument(
+        "--language", metavar="LANG", default="en",
+        help="Language code for alignment (default: en)",
+    )
+    parser.add_argument(
+        "--model", metavar="NAME", default="base",
+        help="stable-whisper model name: base | small | medium | large (default: base). "
+             "Use 'small' or 'medium' for phonetically dense dharanis or Japanese chants.",
+    )
+    parser.add_argument(
+        "--no-smooth", action="store_true",
+        help="Skip the post-alignment smoothing pass",
+    )
+    parser.add_argument(
+        "--smooth-only", action="store_true",
+        help="Re-run smoothing on the existing timestampMap without re-aligning. "
+             "Useful for tuning parameters without re-running the model.",
+    )
     args = parser.parse_args()
 
     json_path = Path(args.sangha_json)
@@ -100,6 +221,25 @@ def main():
         if available:
             print(f"Available services: {', '.join(available)}", file=sys.stderr)
         sys.exit(1)
+
+    # --smooth-only: re-smooth existing timestampMap without re-aligning
+    if args.smooth_only:
+        existing_map = service.get("timestampMap")
+        if not existing_map:
+            print(f"Error: service '{args.service_id}' has no timestampMap to smooth.", file=sys.stderr)
+            sys.exit(1)
+        print(f"Re-smoothing existing timestampMap for '{args.service_id}'…")
+        smooth_timestamp_map(existing_map)
+        apply_corrections(service, existing_map)
+        service["timestampMap"] = existing_map
+        bak_path = json_path.with_suffix(json_path.suffix + ".bak")
+        shutil.copy2(json_path, bak_path)
+        print(f"Backed up original to {bak_path}")
+        with open(json_path, "w") as f:
+            json.dump(data, f, indent=2, ensure_ascii=False)
+            f.write("\n")
+        print(f"Wrote updated JSON to {json_path}")
+        return
 
     if not service.get("audio"):
         print(f"Error: service '{args.service_id}' has no audio field", file=sys.stderr)
@@ -131,6 +271,7 @@ def main():
 
     print(f"Service: {service['id']}")
     print(f"Audio:   {service['audio']}")
+    print(f"Model:   {args.model}")
     print(f"Chants:  {len(ordered_chants)}  ({', '.join(c['id'] for c in ordered_chants)})")
     print(f"Lines:   {len(line_index)}")
 
@@ -145,8 +286,8 @@ def main():
         sys.exit(0)
 
     import stable_whisper
-    print("\nLoading stable-whisper model (base, cpu)…")
-    model = stable_whisper.load_model("base", device="cpu")
+    print(f"\nLoading stable-whisper model ({args.model}, cpu)…")
+    model = stable_whisper.load_model(args.model, device="cpu")
 
     print("Aligning…")
     result = model.align(service["audio"], transcript, language=args.language)
@@ -154,7 +295,6 @@ def main():
 
     # Match each line's first word forward through the word list
     pointer = 0
-    # Track per-chant data for timestampMap assembly
     chant_data: dict[str, dict] = {}  # chant_id -> {startTime, lines: [{lineIndex, cueIn}]}
 
     for entry in line_index:
@@ -182,6 +322,11 @@ def main():
                 "startTime": entry["startTime"],
                 "lines": entry["lines"],
             })
+
+    # Smoothing pass
+    if not args.no_smooth:
+        print("\nSmoothing timestamps…")
+        smooth_timestamp_map(timestamp_map)
 
     apply_corrections(service, timestamp_map)
     service["timestampMap"] = timestamp_map

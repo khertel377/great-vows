@@ -9207,11 +9207,11 @@
             },
             {
               "lineIndex": 13,
-              "cueIn": 194.6
+              "cueIn": 194.92
             },
             {
               "lineIndex": 14,
-              "cueIn": 205.0
+              "cueIn": 202.55
             },
             {
               "lineIndex": 15,
@@ -9263,7 +9263,7 @@
             },
             {
               "lineIndex": 30,
-              "cueIn": 257.08
+              "cueIn": 258.02
             },
             {
               "lineIndex": 31,
@@ -9283,7 +9283,7 @@
             },
             {
               "lineIndex": 36,
-              "cueIn": 274.88
+              "cueIn": 276.28
             },
             {
               "lineIndex": 37,
@@ -9345,29 +9345,41 @@
           "lines": [
             {
               "lineIndex": 0,
-              "cueIn": 336.6
+              "cueIn": 400
             },
             {
               "lineIndex": 1,
-              "cueIn": 343.62
+              "cueIn": 413
             },
             {
               "lineIndex": 2,
-              "cueIn": 344.98
+              "cueIn": 433
             },
             {
               "lineIndex": 3,
-              "cueIn": 347.32
+              "cueIn": 446
             }
           ]
         }
       ],
       "timestampCorrections": {
         "after-dedication-english": [
-          { "lineIndex": 0, "cueIn": 400 },
-          { "lineIndex": 1, "cueIn": 413 },
-          { "lineIndex": 2, "cueIn": 433 },
-          { "lineIndex": 3, "cueIn": 446 }
+          {
+            "lineIndex": 0,
+            "cueIn": 400
+          },
+          {
+            "lineIndex": 1,
+            "cueIn": 413
+          },
+          {
+            "lineIndex": 2,
+            "cueIn": 433
+          },
+          {
+            "lineIndex": 3,
+            "cueIn": 446
+          }
         ]
       },
       "chantEndOverrides": {
