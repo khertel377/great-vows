@@ -152,6 +152,28 @@ body::before {
   font-family: var(--mono);
   font-size: 10px;
   font-weight: 500;
+  letter-spacing: 0.06em;
+  color: var(--paper);
+  background: var(--seal);
+  text-decoration: none;
+  border: none;
+  border-radius: 2px;
+  padding: 8px 16px;
+  opacity: 0.92;
+  transition: background 0.2s ease, opacity 0.2s ease;
+  pointer-events: auto;
+}
+.enter-btn:hover {
+  opacity: 1;
+  background: #99332A;
+}
+.enter-btn.hidden { display: none; }
+
+.sidebar-link-quiet {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 500;
   letter-spacing: 0.04em;
   color: var(--ink);
   text-decoration: none;
@@ -159,11 +181,8 @@ body::before {
   padding: 7px 11px;
   opacity: 0.65;
   transition: opacity 0.2s;
-  pointer-events: auto;
 }
-
-.enter-btn:hover { opacity: 1; }
-.enter-btn.hidden { display: none; }
+.sidebar-link-quiet:hover { opacity: 1; }
 
 /* ── PERIOD ROW CELLS ── */
 .period-left {
@@ -249,7 +268,7 @@ body::before {
 .period-row.now .clock-display   { grid-area: clock; align-self: end;      padding: 10px 20px 0; }
 .period-row.now .clock-meta      { grid-area: ampm;  align-self: baseline; padding: 8px 20px 0; }
 .period-row.now .sidebar-next    { grid-area: next;  margin-top: 8px; padding: 0 20px 0; }
-.period-row.now .enter-btn       { grid-area: enter; margin-top: 20px;      padding: 4px 20px 16px; }
+.period-row.now .enter-btn       { grid-area: enter; margin: 16px 0 16px 20px; padding: 8px 16px; }
 .period-row.now .period-name     { grid-area: name;  align-self: end;      padding: 10px 24px 0 24px; }
 .period-row.now .period-row-meta { grid-area: meta;  align-self: baseline; padding: 8px 16px 10px 24px; }
 
@@ -547,7 +566,7 @@ body.placed .period-row.now .period-name { font-size: 52px; }
   <div class="entry-note">the schedule is already running</div>
 </div>
 
-<div class="sidebar-header">San Francisco<br>Zen Center<br><a href="index.html" class="enter-btn">&#8595;&nbsp;Service Index</a></div>
+<div class="sidebar-header">San Francisco<br>Zen Center<br><a href="index.html" class="sidebar-link-quiet">&#8595;&nbsp;Service Index</a></div>
 
 <div id="layout">
   <main id="track"></main>

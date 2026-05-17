@@ -165,10 +165,35 @@
     border: 1px solid rgba(255,255,255,0.12);
     border-radius: 3px; padding: 10px 8px 9px;
     cursor: pointer; text-align: left;
+    position: relative;
+    overflow: hidden;
     transition: background 0.2s, border-color 0.2s;
   }
-  .service-slot:hover { background: rgba(184,134,11,0.06); border-color: var(--gold-dim); }
-  .day-cell.today .service-slot:hover { border-color: var(--gold-dim); }
+  .service-slot::after {
+    content: '\2192';
+    position: absolute;
+    right: 8px;
+    bottom: 7px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--gold);
+    opacity: 0;
+    transform: translateX(-3px);
+    transition: opacity 0.18s ease, transform 0.18s ease;
+    pointer-events: none;
+  }
+  .service-slot:hover {
+    background: rgba(176,58,46,0.10);
+    border-color: var(--gold);
+  }
+  .service-slot:hover::after {
+    opacity: 0.75;
+    transform: translateX(0);
+  }
+  .day-cell.today .service-slot:hover {
+    background: rgba(184,134,11,0.06);
+    border-color: var(--gold-dim);
+  }
   .slot-label {
     display: block;
     font-family: 'IBM Plex Mono', monospace;
