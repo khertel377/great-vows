@@ -86,8 +86,8 @@ body::before {
   z-index: 5;
   text-decoration: none;
   transition: opacity 0.2s;
+  pointer-events: none;
 }
-.sidebar-header:hover { opacity: 0.6; }
 
 .sidebar-now {
   padding-bottom: 12px; /* descender clearance — Cormorant 7 drops below baseline */
@@ -159,6 +159,7 @@ body::before {
   padding: 7px 11px;
   opacity: 0.65;
   transition: opacity 0.2s;
+  pointer-events: auto;
 }
 
 .enter-btn:hover { opacity: 1; }
@@ -546,7 +547,7 @@ body.placed .period-row.now .period-name { font-size: 52px; }
   <div class="entry-note">the schedule is already running</div>
 </div>
 
-<a href="index.html" class="sidebar-header">San Francisco<br>Zen Center</a>
+<div class="sidebar-header">San Francisco<br>Zen Center<br><a href="index.html" class="enter-btn">&#8595;&nbsp;Service Index</a></div>
 
 <div id="layout">
   <main id="track"></main>
@@ -1494,8 +1495,7 @@ mobileStyles.textContent = `
       to   { font-size: 36px; opacity: 1;   letter-spacing: -0.01em; }
     }
 
-    /* Sidebar header too cramped at mobile */
-    .sidebar-header { display: none; }
+    /* Sidebar header: visible on mobile — hosts the ↓ Service Index reciprocal link */
 
     #mute-btn { bottom: calc(16px + env(safe-area-inset-bottom, 0px)); right: 16px; }
   }

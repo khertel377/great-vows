@@ -145,12 +145,17 @@
   }
   .day-chant-item {
     font-family: 'IBM Plex Mono', monospace;
-    font-size: 9px; letter-spacing: 0.04em;
-    color: rgba(255,255,255,0.25);
+    font-size: 13px; letter-spacing: 0.04em;
+    color: rgba(255,255,255,0.45);
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     line-height: 1.4;
   }
-  .day-cell.today .day-chant-item { color: rgba(184,134,11,0.5); }
+  .day-cell.today .day-chant-item { color: rgba(184,134,11,0.65); }
+  .day-cell.off-day { opacity: 0.4; }
+  .day-cell.off-day:hover { opacity: 0.6; }
+  .week-strip.layout-vertical { flex-direction: column; }
+  .week-strip.layout-vertical .day-cell { width: 100%; min-width: unset; }
+  .week-strip.layout-vertical .day-chant-item { white-space: normal; overflow: visible; text-overflow: unset; }
 
   /* ── CHANT LIST (SHOW_CHANT_INDEX=false → display:none via JS) ── */
   .chant-section { margin-top: 40px; opacity: 0; animation: fadeUp 0.8s ease 0.45s forwards; }
@@ -389,6 +394,7 @@
 // CONFIG
 // ══════════════════════════════
 var SHOW_CHANT_INDEX = false;
+var WEEK_LAYOUT = 'vertical'; // 'horizontal' | 'vertical'
 
 function getNow() { return new Date(); }
 
@@ -580,23 +586,25 @@ function buildIndex() {
   var svcEl = document.getElementById('serviceCards');
   svcEl.innerHTML = '';
 
-  var _weekDays = [
+  var _weekDaysCanonical = [
+    { key: 'sun', label: 'Sun', svcId: 'morning-service-thursday'  },
     { key: 'mon', label: 'Mon', svcId: 'morning-service-monday'    },
     { key: 'tue', label: 'Tue', svcId: 'morning-service-tuesday'   },
     { key: 'wed', label: 'Wed', svcId: 'morning-service-wednesday' },
     { key: 'thu', label: 'Thu', svcId: 'morning-service-thursday'  },
     { key: 'fri', label: 'Fri', svcId: 'morning-service-thursday'  },
-    { key: 'sat', label: 'Sat', svcId: 'morning-service-thursday'  },
-    { key: 'sun', label: 'Sun', svcId: 'morning-service-thursday'  }
+    { key: 'sat', label: 'Sat', svcId: 'morning-service-thursday'  }
   ];
+  var _weekDays = _weekDaysCanonical.slice(_dow).concat(_weekDaysCanonical.slice(0, _dow));
 
   var strip = document.createElement('div');
-  strip.className = 'week-strip';
+  strip.className = 'week-strip layout-' + WEEK_LAYOUT;
 
   _weekDays.forEach(function(day) {
     var cell = document.createElement('div');
     var isToday = day.key === _todayKey;
-    cell.className = 'day-cell' + (isToday ? ' today' : '');
+    var isOffDay = !isToday && (day.key === 'fri' || day.key === 'sat' || day.key === 'sun');
+    cell.className = 'day-cell' + (isToday ? ' today' : '') + (isOffDay ? ' off-day' : '');
 
     var svc = (DATA.services || []).find(function(s) { return s.id === day.svcId; });
 
